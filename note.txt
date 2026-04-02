@@ -1,0 +1,76 @@
+users:
+    - id (PK)
+    - first_name
+    - last_name
+    - email (UNIQUE)
+    - password
+    - phone
+    - status
+    - last_login_at
+    - created_at
+    - updated_at
+    - deleted_at
+
+
+machines:
+    - id (PK)
+    - code (UNIQUE)
+    - name
+    - description
+    - location_name
+    - latitude
+    - longitude
+    - status
+    - created_by (FK -> users.id)
+    - created_at
+    - updated_at
+    - deleted_at
+
+
+checklist_templates:
+    - id (PK)
+    - name
+    - description
+    //- version
+    - status
+    - created_by (FK -> users.id)
+    - created_at
+    - updated_at
+    - deleted_at
+
+
+checklist_items:
+    - id (PK)
+    - checklist_template_id (FK -> checklist_templates.id)
+    - label
+    - item_order
+    - created_at
+    - updated_at
+
+
+maintenance_plans:
+    - id (PK)
+    - machine_id (FK -> machines.id)
+    - checklist_template_id (FK -> checklist_templates.id)
+    - assigned_to (FK -> users.id)
+    - repeat_every
+    - repeat_unit
+    - start_date
+    - is_active
+    - created_by (FK -> users.id)
+    - created_at
+    - updated_at
+
+
+rounds:
+    - id (PK)
+    - maintenance_plan_id (FK -> maintenance_plans.id)
+    - machine_id (FK -> machines.id)
+    - scheduled_for
+    - status
+    - completed_at
+    - created_at
+    - updated_at
+
+
+
