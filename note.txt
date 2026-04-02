@@ -73,4 +73,52 @@ rounds:
     - updated_at
 
 
+round_check_items:
+    - id (PK)
+    - round_id (FK -> rounds.id)
+    - checklist_item_id (FK -> checklist_items.id)
+    - status
+    - comment
+    - created_at
+    - updated_at
+
+
+anomalies:
+    - id (PK)
+    - round_id (FK -> rounds.id)
+    - machine_id (FK -> machines.id)
+    - reported_by (FK -> users.id)
+    - title
+    - description
+    - severity
+    - status
+    - created_at
+    - updated_at
+
+repair_requests:
+    - id (PK)
+    - anomaly_id (FK -> anomalies.id)
+    - machine_id (FK -> machines.id)
+    - requested_by (FK -> users.id)
+    - title
+    - description
+    - estimated_cost
+    - status
+    - created_at
+    - updated_at
+
+
+purchase_orders:
+    - id (PK)
+    - repair_request_id (FK -> repair_requests.id)
+    - uploaded_by (FK -> users.id)
+    - file_path
+    - original_file_name
+    - status
+    - uploaded_at
+    - created_at
+    - updated_at
+
+
+
 
