@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('round_check_items', function (Blueprint $table) {
+        Schema::create('maintenance_task_check_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('round_id')->constrained()->onDelete('cascade');
+            $table->foreignId('maintenance_task_id')->constrained('maintenance_tasks')->onDelete('cascade');
             $table->foreignId('checklist_item_id')->constrained('checklist_items')->onDelete('cascade');
             $table->boolean('status')->default(false);
             $table->text('comment')->nullable();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('round_check_items');
+        Schema::dropIfExists('maintenance_task_check_items');
     }
 };

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('machine_id')->constrained('machines')->onDelete('cascade');
             $table->foreignId('reported_by')->constrained('users')->onDelete('cascade');
-            $table->foreignId('round_id')->constrained('rounds')->onDelete('cascade');
+            $table->foreignId('maintenance_task_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->string('description');
             $table->enum('severity', ['low', 'medium', 'high'])->default('low');
