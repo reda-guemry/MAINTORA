@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
     'token_hash',
     'expires_at',
     'last_used_at',
-    'revoked_at'
+    'revoked_at', 
 ])]
 class RefreshToken extends Model
 {

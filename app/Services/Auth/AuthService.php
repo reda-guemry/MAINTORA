@@ -12,20 +12,27 @@ class AuthService
      */
     public function __construct(
         private AuthTokenService $tokenService,
-    ){}
+    ) {
+    }
 
     public function login($credentials)
     {
-        if(!$token = Auth::guard('api')->attempt($credentials)){
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
             throw new Exception('Invalid credentials');
         }
 
         $user = Auth::guard('api')->user();
-        
-        $pair = $this->tokenService->issueToken($user);
+
+        $refresh_token = $this->tokenService->issueToken($user);
 
 
-        return $this->tokenService->issueToken($user);
+        return [
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+            'refresh_token' => $refresh_token , 
+        ];
+
     }
 
 
