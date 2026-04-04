@@ -41,8 +41,15 @@ checklist_templates:
 
 checklist_items:
     - id (PK)
-    - checklist_template_id (FK -> checklist_templates.id)
     - label
+    - created_at
+    - updated_at
+
+
+checklist_template_items:
+    - id (PK)
+    - checklist_template_id (FK -> checklist_templates.id)
+    - checklist_item_id (FK -> checklist_items.id)
     - item_order
     - created_at
     - updated_at

@@ -24,4 +24,9 @@ class ChecklistTemplate extends Model
         return $this->belongsTo(User::class, 'created_by') ;
     }
 
+    public function checklistItems()
+    {
+        return $this->hasMany(ChecklistTemplateItem::class ) ;
+    }
+
 }

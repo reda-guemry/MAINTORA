@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('checklist_items', function (Blueprint $table) {
+        Schema::create('checklist_template_items', function (Blueprint $table) {
             $table->id();
-            $table->string('label');
+            $table->foreignId('checklist_template_id')->constrained('checklist_templates')->onDelete('cascade');
+            $table->foreignId('checklist_item_id')->constrained('checklist_items')->onDelete('cascade');
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('checklist_items');
+        Schema::dropIfExists('checklist_template_items');
     }
 };

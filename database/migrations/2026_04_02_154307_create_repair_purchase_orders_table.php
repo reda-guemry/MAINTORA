@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('repair_purchase_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('repair_request_id')->constrained('repair_requests')->onDelete('cascade');
+            $table->foreignId('repair_request_id')->constrained()->onDelete('cascade');
             $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
             $table->string('file_path');
             $table->string('original_file_name');

@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
     'label',
-    'item_order',
 ])]
 
 class ChecklistItem extends Model
@@ -17,9 +16,9 @@ class ChecklistItem extends Model
     use HasFactory ;
     
 
-    public function checklistTemplate()
+    public function checklistTemplateItems()
     {
-        return $this->belongsTo(ChecklistTemplate::class) ;
+        return $this->hasMany(ChecklistTemplateItem::class) ;
     }
 
 

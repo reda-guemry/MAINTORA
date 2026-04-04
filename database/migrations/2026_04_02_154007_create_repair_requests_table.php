@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('machine_id')->constrained('machines')->onDelete('cascade');
             $table->foreignId('requested_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('anomaly_id')->constrained()->onDelete('cascade');
+            $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
             $table->string('title');
             $table->text('description');
             $table->enum('status', ['open', 'in_progress', 'completed', 'rejected'])->default('open');

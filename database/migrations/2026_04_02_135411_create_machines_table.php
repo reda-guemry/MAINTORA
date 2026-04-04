@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('location');
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
-            $table->string('status')->enum('active', 'anomalous', 'maintenance')->default('active');
+            $table->enum('status', ['active', 'anomalous', 'maintenance'])->default('active');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->softDeletes() ; 
             $table->timestamps();

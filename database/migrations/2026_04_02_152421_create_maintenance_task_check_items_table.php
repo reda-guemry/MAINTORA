@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('maintenance_task_id')->constrained('maintenance_tasks')->onDelete('cascade');
             $table->foreignId('checklist_item_id')->constrained('checklist_items')->onDelete('cascade');
-            $table->boolean('status')->default(false);
+            $table->boolean('status')->nullable();
             $table->text('comment')->nullable();
             $table->timestamps();
         });
