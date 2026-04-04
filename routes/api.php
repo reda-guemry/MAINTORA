@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,11 +23,11 @@ Route::middleware(['auth:api'])->group(function () {
      * Admin routes
      */
     Route::prefix('admin')->middleware(['admin'])->group(function () {
-
+        
         /*
          * Manage users Routes
          */
-        Route::apiResource('users', UserController::class);
+        Route::apiResource('users', UserController::class)->middleware('can:manage users');
 
 
     });
