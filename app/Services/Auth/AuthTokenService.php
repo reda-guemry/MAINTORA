@@ -8,4 +8,11 @@ class AuthTokenService
     {
         //
     }
+
+    public function issueToken($user , )
+    {
+
+    }
+
+
 }
