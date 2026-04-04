@@ -12,9 +12,17 @@ use Illuminate\Database\Eloquent\Model;
     'last_used_at',
     'revoked_at', 
 ])]
+
+
+
 class RefreshToken extends Model
 {
     protected $table = 'refresh_tokens';
+    protected $casts = [
+        'expires_at' => 'datetime',
+        'last_used_at' => 'datetime',
+        'revoked_at' => 'datetime',
+    ];
 
     public function user()
     {

@@ -7,17 +7,19 @@ use App\Repositories\Auth\RefreshTokenRepository;
 class AuthTokenService
 {
     public function __construct(
-        private RefreshTokenRepository $refreshTokenRepo,
+        private RefreshTokenRepository $refreshTokenRepository,
     ){}
 
     public function issueToken($user)
     {
         $refreshToken = $this->generateRefreshToken();
 
-        $this->refreshTokenRepo->create($user->id, $refreshToken['refresh_token_hash']);
+        $refresh = $this->refreshTokenRepository->create($user->id, $refreshToken['refresh_token_hash']);
 
-        return $refreshToken['refresh_token'] ;
-
+        return [
+            'refresh_token' => $refreshToken['refresh_token'],
+            'expires_in' => $refresh->expires_at->diffInMinutes(now()),
+        ] ;
     }
 
     private function generateRefreshToken()

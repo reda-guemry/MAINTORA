@@ -26,12 +26,11 @@ class AuthService
         $refresh_token = $this->tokenService->issueToken($user);
 
 
-        return [
+        return array_merge($refresh_token, [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
-            'refresh_token' => $refresh_token , 
-        ];
+            'expires_in' => Auth::guard('api')->factory()->getTTL(),
+        ]);
 
     }
 
