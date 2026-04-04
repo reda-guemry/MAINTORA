@@ -29,6 +29,7 @@ class AuthService
         return array_merge($refresh_token, [
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL(),
+            'user' => $user , 
         ]);
 
     }

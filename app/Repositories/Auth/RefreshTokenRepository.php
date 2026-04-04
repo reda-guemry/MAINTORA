@@ -12,8 +12,10 @@ class RefreshTokenRepository
         
     }
 
-    public function create($userId, $tokenHash , $expiresAt = now()->addDays(15))
+    public function create($userId, $tokenHash , $expiresAt = null)
     {
+        $expiresAt = $expiresAt ?? now()->addDays(7) ;
+
         return RefreshToken::create([
             'user_id' => $userId,
             'token_hash' => $tokenHash,

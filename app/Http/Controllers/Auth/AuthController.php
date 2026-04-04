@@ -24,8 +24,10 @@ class AuthController extends Controller
             $response = $this->authService->login($request->validated());
 
             $refresh_token = $response['refresh_token'];
+            $expires_in = $response['expires_in'];
 
             unset($response['refresh_token']);
+            unset($response['expires_in']);
 
             return response()->json([
                 'success' => true,
@@ -34,7 +36,7 @@ class AuthController extends Controller
             ])->cookie(
                     'refresh_token', // name
                     $refresh_token, // value
-                    $refresh_token['expires_in'], // expiration in minutes 
+                    $expires_in, // expiration in minutes 
                     '/api/refresh', // path
                     null, // domain
                     false, // secure

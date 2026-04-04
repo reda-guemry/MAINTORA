@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+
 
 #[Fillable([
     'first_name',
@@ -18,15 +20,15 @@ use Spatie\Permission\Traits\HasRoles;
     'password', 
     'phone',
     'status',
-    'last_login_at'
 ])]
 
 #[Hidden([
     'password', 
-    'remember_token'
+    'remember_token' , 
+    'deleted_at',   
 ])]
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
 
     use HasFactory, Notifiable , HasRoles;
@@ -46,6 +48,12 @@ class User extends Authenticatable
         return $this->getKey();
     }
 
+    public function getJWTCustomClaims()
+    {
+        return [
+            'roles' => $this->getRoleNames(),
+        ];
+    }
 
 
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 
 #[Fillable([
+    'user_id',
     'token_hash',
     'expires_at',
     'last_used_at',
