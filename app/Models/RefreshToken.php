@@ -39,5 +39,6 @@ class RefreshToken extends Model
         $this->update(['revoked_at' => now()]);
     }
 
+    
 
 }

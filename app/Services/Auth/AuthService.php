@@ -17,8 +17,8 @@ class AuthService
 
     public function login($credentials)
     {
-        if (!$token = Auth::guard('api')->attempt($credentials)) {
-            throw new Exception('Invalid credentials');
+        if (!Auth::guard('api')->attempt($credentials)) {
+            throw new Exception('Invalid credentials', 401);
         }
 
         $user = Auth::guard('api')->user();
@@ -27,12 +27,15 @@ class AuthService
 
 
         return array_merge($refresh_token, [
-            'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL(),
         ]);
 
     }
 
+    public function refresh($refreshToken)
+    {
+        return $this->tokenService->refreshToken($refreshToken);
+    }
 
 }

@@ -21,9 +21,9 @@ class RefreshTokenRepository
         ]);
     }
 
-    public function findByTokenHash($token)
+    public function findByToken($token)
     {
-        return RefreshToken::where('token_hash', hash('sha256', $token))->first();
+        return RefreshToken::where('token_hash', hash('sha256', $token))->firstOrFail() ; 
     }
 
     public function invalidate($tokenHash)
@@ -33,4 +33,10 @@ class RefreshTokenRepository
             $token->revoke();
         }   
     }
+
+    public function revokeAllForUser($userId)
+    {
+        RefreshToken::where('user_id', $userId)->revoke();
+    }
+
 }
