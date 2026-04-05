@@ -41,4 +41,30 @@ class UserService
 
     }
 
+    public function findOrFail($id)
+    {
+        return $this->userRepository->find($id);
+    }
+
+    public function update($id, $data)
+    {
+        DB::transaction(function () use ($id, $data) {
+            
+            $user = $this -> userRepository -> update($id, $data);
+
+            if (isset($data['role'])) {
+                $role = $data['role'];
+                unset($data['role']);
+                $user = $this -> roleService -> assigned($user , $role);
+            }
+            
+            return $user;
+        });
+    }
+
+    public function delete($id)
+    {
+        return $this -> userRepository -> delete($id);
+    }
+
 }

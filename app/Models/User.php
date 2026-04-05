@@ -17,23 +17,23 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
     'first_name',
     'last_name',
     'email',
-    'password', 
+    'password',
     'phone',
     'status',
 ])]
 
 #[Hidden([
-    'password', 
-    'remember_token' , 
-    'deleted_at',   
+    'password',
+    'remember_token',
+    'deleted_at',
 ])]
 
 class User extends Authenticatable implements JWTSubject
 {
 
-    use HasFactory, Notifiable , HasRoles;
+    use HasFactory, Notifiable, HasRoles;
 
-
+    protected $guard_name = 'api';
 
     protected function casts(): array
     {

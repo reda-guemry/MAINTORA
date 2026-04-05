@@ -20,15 +20,21 @@ class RolePermissionSeeder extends Seeder
         
         /* * Create permissions
          */
-        Permission::create(['name' => 'manage users']);
-        Permission::create(['name' => 'manage roles']);
-        
+        Permission::findOrCreate('manage users', 'api');
+        Permission::findOrCreate('manage roles', 'api');
+
 
 
         /* * Create roles and assign existing permissions
          */
-        $roleAdmin = Role::create(['name' => 'admin']);
+        $roleAdmin = Role::findOrCreate('admin' , 'api');
         $roleAdmin->givePermissionTo(Permission::all());
+
+
+        /* 
+        * Create a regular user role without permissions
+         */
+        $roleClient = Role::findOrCreate('client' , 'api');
 
 
     }
