@@ -29,6 +29,18 @@ Route::middleware(['auth:api'])->group(function () {
          */
         Route::apiResource('users', UserController::class)->middleware('can:manage users');
 
+    });
+
+
+
+
+
+    Route::prefix('client')->middleware(['admin'])->group(function () {
+        
+        /*
+         * Manage users Routes
+         */
+        Route::apiResource('users', UserController::class)->middleware('can:manage users');
 
     });
 
