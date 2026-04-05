@@ -48,7 +48,7 @@ class UserService
 
     public function update($id, $data)
     {
-        DB::transaction(function () use ($id, $data) {
+        return DB::transaction(function () use ($id, $data) {
             
             $user = $this -> userRepository -> update($id, $data);
 

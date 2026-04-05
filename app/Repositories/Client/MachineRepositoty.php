@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Repositories\Client;
+
+use App\Models\Machine;
+
+class MachineRepositoty
+{
+    /**
+     * Create a new class instance.
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    public function getPaginate()
+    {
+        return Machine::paginate(10);
+    }
+
+    public function create($data)
+    {
+        return Machine::create($data);
+    }
+
+    public function find($id)
+    {
+        return Machine::findOrFail($id);
+    }
+
+    public function update($id, $data)
+    {
+        $machine = Machine::findOrFail($id);
+        $machine->update($data);
+        return $machine;
+    }
+
+    public function delete($id)
+    {
+        $machine = Machine::findOrFail($id);
+        return $machine->delete();
+    }
+
+
+}
