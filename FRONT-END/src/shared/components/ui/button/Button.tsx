@@ -1,21 +1,24 @@
-
-
 import { cn } from '@/shared/utils'
 import type { ButtonProps } from './Button.type'
 import { Spinner } from '../spinner'
 
 const variantClasses = {
-  primary: 'bg-black text-white border border-black hover:opacity-90',
-  secondary: 'bg-gray-100 text-gray-900 border border-gray-200 hover:bg-gray-200',
-  outline: 'bg-transparent text-gray-900 border border-gray-300 hover:bg-gray-50',
-  danger: 'bg-red-600 text-white border border-red-600 hover:opacity-90',
-  ghost: 'bg-transparent text-gray-900 border border-transparent hover:bg-gray-100',
+  primary:
+    'bg-primary text-white border border-primary hover:bg-primary/90 shadow-lg shadow-primary/20',
+  secondary:
+    'bg-white text-text-main border border-neutral-gray hover:bg-background-light',
+  outline:
+    'bg-transparent text-text-main border border-neutral-gray hover:bg-white',
+  danger:
+    'bg-red-600 text-white border border-red-600 hover:bg-red-700',
+  ghost:
+    'bg-transparent text-text-main border border-transparent hover:bg-background-light',
 }
 
 const sizeClasses = {
   sm: 'h-9 px-3 text-sm',
-  md: 'h-10 px-4 text-sm',
-  lg: 'h-11 px-5 text-base',
+  md: 'h-12 px-4 text-sm',
+  lg: 'h-14 px-5 text-base',
 }
 
 export function Button({
@@ -36,7 +39,8 @@ export function Button({
       type={type}
       disabled={isDisabled}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-md font-medium transition disabled:cursor-not-allowed disabled:opacity-60',
+        'inline-flex items-center justify-center gap-2 rounded-lg font-bold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60',
+        'focus:outline-none focus:ring-2 focus:ring-primary/20',
         variantClasses[variant],
         sizeClasses[size],
         fullWidth && 'w-full',

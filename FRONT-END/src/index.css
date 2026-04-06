@@ -1,4 +1,7 @@
+@import "tailwindcss";
+@import "./app/styles/theme.css";
 
-@import "tailwindcss" ;
-@import "./app/styles/theme.css" ;
-
+.grid-bg {
+    background-image: radial-gradient(circle, #d5e1e1 1px, transparent 1px);
+    background-size: 24px 24px;
+}

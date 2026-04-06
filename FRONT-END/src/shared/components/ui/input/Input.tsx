@@ -9,21 +9,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         type={type}
         className={cn(
-          "w-full rounded-md border bg-white px-3 py-2 text-sm outline-none transition",
-          "placeholder:text-gray-400",
-          "focus:ring-2 focus:ring-black/10",
+          "w-full rounded-lg border bg-white px-4 py-3 text-sm text-text-main outline-none transition-colors",
+          "placeholder:text-text-muted/60",
+          "focus:ring-2 focus:ring-primary/20",
           hasError
             ? "border-red-500 focus:border-red-500"
-            : "border-gray-300 focus:border-gray-900",
-          "disabled:cursor-not-allowed disabled:bg-gray-100 disabled:opacity-70",
-          className,
+            : "border-neutral-gray focus:border-primary",
+          "disabled:cursor-not-allowed disabled:bg-background-light disabled:opacity-70",
+          className
         )}
-
-        {...props} 
-
+        {...props}
       />
     );
-  },
+  }
 );
 
 Input.displayName = "Input";

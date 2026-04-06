@@ -1,14 +1,41 @@
-
-
-
-import { LoginForm } from '../components/LoginForm'
+import { MaintoraLogo } from "@/shared/components/ui";
+import { LoginForm } from "../components/LoginForm";
 
 export function LoginPage() {
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-10">
-      <div className="mx-auto flex min-h-[80vh] w-full max-w-md items-center justify-center">
-        <LoginForm />
+    <main className="min-h-screen bg-background-light font-display">
+      <div className="grid-bg flex min-h-screen items-center justify-center px-6">
+        <div className="w-full max-w-[440px]">
+          <div className="mb-8 flex flex-col items-center">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
+              <MaintoraLogo size={200} />
+            </div>
+
+            <p className="text-sm text-text-muted">
+              Preventive Maintenance Management
+            </p>
+          </div>
+
+          <LoginForm />
+
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <div className="h-2 w-2 rounded-full bg-emerald-500" />
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                System Operational
+              </span>
+            </div>
+
+            <div className="h-1 w-1 rounded-full bg-neutral-gray" />
+
+            <div className="flex items-center gap-1.5">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                v2.4.0-stable
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
-  )
+  );
 }
