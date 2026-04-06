@@ -1,7 +1,7 @@
 
 
 import { cn } from '@/shared/utils'
-import type { ButtonProps } from './button.types'
+import type { ButtonProps } from './Button.type'
 import { Spinner } from '../spinner'
 
 const variantClasses = {
