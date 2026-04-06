@@ -1,0 +1,19 @@
+
+
+
+@theme {
+  --color-primary: #398e8e;
+  --color-background-light: #f8f6f0;
+  --color-background-dark: #151d1d;
+  --color-neutral-gray: #d5e1e1;
+  --color-text-main: #111818;
+  --color-text-muted: #5f8686;
+
+  --font-display: "Inter", sans-serif;
+
+  --radius-sm: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+}
+
