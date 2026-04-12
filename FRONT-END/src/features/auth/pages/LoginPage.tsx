@@ -2,6 +2,8 @@ import { MaintoraLogo } from "@/shared/components/ui";
 import { LoginForm } from "../components/LoginForm";
 
 export function LoginPage() {
+
+  
   return (
     <main className="min-h-screen bg-background-light font-display">
       <div className="grid-bg flex min-h-screen items-center justify-center px-6">

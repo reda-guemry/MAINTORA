@@ -5,7 +5,7 @@ import { api } from "@/shared/services/api";
 import type { LoginRequest, LoginResponse, RefreshTokenResponse } from "../types/auth.type";
 
 export async function login (credentials: LoginRequest): Promise<LoginResponse> {
-    return api<LoginResponse>("/auth/login" , {
+    return api<LoginResponse>("login" , {
         method: "POST",
         body: credentials
     });

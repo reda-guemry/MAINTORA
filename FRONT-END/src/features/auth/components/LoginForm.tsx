@@ -1,9 +1,32 @@
-import { useState } from 'react'
-import { Alert } from '@/shared/components/feedback'
-import { Button, Checkbox, FormField, Input, Label } from '@/shared/components/ui'
+import { Button, Checkbox, FormField, Input } from "@/shared/components/ui";
+import { useForm } from "react-hook-form";
+import type { LoginRequest } from "../types/auth.type";
+import useLogin from "../hooks/useLogin";
 
 export function LoginForm() {
-  const [remember, setRemember] = useState(false)
+  const { loginUser, isLoading, error } = useLogin();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginRequest>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: LoginRequest) => {
+    try {
+      const result = await loginUser(data);
+   
+      console.log(result);
+
+    } catch {
+      // error already handled inside useLogin
+    }
+  };
 
   return (
     <div className="rounded-xl border border-neutral-gray bg-white p-8 shadow-xl shadow-primary/5">
@@ -14,16 +37,20 @@ export function LoginForm() {
         </p>
       </div>
 
-      <form className="flex flex-col gap-5">
-        
-
+      <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
         <FormField label="Email or Username" htmlFor="email" required>
           <Input
             id="email"
             type="email"
             placeholder="m.smith@facility.com"
             autoComplete="email"
+            {...register("email", {
+              required: "Email is required",
+            })}
           />
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+          )}
         </FormField>
 
         <FormField label="Password" htmlFor="password" required>
@@ -32,16 +59,25 @@ export function LoginForm() {
             type="password"
             placeholder="••••••••"
             autoComplete="current-password"
+            {...register("password", {
+              required: "Password is required",
+            })}
           />
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.password.message}
+            </p>
+          )}
         </FormField>
 
+        {error && (
+          <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+            {error}
+          </div>
+        )}
+
         <div className="flex items-center justify-between gap-3">
-          <Checkbox
-            id="remember"
-            label="Remember me"
-            checked={remember}
-            onChange={(e) => setRemember(e.target.checked)}
-          />
+          <Checkbox id="remember" label="Remember me" />
 
           <button
             type="button"
@@ -51,14 +87,16 @@ export function LoginForm() {
           </button>
         </div>
 
-        <Button type="submit" fullWidth >
-          Sign In
+        <Button type="submit" fullWidth disabled={isLoading}>
+          {isLoading ? "Signing In..." : "Sign In"}
         </Button>
       </form>
 
       <div className="mt-8 flex flex-col items-center gap-3 border-t border-neutral-gray/50 pt-6">
-        <p className="text-xs text-text-muted">Engineering Team Portal © 2024</p>
+        <p className="text-xs text-text-muted">
+          Engineering Team Portal © 2024
+        </p>
       </div>
     </div>
-  )
+  );
 }
