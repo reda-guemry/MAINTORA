@@ -31,7 +31,7 @@ export function useApi() {
         
         const refreshResponse = await refreshAccessToken() ; 
 
-        const newToken = refreshResponse.data.token;
+        const newToken = refreshResponse.data.access_token;
         const user = refreshResponse.data.user;
 
         setAuth(user, newToken);

@@ -38,10 +38,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       try {
         const response = await refreshAccessToken();
 
+        console.log(response) ; 
+
+        // console.log(response) ; 
+
         if (cancelled) return;
 
-        const newToken = response.data.token;
+        const newToken = response.data.access_token;
         const user = response.data.user;
+
 
         setAuth(user, newToken);
       } catch (error) {

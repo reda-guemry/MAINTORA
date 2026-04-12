@@ -2,6 +2,8 @@
 
 namespace App\Services\Auth;
 
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Repositories\Auth\RefreshTokenRepository;
 use Exception;
 
@@ -21,7 +23,7 @@ class AuthTokenService
         return [
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken['refresh_token'],
-            'expires_in' => $refresh->expires_at->diffInMinutes(now()),
+            'expires_in' => auth()->guard('api')->factory()->getTTL(),
         ] ;
     }
 
@@ -54,7 +56,10 @@ class AuthTokenService
         $refreshTokenRecord->update([
             'last_used_at' => now(),
         ]) ; 
-        return $this->issueToken($refreshTokenRecord->user);
+        
+        $user = $refreshTokenRecord->user;
+
+        return array_merge($this->issueToken($refreshTokenRecord->user), ['user' => UserResource::make($user)]) ;
     }
 
 }

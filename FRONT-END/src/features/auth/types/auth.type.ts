@@ -31,7 +31,7 @@ export type RefreshTokenResponse = {
     message: string;
     data: {
         user: User;
-        token: string;
+        access_token: string;
     }
 }
 
