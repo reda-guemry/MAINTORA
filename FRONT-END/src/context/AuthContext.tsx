@@ -1,18 +1,12 @@
-import { createContext, useMemo, useReducer, type ReactNode } from "react";
-import type { User } from "@/features/auth/types/auth.type";
+import { createContext, useEffect, useMemo, useReducer } from "react";
+import type {
+  AuthContextType,
+  AuthProviderProps,
+  User,
+} from "@/features/auth";
+
 import { authReducer, initialAuthState } from "./authReducer";
-
-type AuthContextType = {
-  access_token: string | null;
-  user: User | null;
-  isAuthenticated: boolean;
-  setAuth: (user: User, access_token: string) => void;
-  clearAuth: () => void;
-};
-
-type AuthProviderProps = {
-  children: ReactNode;
-};
+import { refreshAccessToken } from "@/features/auth";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -20,7 +14,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const [state, dispatch] = useReducer(authReducer, initialAuthState);
 
-  function setAuth(user: User , access_token: string) {
+  function setAuth(user: User, access_token: string) {
     dispatch({
       type: "SET_AUTH",
       payload: { user, access_token },
@@ -31,15 +25,51 @@ export function AuthProvider({ children }: AuthProviderProps) {
     dispatch({ type: "CLEAR_AUTH" });
   }
 
-  const value = useMemo( () => ({
-    access_token: state.access_token,
-    user: state.user,
-    isAuthenticated: state.isAuthenticated,
-    setAuth,
-    clearAuth,
-  }) , [state.access_token , state.user , state.isAuthenticated] )
+  function startAuthCheck() {
+    dispatch({ type: "START_AUTH_CHECK" });
+  }
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function initializeAuth() {
+      startAuthCheck();
+
+      try {
+        const response = await refreshAccessToken();
+
+        if (cancelled) return;
+
+        const newToken = response.data.token;
+        const user = response.data.user;
+
+        setAuth(user, newToken);
+      } catch (error) {
+        if (cancelled) return;
+
+        clearAuth();
+      }
+    }
+
+    initializeAuth();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      access_token: state.access_token,
+      user: state.user,
+      isAuthenticated: state.isAuthenticated,
+      authStatus: state.authStatus,
+      setAuth,
+      clearAuth,
+      startAuthCheck,
+    }),
+    [state.access_token, state.user, state.isAuthenticated, state.authStatus],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-
-
 }
