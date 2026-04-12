@@ -1,6 +1,5 @@
 
 
-type role = "admin" | "client" | string ;
 
 
 export interface User {
@@ -8,7 +7,7 @@ export interface User {
     first_name: string ;
     last_name: string ;
     email: string ;
-    roles: [role] ;
+    roles: string[] ;
     number : string ;
 }
 
@@ -42,6 +41,6 @@ export type AuthState = {
 }
 
 export type onSuccess = {
-    onSuccess : (user: User) => void ;
+    onSuccess : (roles: string[]) => void ;
 }
 

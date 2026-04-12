@@ -2,23 +2,16 @@ import { MaintoraLogo } from "@/shared/components/ui";
 import { LoginForm } from "../components/LoginForm";
 import type { User } from "../types/auth.type";
 import { useNavigate } from "react-router-dom";
+import { getDefaultRouteByRole } from "../utils/getDefaultRouteByRole";
 
 export function LoginPage() {
 
   const navigate = useNavigate();
 
-  function handleLoginSuccess(user: User) {
-    console.log("Logged in user:", user);
-      switch (user.roles[0]) {
-        case "admin":
-          navigate("/admin/dashboard");
-          break;
-        case "client" : 
-          navigate("/client/dashboard");
-          break;
-        default:
-          navigate("/dashboard");
-      }
+  function handleLoginSuccess(roles: string[]) {
+    const defaultRoute = getDefaultRouteByRole(roles);
+    navigate(defaultRoute);
+    
   }
 
 

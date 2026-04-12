@@ -5,7 +5,8 @@ import DashboardPage from "./pages/DashboardPage";
 
 export  const adminRoutes = [
     {
-        path: "/admin/dashboard",
+        index: true , 
+        // path : "dashboard",
         element: <DashboardPage />
     },
 ] ; 

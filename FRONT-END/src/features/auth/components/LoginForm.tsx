@@ -4,7 +4,6 @@ import type { LoginRequest, onSuccess } from "../types/auth.type";
 import useLogin from "../hooks/useLogin";
 
 export function LoginForm({ onSuccess }: onSuccess) {
-  
   const { loginUser, isLoading, error } = useLogin();
 
   const {
@@ -19,15 +18,10 @@ export function LoginForm({ onSuccess }: onSuccess) {
   });
 
   const onSubmit = async (data: LoginRequest) => {
-    try {
-      const result = await loginUser(data);
-   
-      console.log(result);
-      onSuccess(result.data.user);
+    const result = await loginUser(data);
 
-    } catch {
-      // error already handled inside useLogin
-    }
+    console.log(result);
+    onSuccess(result.data.user.roles);
   };
 
   return (
