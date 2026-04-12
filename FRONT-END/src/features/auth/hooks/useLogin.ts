@@ -22,12 +22,15 @@ import { useAuth } from "@/context/useAuth";
 
       setAuth(user, token);
 
+    //   console.log("Logged in user:", user);
       return response;
     } catch (err) {
+
       if (err instanceof ApiError) {
         setError(err.message);
       } else {
         setError("Something went wrong. Please try again.");
+        
       }
 
       throw err;

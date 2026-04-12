@@ -1,9 +1,27 @@
 import { MaintoraLogo } from "@/shared/components/ui";
 import { LoginForm } from "../components/LoginForm";
+import type { User } from "../types/auth.type";
+import { useNavigate } from "react-router-dom";
 
 export function LoginPage() {
 
-  
+  const navigate = useNavigate();
+
+  function handleLoginSuccess(user: User) {
+    console.log("Logged in user:", user);
+      switch (user.roles[0]) {
+        case "admin":
+          navigate("/admin/dashboard");
+          break;
+        case "client" : 
+          navigate("/client/dashboard");
+          break;
+        default:
+          navigate("/dashboard");
+      }
+  }
+
+
   return (
     <main className="min-h-screen bg-background-light font-display">
       <div className="grid-bg flex min-h-screen items-center justify-center px-6">
@@ -18,7 +36,7 @@ export function LoginPage() {
             </p>
           </div>
 
-          <LoginForm />
+          <LoginForm onSuccess={handleLoginSuccess} />
 
           <div className="mt-8 flex items-center justify-center gap-4">
             <div className="flex items-center gap-1.5">

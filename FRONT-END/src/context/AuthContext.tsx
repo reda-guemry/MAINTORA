@@ -17,6 +17,7 @@ type AuthProviderProps = {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: AuthProviderProps) {
+
   const [state, dispatch] = useReducer(authReducer, initialAuthState);
 
   function setAuth(user: User , access_token: string) {

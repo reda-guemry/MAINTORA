@@ -2,6 +2,8 @@
 
 namespace App\Services\Auth;
 
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Auth;
 use Exception;
 
@@ -29,7 +31,7 @@ class AuthService
         return array_merge($refresh_token, [
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL(),
-            'user' => $user , 
+            'user' => UserResource::make($user),
         ]);
 
     }

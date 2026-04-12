@@ -1,7 +1,6 @@
 
 
-
-export type UserRole = "admin" | "client" ;
+type role = "admin" | "client" | string ;
 
 
 export interface User {
@@ -9,9 +8,8 @@ export interface User {
     first_name: string ;
     last_name: string ;
     email: string ;
-    role: UserRole ;
+    roles: [role] ;
     number : string ;
-
 }
 
 export interface LoginRequest {
@@ -43,5 +41,7 @@ export type AuthState = {
     isAuthenticated : boolean ;
 }
 
-
+export type onSuccess = {
+    onSuccess : (user: User) => void ;
+}
 

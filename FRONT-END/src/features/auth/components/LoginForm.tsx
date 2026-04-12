@@ -1,9 +1,10 @@
 import { Button, Checkbox, FormField, Input } from "@/shared/components/ui";
 import { useForm } from "react-hook-form";
-import type { LoginRequest } from "../types/auth.type";
+import type { LoginRequest, onSuccess } from "../types/auth.type";
 import useLogin from "../hooks/useLogin";
 
-export function LoginForm() {
+export function LoginForm({ onSuccess }: onSuccess) {
+  
   const { loginUser, isLoading, error } = useLogin();
 
   const {
@@ -22,6 +23,7 @@ export function LoginForm() {
       const result = await loginUser(data);
    
       console.log(result);
+      onSuccess(result.data.user);
 
     } catch {
       // error already handled inside useLogin
@@ -87,7 +89,7 @@ export function LoginForm() {
           </button>
         </div>
 
-        <Button type="submit" fullWidth disabled={isLoading}>
+        <Button type="submit" fullWidth isLoading={isLoading}>
           {isLoading ? "Signing In..." : "Sign In"}
         </Button>
       </form>
