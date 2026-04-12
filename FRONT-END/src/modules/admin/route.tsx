@@ -4,10 +4,9 @@ import DashboardPage from "./pages/DashboardPage";
 export const adminRoutes = [
   {
     element: <RoleGuard allowedRoles={["admin"]} />,
-    Children: [
+    children: [
       {
         index: true,
-        // path : "dashboard",
         element: <DashboardPage />,
       },
     ],
