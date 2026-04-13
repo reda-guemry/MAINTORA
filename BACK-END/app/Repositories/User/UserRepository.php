@@ -18,15 +18,15 @@ class UserRepository
         return User::create($data);
     }
 
-    public function paginateUsers($perPage = 15)
+    public function paginateUsers($perPage = 10)
     {
-        return User::paginate($perPage);
+        return User::with(['roles'])->paginate($perPage);
     }
 
 
     public function find($id)
     {
-        return User::findOrFail($id);
+        return User::with(['roles'])->findOrFail($id);
     }
 
     public function update($id, $data)

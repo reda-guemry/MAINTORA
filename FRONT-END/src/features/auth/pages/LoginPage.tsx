@@ -2,13 +2,13 @@ import { MaintoraLogo } from "@/shared/components/ui";
 import { LoginForm } from "../components/LoginForm";
 import { useNavigate } from "react-router-dom";
 import { getDefaultRouteByRole } from "../utils/getDefaultRouteByRole";
-import { useAuth } from "@/context/useAuth";
+// import { useAuth } from "@/context/useAuth";
 
 export function LoginPage() {
 
-  const { user } = useAuth(); 
+  // const { user } = useAuth(); 
 
-  console.log("Current user in LoginPage:", user); 
+  // console.log("Current user in LoginPage:", user); 
 
   const navigate = useNavigate();
 

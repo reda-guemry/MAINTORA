@@ -38,9 +38,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       try {
         const response = await refreshAccessToken();
 
-        console.log(response) ; 
-
-        // console.log(response) ; 
 
         if (cancelled) return;
 
