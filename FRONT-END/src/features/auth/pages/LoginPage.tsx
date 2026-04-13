@@ -22,7 +22,7 @@ export function LoginPage() {
   return (
     <main className="min-h-screen bg-background-light font-display">
       <div className="grid-bg flex min-h-screen items-center justify-center px-6">
-        <div className="w-full max-w-[440px]">
+        <div className="w-full max-w-110">
           <div className="mb-8 flex flex-col items-center">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
               <MaintoraLogo size={200} />

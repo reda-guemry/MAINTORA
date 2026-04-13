@@ -1,9 +1,9 @@
-import type { User } from "@/features/auth"
+import type { User } from "@/features/auth";
 
 
 export type PaginateUserResponse = {
     data: {
-        data: User[],
+        data: User[];
         current_page: number;
         last_page: number;
         per_page: number;
@@ -12,8 +12,8 @@ export type PaginateUserResponse = {
         to: number | null;
         next_page_url: string | null;
         prev_page_url: string | null;
-    }
+    };
     success: boolean;
     message: string;
-}
+};
 

@@ -1,6 +1,6 @@
 import RoleGuard from "@/app/router/guards/RoleGuard";
 import Dashboard from "./pages/Dashboard";
-import UsersManagement from "./pages/UsersManagment";
+import UsersManagement from "./pages/UsersManagement";
 
 export const adminRoutes = [
   {
@@ -13,7 +13,7 @@ export const adminRoutes = [
       {
         path: "users",
         element: <UsersManagement />,
-      }
+      },
     ],
   },
 ];
