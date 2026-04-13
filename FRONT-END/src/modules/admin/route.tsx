@@ -1,5 +1,6 @@
 import RoleGuard from "@/app/router/guards/RoleGuard";
-import DashboardPage from "./pages/DashboardPage";
+import Dashboard from "./pages/Dashboard";
+import UsersManagement from "./pages/UsersManagment";
 
 export const adminRoutes = [
   {
@@ -7,8 +8,12 @@ export const adminRoutes = [
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        element: <Dashboard />,
       },
+      {
+        path: "users",
+        element: <UsersManagement />,
+      }
     ],
   },
 ];

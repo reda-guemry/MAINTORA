@@ -1,6 +1,5 @@
-import React from "react";
 
-function DashboardPage() {
+function Dashboard() {
   return (
     <div className="space-y-6">
       
@@ -170,4 +169,4 @@ function DashboardPage() {
   );
 }
 
-export default DashboardPage;
+export default Dashboard ;
