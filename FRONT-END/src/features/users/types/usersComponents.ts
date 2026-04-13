@@ -9,7 +9,7 @@ export type EditUserPayload = {
   last_name: string;
   email: string;
   number: string;
-  role: string;
+  role: number | string ;
 };
 
 export type DeleteUserDialogProps = {
@@ -40,5 +40,18 @@ export type EditUserModalProps = {
   isLoading?: boolean;
 };
 
+export type RoleOption = {
+  id: number;
+  name: string;
+};
 
 
+export type UsersPaginationProps = {
+  currentPage: number;
+  lastPage: number;
+  from: number | null;
+  to: number | null;
+  total: number;
+  isLoading: boolean;
+  onPageChange: (page: number) => void;
+};

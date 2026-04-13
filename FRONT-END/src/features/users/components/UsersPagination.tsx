@@ -1,12 +1,7 @@
-type UsersPaginationProps = {
-  currentPage: number;
-  lastPage: number;
-  from: number | null;
-  to: number | null;
-  total: number;
-  isLoading: boolean;
-  onPageChange: (page: number) => void;
-};
+import type { UsersPaginationProps } from "../types/usersComponents";
+
+
+
 
 export function UsersPagination({
   currentPage,
@@ -18,6 +13,7 @@ export function UsersPagination({
   onPageChange,
 }: UsersPaginationProps) {
   const hasPages = lastPage > 1;
+
 
   return (
     <div className="bg-white border-t border-gray-100 px-6 py-4 flex items-center justify-between">

@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Client\MachineController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,11 +24,12 @@ Route::middleware(['auth:api'])->group(function () {
      * Admin routes
      */
     Route::prefix('admin')->middleware(['admin'])->group(function () {
-        
+
         /*
          * Manage users Routes
          */
         Route::apiResource('users', UserController::class)->middleware('can:manage users');
+        Route::get('/roles', [RoleController::class, 'index'])->middleware('can:manage users');
 
     });
 
@@ -37,7 +38,7 @@ Route::middleware(['auth:api'])->group(function () {
 
 
     Route::prefix('client')->middleware(['client'])->group(function () {
-        
+
         /*
          * Manage users Routes
          */

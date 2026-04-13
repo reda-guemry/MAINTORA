@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormField, Input } from "@/shared/components/ui";
 import type { EditUserModalProps, EditUserPayload } from "../types/usersComponents";
+import { useUserRoles } from "../hooks/useRoles";
 
 
 
@@ -11,6 +12,13 @@ export function EditUserModal({
   onSubmit,
   isLoading = false,
 }: EditUserModalProps) {
+
+  const { roles , error } = useUserRoles();
+
+
+  const selectedRoleId =
+  roles.find((r) => r.name === user?.roles?.[0])?.id ?? "";
+  
   const {
     register,
     handleSubmit,
@@ -34,7 +42,7 @@ export function EditUserModal({
       last_name: user.last_name ?? "",
       email: user.email ?? "",
       number: user.number ?? "",
-      role: user.roles?.[0] ?? "",
+      role: selectedRoleId ,
     });
   }, [user, reset]);
 
@@ -125,10 +133,15 @@ export function EditUserModal({
               {...register("role", {
                 required: "Role is required",
               })}
+              className=" border  p-1.5 rounded-md w-full focus:ring-primary focus:border-primary"
             >
               <option value="">Select a role</option>
-              <option value="admin">Administrator</option>
-              <option value="technician">Technician</option>
+              {roles.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.name}
+                </option>
+              ))}
+              
             </select>
             {errors.role && (
               <p className="mt-1 text-sm text-red-500">
