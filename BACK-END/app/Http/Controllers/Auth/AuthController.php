@@ -36,7 +36,7 @@ class AuthController extends Controller
             ])->cookie(
                     'refresh_token', // name
                     $refresh_token, // value
-                    $expires_in, // expiration in minutes 
+                    10080, // expiration in minutes  // 7 days
                     '/api/refresh', // path
                     null, // domain
                     false, // secure
@@ -86,7 +86,7 @@ class AuthController extends Controller
             ])->cookie(
                     'refresh_token', // name
                     $refresh_token, // value
-                    $expires_in, // expiration in minutes 
+                    10080 , // expiration in minutes 
                     '/api/refresh', // path
                     null, // domain
                     false, // secure
