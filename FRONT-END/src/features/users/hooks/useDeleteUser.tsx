@@ -1,31 +1,29 @@
 import { useApi } from "@/shared/hooks/useApi";
-import type { EditUserModalProps, EditUserPayload } from "../types/usersComponents";
 import { useState } from "react";
 
 
 
-export function useEdit() {
+export function useDeleteUser() {
     const { callApi } = useApi();
     const [ error, setError ] = useState<string | null>(null);
 
-    async function editUserCall(userId: number, data: EditUserPayload) {
+    async function deleteUserCall(userId: number) {
         
         try {
             const response = await callApi(`admin/users/${userId}`, {
-                method: "PUT",
-                body: data,
+                method: "DELETE",
             });
             return response;
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
             } else {
-                setError("Failed to update user");
+                setError("Failed to delete user");
             }
         }
 
     }
 
-    return { editUserCall, error };
+    return { deleteUserCall , error };
     
 }

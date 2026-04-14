@@ -1,22 +1,29 @@
 import { useState } from "react";
 import { DeleteUserDialog } from "@/features/users/components/DeleteUserDialog";
 import { EditUserModal } from "@/features/users/components/EditUserModal";
+import { AddUserModal } from "@/features/users/components/AddUserModal";
 import { UsersPagination } from "@/features/users/components/UsersPagination";
 import { UsersTable } from "@/features/users/components/UsersTable";
 import usePaginateUser from "@/features/users/hooks/usePaginateUser";
-import type { EditUserPayload } from "@/features/users/types/usersComponents";
+import type { AddUserPayload, EditUserPayload } from "@/features/users/types/usersComponents";
 import type { User } from "@/features/auth/types/auth.type";
-import { useEdit } from "@/features/users/hooks/useEdit";
-import { useDelete } from "@/features/users/hooks/useDelete";
+import { useEditUser } from "@/features/users/hooks/useEditUser";
+import { useDeleteUser } from "@/features/users/hooks/useDeleteUser";
+import { useCreateUser } from "@/features/users/hooks/useCreateUser";
+
 
 export default function UsersManagement() {
   const { paginate, isLoading, currentPage, setPage, error , updateUserInList, removeUserFromList } = usePaginateUser();
 
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
 
-  const { editUserCall , error: editError } = useEdit();
-  const { deleteUserCall, error: deleteError } = useDelete();
+  const { editUserCall , error: editError } = useEditUser();
+  const { deleteUserCall } = useDeleteUser();
+  const { createUserCall } = useCreateUser();
+
 
 
   const users =  paginate?.data ?? [];
@@ -36,6 +43,26 @@ export default function UsersManagement() {
 
   function handleCloseDelete() {
     setDeleteUser(null);
+  }
+
+  function handleOpenAdd() {
+    setIsAddModalOpen(true);
+  }
+
+  function handleCloseAdd() {
+    setIsAddModalOpen(false);
+  }
+
+  async function handleAddSubmit(payload: AddUserPayload) {
+    setIsCreatingUser(true);
+    try {
+      const response = await createUserCall(payload);
+      console.log("Create user response", response);
+      handleCloseAdd();
+    } finally {
+      setIsCreatingUser(false);
+    }
+
   }
 
   async function handleEditSubmit(payload: EditUserPayload) {
@@ -70,7 +97,11 @@ export default function UsersManagement() {
           <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">User Management</h1>
           <p className="text-sm text-gray-500 mt-1.5">Configure user access levels and system permissions.</p>
         </div>
-        <button className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#2d7373] transition-colors shadow-sm" type="button">
+        <button
+          className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#2d7373] transition-colors shadow-sm"
+          type="button"
+          onClick={handleOpenAdd}
+        >
           <span className="material-symbols-outlined text-[18px]">person_add</span>
           Add New User
         </button>
@@ -124,6 +155,13 @@ export default function UsersManagement() {
         user={deleteUser}
         onClose={handleCloseDelete}
         onConfirm={handleDeleteConfirm}
+      />
+
+      <AddUserModal
+        isOpen={isAddModalOpen}
+        onClose={handleCloseAdd}
+        onSubmit={handleAddSubmit}
+        isLoading={isCreatingUser}
       />
     </div>
   );

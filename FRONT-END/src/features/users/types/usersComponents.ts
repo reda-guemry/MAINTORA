@@ -12,6 +12,16 @@ export type EditUserPayload = {
   role: number | string ;
 };
 
+export type AddUserPayload = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  role: number | string;
+  password: string;
+  password_confirmation: string;
+};
+
 export type DeleteUserDialogProps = {
   user: User | null;
   onClose: () => void;
@@ -39,6 +49,13 @@ export type EditUserModalProps = {
   onSubmit: (payload: EditUserPayload) => void;
   isLoading?: boolean;
   editError?: string | null;
+};
+
+export type AddUserModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (payload: AddUserPayload) => void;
+  isLoading?: boolean;
 };
 
 export type RoleOption = {

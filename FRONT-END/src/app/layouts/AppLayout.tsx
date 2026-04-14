@@ -1,8 +1,12 @@
+import { useAuth } from "@/context/useAuth";
 import { MaintoraLogo } from "@/shared/components/ui";
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 
 function AppLayout() {
+
+  const { user } = useAuth();
+
   return (
     <div className="flex h-screen bg-[#F7F6F2] font-sans text-slate-800 overflow-hidden">
       
@@ -54,8 +58,8 @@ function AppLayout() {
               <span className="material-symbols-outlined text-[18px]">person</span>
             </div>
             <div>
-              <p className="text-[13px] font-bold text-gray-800">Alex Foreman</p>
-              <p className="text-[11px] text-gray-400 font-medium">Chief Engineer</p>
+              <p className="text-[13px] font-bold text-gray-800">{user?.first_name} {user?.last_name}</p>
+              <p className="text-[11px] text-gray-400 font-medium">{user?.roles[0].name}</p>
             </div>
           </div>
         </div>
@@ -76,10 +80,6 @@ function AppLayout() {
             <button className="text-gray-400 hover:text-[#398e8e] transition-colors relative">
               <span className="material-symbols-outlined text-[22px]">notifications</span>
               <span className="absolute top-0 right-0.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#F7F6F2]"></span>
-            </button>
-            <button className="flex items-center gap-2 bg-[#398e8e] text-white px-4 py-2.5 rounded-lg text-[13px] font-semibold hover:bg-[#2d7373] transition-colors">
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              Export PDF
             </button>
           </div>
         </header>
