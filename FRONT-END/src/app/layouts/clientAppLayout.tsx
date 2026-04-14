@@ -1,6 +1,11 @@
 import { Outlet } from "react-router-dom";
+import { useLogout } from "@/features/auth/";
 
 function ClientAppLayout() {
+
+  const { logout } = useLogout() ;
+
+
   return (
     <div className="font-display bg-[#F8F6F0] text-slate-900 min-h-screen flex flex-col overflow-hidden">
       {/* Top Navigation Bar */}
