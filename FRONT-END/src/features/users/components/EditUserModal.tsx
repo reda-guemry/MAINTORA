@@ -28,7 +28,7 @@ export function EditUserModal({
       first_name: "",
       last_name: "",
       email: "",
-      number: "",
+      phone: "",
       role: "",
     },
   });
@@ -40,7 +40,7 @@ export function EditUserModal({
       first_name: user.first_name ?? "",
       last_name: user.last_name ?? "",
       email: user.email ?? "",
-      number: user.number ?? "",
+      phone: user.phone ?? "",
       role: user.roles?.[0]?.id ?? "",
     });
   }, [user, reset]);
@@ -112,16 +112,16 @@ export function EditUserModal({
             )}
           </FormField>
 
-          <FormField label="Number" htmlFor="number" required>
+          <FormField label="Phone" htmlFor="phone" required>
             <Input
-              id="number"
-              {...register("number", {
-                required: "Number is required",
+              id="phone"
+              {...register("phone", {
+                required: "Phone is required",
               })}
             />
-            {errors.number && (
+            {errors.phone && (
               <p className="mt-1 text-sm text-red-500">
-                {errors.number.message}
+                {errors.phone.message}
               </p>
             )}
           </FormField>

@@ -13,10 +13,10 @@ function RoleGuard({ allowedRoles }: RoleGuardProps) {
     return <Navigate to="/login" replace />;
   }
 
-  const hasAccess = user.roles.some((role) => allowedRoles.includes(role));
+  const hasAccess = user.roles.some((role) => allowedRoles.includes(role.name));
 
   if (!hasAccess) {
-    return <Navigate to={getDefaultRouteByRole(user.roles)} replace />;
+    return <Navigate to={getDefaultRouteByRole(user.roles.map((role) => role.name))} replace />;
   }
 
   return <Outlet />;

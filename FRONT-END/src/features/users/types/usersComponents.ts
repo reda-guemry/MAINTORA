@@ -8,7 +8,7 @@ export type EditUserPayload = {
   first_name: string;
   last_name: string;
   email: string;
-  number: string;
+  phone: string;
   role: number | string ;
 };
 

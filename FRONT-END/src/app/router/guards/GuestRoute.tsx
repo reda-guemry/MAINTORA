@@ -10,7 +10,7 @@ export function GuestRoute() {
   }
 
   if (authStatus === "authenticated" && user) {
-    return <Navigate to={getDefaultRouteByRole(user.roles)} replace />;
+    return <Navigate to={getDefaultRouteByRole(user.roles.map((role) => role.name))} replace />;
   }
 
   console.log("GuestRoute authStatus:", authStatus);

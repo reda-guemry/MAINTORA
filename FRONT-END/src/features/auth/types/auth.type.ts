@@ -13,7 +13,7 @@ export interface User {
     last_name: string;
     email: string;
     roles: role[];
-    number: string;
+    phone: string;
 }
 
 export interface LoginRequest {

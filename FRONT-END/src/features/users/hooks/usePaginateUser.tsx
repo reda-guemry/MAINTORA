@@ -21,7 +21,9 @@ function usePaginateUser() {
           method: "GET",
         });
 
+        console.log(response);
         setPaginate(response.data);
+
       } catch (err) {
         const message = err instanceof Error ? err.message : "Failed to load users";
         setError(message);
