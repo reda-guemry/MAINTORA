@@ -67,4 +67,10 @@ class AuthTokenService
 
     }
 
+    public function revokeToken($tokenHash)
+    {
+        $this->refreshTokenRepository->revokeCurrentToken($tokenHash);
+    }
+
+
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Requests\LoginRequest;
 use App\Services\Auth\AuthService;
+use App\Services\Auth\AuthTokenService;
 use Exception;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -14,6 +15,8 @@ class AuthController extends Controller
 
     public function __construct(
         private AuthService $authService,
+        private AuthTokenService $authTokenService ,
+
     ) {
     }
 
@@ -109,5 +112,37 @@ class AuthController extends Controller
 
     }
 
+    public function logout(Request $request)
+    {
+        try {
+            $this->authTokenService->revokeToken($request->cookie('refresh_token'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Logout successful',
+            ])->cookie(
+                    'refresh_token', // name
+                    '', // value
+                    -1, // expiration in minutes (delete cookie)
+                    '/api/refresh', // path
+                    null, // domain
+                    false, // secure
+                    true, // httpOnly
+                    false, // raw
+                    'Strict' // sameSite
+                );
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Invalid refresh token',
+                'message' => $e->getMessage()
+            ], 401);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'Logout failed',
+                'message' => $e->getMessage()
+            ], $e->getCode() ?: 401);
+        }
+    }
 
 }

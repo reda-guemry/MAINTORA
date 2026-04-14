@@ -28,9 +28,9 @@ class RefreshTokenRepository
         return RefreshToken::where('token_hash', hash('sha256', $token))->firstOrFail() ; 
     }
 
-    public function invalidate($tokenHash)
+    public function revokeCurrentToken($tokenHash)
     {
-        $token = RefreshToken::where('token_hash', $tokenHash)->first();
+        $token = RefreshToken::where('token_hash', hash('sha256', $tokenHash))->first();
         if ($token) {
             $token->revoke();
         }   
@@ -40,5 +40,6 @@ class RefreshTokenRepository
     {
         RefreshToken::where('user_id', $userId)->revoke();
     }
+
 
 }
