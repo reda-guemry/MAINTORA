@@ -10,7 +10,7 @@ import { useEdit } from "@/features/users/hooks/useEdit";
 import { useDelete } from "@/features/users/hooks/useDelete";
 
 export default function UsersManagement() {
-  const { paginate, isLoading, currentPage, setPage, error } = usePaginateUser();
+  const { paginate, isLoading, currentPage, setPage, error , updateUserInList, removeUserFromList } = usePaginateUser();
 
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
@@ -19,7 +19,8 @@ export default function UsersManagement() {
   const { deleteUserCall, error: deleteError } = useDelete();
 
 
-  const users = paginate?.data ?? [];
+  const users =  paginate?.data ?? [];
+  console.log(paginate);
 
   function handleOpenEdit(user: User) {
     setEditUser(user);
@@ -37,19 +38,29 @@ export default function UsersManagement() {
     setDeleteUser(null);
   }
 
-  function handleEditSubmit(payload: EditUserPayload) {
+  async function handleEditSubmit(payload: EditUserPayload) {
     if (!editUser) return;
 
-    editUserCall(editUser.id, payload);
+    const ok = await editUserCall(editUser.id, payload);
     
-    handleCloseEdit();
+
+    if (ok) {
+      updateUserInList({ ...editUser, ...payload });
+      handleCloseEdit();
+    }
+
   }
 
-  function handleDeleteConfirm() {
+  async function handleDeleteConfirm() {
     if (!deleteUser) return;
 
-    deleteUserCall(deleteUser.id);
-    handleCloseDelete();
+    const ok = await  deleteUserCall(deleteUser.id);
+    
+    if (ok) {
+      removeUserFromList(deleteUser.id);
+      handleCloseDelete();
+    }
+
   }
 
   return (

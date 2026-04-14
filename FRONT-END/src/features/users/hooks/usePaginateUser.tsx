@@ -1,6 +1,7 @@
 import { useApi } from "@/shared/hooks/useApi";
 import { useEffect, useState } from "react";
 import type { PaginateUserResponse } from "../types/paginateUser";
+import type { User } from "@/features/auth/types/auth.type";
 
 function usePaginateUser() {
 
@@ -21,7 +22,7 @@ function usePaginateUser() {
           method: "GET",
         });
 
-        console.log(response);
+        
         setPaginate(response.data);
 
       } catch (err) {
@@ -35,6 +36,7 @@ function usePaginateUser() {
     fetchUsers();
   }, [currentPage]);
 
+
   function setPage(page: number) {
     if (!paginate) {
       setCurrentPage(page);
@@ -45,7 +47,31 @@ function usePaginateUser() {
     setCurrentPage(boundedPage);
   }
 
-  return { paginate, isLoading, currentPage, setPage, error };
+  function updateUserInList(updatedUser: User) {
+    setPaginate((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        data: prev.data.map((user) =>
+          user.id === updatedUser.id ? updatedUser : user
+        ),
+      };
+    });
+  }
+
+  function removeUserFromList(userId: number) {
+    setPaginate((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        data: prev.data.filter((user) => user.id !== userId),
+      };
+    });
+  }
+
+  return { paginate, isLoading, currentPage, setPage, error , updateUserInList, removeUserFromList };
 
 }
 
