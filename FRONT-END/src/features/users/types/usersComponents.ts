@@ -38,6 +38,7 @@ export type EditUserModalProps = {
   onClose: () => void;
   onSubmit: (payload: EditUserPayload) => void;
   isLoading?: boolean;
+  editError?: string | null;
 };
 
 export type RoleOption = {

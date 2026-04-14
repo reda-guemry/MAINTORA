@@ -11,7 +11,8 @@ class AuthTokenService
 {
     public function __construct(
         private RefreshTokenRepository $refreshTokenRepository,
-    ){}
+    ) {
+    }
 
     public function issueToken($user)
     {
@@ -24,7 +25,7 @@ class AuthTokenService
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken['refresh_token'],
             'expires_in' => auth()->guard('api')->factory()->getTTL(),
-        ] ;
+        ];
     }
 
     private function generateRefreshToken()
@@ -36,15 +37,15 @@ class AuthTokenService
         return [
             'refresh_token' => $tokenString,
             'refresh_token_hash' => $tokenHash,
-        ] ; 
+        ];
     }
 
-    
 
-    public function refreshToken($token )
+
+    public function refreshToken($token)
     {
         $refreshTokenRecord = $this->refreshTokenRepository->findByToken($token);
-        
+
         if (!$refreshTokenRecord->isUsable()) {
 
             if (is_null($refreshTokenRecord->revoked_at)) {
@@ -55,11 +56,15 @@ class AuthTokenService
 
         $refreshTokenRecord->update([
             'last_used_at' => now(),
-        ]) ; 
-        
-        $user = $refreshTokenRecord->user;
+        ]);
 
-        return array_merge($this->issueToken($refreshTokenRecord->user), ['user' => UserResource::make($user)]) ;
+        $user = $refreshTokenRecord->user->load('roles');
+
+        return array_merge(
+            $this->issueToken($refreshTokenRecord->user),
+            ['user' => UserResource::make($user)]
+        );
+
     }
 
 }

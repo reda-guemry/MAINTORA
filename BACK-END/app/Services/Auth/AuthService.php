@@ -23,7 +23,7 @@ class AuthService
             throw new Exception('Invalid credentials', 401);
         }
 
-        $user = Auth::guard('api')->user();
+        $user = Auth::guard('api')->user()->load('roles');
 
         $refresh_token = $this->tokenService->issueToken($user);
 

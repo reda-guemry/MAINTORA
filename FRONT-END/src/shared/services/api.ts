@@ -11,6 +11,7 @@ function buildHeaders(
     return {
         ...(hasBody ? { "Content-Type": "application/json" } : {}),
         ...headers,
+        "Accept": "application/json",
     };
 }
 
@@ -33,7 +34,8 @@ export async function api<T>(
     const {
         method = "GET",
         body,
-        headers = {},
+        headers = {
+        },
         signal,
     } = options;
 
@@ -41,7 +43,7 @@ export async function api<T>(
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method , 
         credentials : "include" , 
-        headers : buildHeaders(headers , !!body) ,
+        headers : buildHeaders(headers , !!body, ) ,
         body : body ? JSON.stringify(body) : undefined ,
         signal , 
     } )

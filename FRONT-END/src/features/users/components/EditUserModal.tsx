@@ -11,13 +11,12 @@ export function EditUserModal({
   onClose,
   onSubmit,
   isLoading = false,
+  editError = null,
 }: EditUserModalProps) {
 
   const { roles , error } = useUserRoles();
 
 
-  const selectedRoleId =
-  roles.find((r) => r.name === user?.roles?.[0])?.id ?? "";
   
   const {
     register,
@@ -42,7 +41,7 @@ export function EditUserModal({
       last_name: user.last_name ?? "",
       email: user.email ?? "",
       number: user.number ?? "",
-      role: selectedRoleId ,
+      role: user.roles?.[0]?.id ?? "",
     });
   }, [user, reset]);
 
@@ -159,6 +158,13 @@ export function EditUserModal({
               {isLoading ? "Saving..." : "Save Changes"}
             </Button>
           </div>
+
+          {editError && (
+            <p className="mt-4 text-center text-sm text-red-500">
+              {editError}
+            </p>
+          )}
+
         </form>
       </div>
     </div>

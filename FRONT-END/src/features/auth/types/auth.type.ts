@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
 
 
+type role = {
+    id: number;
+    name: string;
+} 
 
 
 export interface User {
@@ -8,7 +12,7 @@ export interface User {
     first_name: string;
     last_name: string;
     email: string;
-    roles: string[];
+    roles: role[];
     number: string;
 }
 
@@ -37,7 +41,7 @@ export type RefreshTokenResponse = {
 
 
 export type onSuccess = {
-    onSuccess: (roles: string[]) => void;
+    onSuccess: (roles: User["roles"]) => void;
 }
 
 

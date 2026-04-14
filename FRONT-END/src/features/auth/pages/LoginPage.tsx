@@ -2,6 +2,7 @@ import { MaintoraLogo } from "@/shared/components/ui";
 import { LoginForm } from "../components/LoginForm";
 import { useNavigate } from "react-router-dom";
 import { getDefaultRouteByRole } from "../utils/getDefaultRouteByRole";
+import type { User } from "../types/auth.type";
 // import { useAuth } from "@/context/useAuth";
 
 export function LoginPage() {
@@ -12,8 +13,8 @@ export function LoginPage() {
 
   const navigate = useNavigate();
 
-  function handleLoginSuccess(roles: string[]) {
-    const defaultRoute = getDefaultRouteByRole(roles);
+  function handleLoginSuccess(roles: User["roles"] ) {
+    const defaultRoute = getDefaultRouteByRole(roles.map(role => role.name));
     navigate(defaultRoute);
     
   }

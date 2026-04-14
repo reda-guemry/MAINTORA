@@ -6,12 +6,16 @@ import { UsersTable } from "@/features/users/components/UsersTable";
 import usePaginateUser from "@/features/users/hooks/usePaginateUser";
 import type { EditUserPayload } from "@/features/users/types/usersComponents";
 import type { User } from "@/features/auth/types/auth.type";
+import { useEdit } from "@/features/users/hooks/useEdit";
 
 export default function UsersManagement() {
   const { paginate, isLoading, currentPage, setPage, error } = usePaginateUser();
 
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
+
+  const { editUserCall , error: editError } = useEdit();
+
 
   const users = paginate?.data ?? [];
 
@@ -31,7 +35,13 @@ export default function UsersManagement() {
     setDeleteUser(null);
   }
 
-  function handleEditSubmit(_payload: EditUserPayload) {
+  function handleEditSubmit(payload: EditUserPayload) {
+    if (!editUser) return;
+
+    // console.log("Submitting edit for user ID:", editUser.id, "with payload:", payload);
+
+    editUserCall(editUser.id, payload);
+
     handleCloseEdit();
   }
 
@@ -93,6 +103,7 @@ export default function UsersManagement() {
         user={editUser}
         onClose={handleCloseEdit}
         onSubmit={handleEditSubmit}
+        editError={editError}
       />
 
       <DeleteUserDialog

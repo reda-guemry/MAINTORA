@@ -3,7 +3,7 @@ import type { UserTableRowProps } from "../types/usersComponents";
 
 export function UserTableRow({ user, onEdit, onDelete }: UserTableRowProps) {
   const initials = `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase();
-  const primaryRole = user.roles[0] ?? "No role";
+  const primaryRole = user.roles?.[0]?.name ?? "No role";
 
   return (
     <tr className="hover:bg-gray-50/50 transition-colors">
