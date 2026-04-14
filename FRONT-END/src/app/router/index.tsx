@@ -1,9 +1,10 @@
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { createBrowserRouter } from "react-router-dom";
-import AppLayout from "../layouts/AppLayout";
 import { adminRoutes } from "@/modules/admin/route";
 import { ProtectedRoute } from "./guards/ProtectedRoute";
 import { GuestRoute } from "./guards/GuestRoute";
+import AdminAppLayout from "../layouts/adminAppLayout";
+import ClientAppLayout from "../layouts/clientAppLayout";
 
 export const router = createBrowserRouter([
   {
@@ -24,9 +25,15 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/admin",
-        element: <AppLayout />,
+        element: <AdminAppLayout />,
         children: [...adminRoutes],
       },
+      {
+        path: "/client" , 
+        element: <ClientAppLayout /> ,
+        children: [...adminRoutes] ,
+      } , 
+      
     ],
   },
 ]);

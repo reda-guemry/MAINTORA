@@ -1,9 +1,8 @@
 import { useAuth } from "@/context/useAuth";
 import { MaintoraLogo } from "@/shared/components/ui";
-import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 
-function AppLayout() {
+function AdminAppLayout() {
 
   const { user } = useAuth();
 
@@ -96,4 +95,4 @@ function AppLayout() {
   );
 }
 
-export default AppLayout;
+export default AdminAppLayout;
