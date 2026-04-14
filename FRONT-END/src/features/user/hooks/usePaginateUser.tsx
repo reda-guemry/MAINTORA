@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { PaginateUserResponse } from "../types/paginateUser";
 import type { User } from "@/features/auth/types/auth.type";
 
-function usePaginateUser() {
+export function usePaginateUser() {
 
     const [ paginate, setPaginate ] = useState<PaginateUserResponse['data'] | null>(null);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
@@ -87,5 +87,5 @@ function usePaginateUser() {
 }
 
 
-export default usePaginateUser;
+usePaginateUser;
 

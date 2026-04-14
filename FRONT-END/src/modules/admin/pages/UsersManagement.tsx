@@ -1,32 +1,41 @@
 import { useState } from "react";
-import { DeleteUserDialog } from "@/features/users/components/DeleteUserDialog";
-import { EditUserModal } from "@/features/users/components/EditUserModal";
-import { AddUserModal } from "@/features/users/components/AddUserModal";
-import { UsersPagination } from "@/features/users/components/UsersPagination";
-import { UsersTable } from "@/features/users/components/UsersTable";
-import usePaginateUser from "@/features/users/hooks/usePaginateUser";
-import type { AddUserPayload, EditUserPayload } from "@/features/users/types/usersComponents";
-import type { User } from "@/features/auth/types/auth.type";
-import { useEditUser } from "@/features/users/hooks/useEditUser";
-import { useDeleteUser } from "@/features/users/hooks/useDeleteUser";
-import { useCreateUser } from "@/features/users/hooks/useCreateUser";
+import type { User } from "@/features/auth";
+import {
+  AddUserModal,
+  DeleteUserDialog,
+  EditUserModal,
+  useCreateUser,
+  useDeleteUser,
+  useEditUser,
+  usePaginateUser,
+  UsersPagination,
+  UsersTable,
+} from "@/features/user";
 
+import type { AddUserPayload, EditUserPayload } from "@/features/user";
 
 export default function UsersManagement() {
-  const { paginate, isLoading, currentPage, setPage, error , updateUserInList, removeUserFromList , addUserToList } = usePaginateUser();
+  const {
+    paginate,
+    isLoading,
+    currentPage,
+    setPage,
+    error,
+    updateUserInList,
+    removeUserFromList,
+    addUserToList,
+  } = usePaginateUser();
 
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCreatingUser, setIsCreatingUser] = useState(false);
 
-  const { editUserCall , error: editError } = useEditUser();
+  const { editUserCall, error: editError } = useEditUser();
   const { deleteUserCall } = useDeleteUser();
   const { createUserCall } = useCreateUser();
 
-
-
-  const users =  paginate?.data ?? [];
+  const users = paginate?.data ?? [];
   console.log(paginate);
 
   function handleOpenEdit(user: User) {
@@ -65,69 +74,89 @@ export default function UsersManagement() {
     } finally {
       setIsCreatingUser(false);
     }
-
   }
 
   async function handleEditSubmit(payload: EditUserPayload) {
     if (!editUser) return;
 
     const ok = await editUserCall(editUser.id, payload);
-    
 
     if (ok) {
       updateUserInList({ ...editUser, ...payload });
       handleCloseEdit();
     }
-
   }
 
   async function handleDeleteConfirm() {
     if (!deleteUser) return;
 
-    const ok = await  deleteUserCall(deleteUser.id);
-    
+    const ok = await deleteUserCall(deleteUser.id);
+
     if (ok) {
       removeUserFromList(deleteUser.id);
       handleCloseDelete();
     }
-
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-end mb-8">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">User Management</h1>
-          <p className="text-sm text-gray-500 mt-1.5">Configure user access levels and system permissions.</p>
+          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+            User Management
+          </h1>
+          <p className="text-sm text-gray-500 mt-1.5">
+            Configure user access levels and system permissions.
+          </p>
         </div>
         <button
           className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#2d7373] transition-colors shadow-sm"
           type="button"
           onClick={handleOpenAdd}
         >
-          <span className="material-symbols-outlined text-[18px]">person_add</span>
+          <span className="material-symbols-outlined text-[18px]">
+            person_add
+          </span>
           Add New User
         </button>
       </div>
 
       <div className="border-b border-gray-200">
         <nav className="flex gap-8 text-sm font-medium">
-          <a href="#" className="text-primary border-b-2 border-primary pb-4 px-1">
+          <a
+            href="#"
+            className="text-primary border-b-2 border-primary pb-4 px-1"
+          >
             All Members ( {users.length} )
           </a>
-          <a href="#" className="text-gray-500 hover:text-gray-700 pb-4 px-1 transition-colors">
+          <a
+            href="#"
+            className="text-gray-500 hover:text-gray-700 pb-4 px-1 transition-colors"
+          >
             Administrators
           </a>
-          <a href="#" className="text-gray-500 hover:text-gray-700 pb-4 px-1 transition-colors">
+          <a
+            href="#"
+            className="text-gray-500 hover:text-gray-700 pb-4 px-1 transition-colors"
+          >
             Technicians
           </a>
-          <a href="#" className="text-gray-500 hover:text-gray-700 pb-4 px-1 transition-colors">
+          <a
+            href="#"
+            className="text-gray-500 hover:text-gray-700 pb-4 px-1 transition-colors"
+          >
             Pending Invites
           </a>
         </nav>
       </div>
 
-      <UsersTable users={users} isLoading={isLoading} error={error} onEdit={handleOpenEdit} onDelete={handleOpenDelete}>
+      <UsersTable
+        users={users}
+        isLoading={isLoading}
+        error={error}
+        onEdit={handleOpenEdit}
+        onDelete={handleOpenDelete}
+      >
         <UsersPagination
           currentPage={currentPage}
           lastPage={paginate?.last_page ?? 1}
