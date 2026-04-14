@@ -13,7 +13,7 @@ import { useCreateUser } from "@/features/users/hooks/useCreateUser";
 
 
 export default function UsersManagement() {
-  const { paginate, isLoading, currentPage, setPage, error , updateUserInList, removeUserFromList } = usePaginateUser();
+  const { paginate, isLoading, currentPage, setPage, error , updateUserInList, removeUserFromList , addUserToList } = usePaginateUser();
 
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
@@ -57,7 +57,10 @@ export default function UsersManagement() {
     setIsCreatingUser(true);
     try {
       const response = await createUserCall(payload);
-      console.log("Create user response", response);
+      if (response) {
+        addUserToList(response.data);
+      }
+
       handleCloseAdd();
     } finally {
       setIsCreatingUser(false);

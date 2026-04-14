@@ -25,7 +25,7 @@ class UserService
     {
 
 
-        DB::transaction(function () use ($data ) {
+        return DB::transaction(function () use ($data ) {
             if (isset($data['role'])) {
                 $role = $data['role'];
                 unset($data['role']);

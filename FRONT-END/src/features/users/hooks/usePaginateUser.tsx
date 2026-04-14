@@ -71,7 +71,18 @@ function usePaginateUser() {
     });
   }
 
-  return { paginate, isLoading, currentPage, setPage, error , updateUserInList, removeUserFromList };
+  function addUserToList(newUser: User) {
+    setPaginate((prev) => {
+      if (!prev) return prev;
+      
+      return {
+        ...prev,
+        data: [newUser, ...prev.data],
+      };
+    });
+  }
+
+  return { paginate, isLoading, currentPage, setPage, error , updateUserInList, removeUserFromList, addUserToList };
 
 }
 

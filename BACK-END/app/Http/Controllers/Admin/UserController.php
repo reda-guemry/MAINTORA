@@ -39,10 +39,11 @@ class UserController extends Controller
     public function store(CreatUserRequest $request)
     {
         try {
-            $this->userService->create($request->validated());
+            $user = $this->userService->create($request->validated());
             return response()->json([
                 'success' => true,
                 'message' => 'User created successfully',
+                'data' => new UserResource($user),
             ], 201);
         } catch (Exception $e) {
             return response()->json([
