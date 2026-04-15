@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./app/styles/theme.css";
+@import "maplibre-gl/dist/maplibre-gl.css";
 
 .grid-bg {
     background-image: radial-gradient(circle, #d5e1e1 1px, transparent 1px);

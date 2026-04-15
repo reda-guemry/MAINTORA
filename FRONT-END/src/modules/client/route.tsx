@@ -1,9 +1,9 @@
 import RoleGuard from "@/app/router/guards/RoleGuard";
-import Dashboard from "../admin/pages/Dashboard";
+import Dashboard from "../client/pages/Dashboard";
 
 export const clientRoutes = [
   {
-    element: <RoleGuard allowedRoles={["admin"]} />,
+    element: <RoleGuard allowedRoles={["client"]} />,
     children: [
       {
         index: true,

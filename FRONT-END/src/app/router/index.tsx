@@ -5,6 +5,7 @@ import { ProtectedRoute } from "./guards/ProtectedRoute";
 import { GuestRoute } from "./guards/GuestRoute";
 import AdminAppLayout from "../layouts/adminAppLayout";
 import ClientAppLayout from "../layouts/clientAppLayout";
+import { clientRoutes } from "@/modules/client/route";
 
 export const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ export const router = createBrowserRouter([
       {
         path: "/client" , 
         element: <ClientAppLayout /> ,
-        children: [...adminRoutes] ,
+        children: [...clientRoutes] ,
       } , 
       
     ],

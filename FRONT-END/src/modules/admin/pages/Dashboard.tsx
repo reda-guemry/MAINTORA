@@ -1,13 +1,13 @@
 
 function Dashboard() {
+
+  console.log("Rendering Dashboard...");
   
   return (
     <div className="space-y-6">
       
-      {/* KPI Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
-        {/* Card 1 */}
         <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#eaf3f3] text-[#398e8e]">
@@ -84,13 +84,13 @@ function Dashboard() {
             <button className="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-[11px] font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors">
               EXPORT PDF
             </button>
-            <button className="px-4 py-2 bg-[#398e8e] text-white rounded-lg text-[11px] font-bold uppercase tracking-wider hover:bg-[#2d7373] transition-colors">
+            <button className="px-4 py-2 bg-primary text-white rounded-lg text-[11px] font-bold uppercase tracking-wider hover:bg-[#2d7373] transition-colors">
               FILTER VIEW
             </button>
           </div>
         </div>
 
-        <div className="relative h-[220px] w-full">
+        <div className="relative h-55 w-full">
           <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1000 250">
             <defs>
               <linearGradient id="curveGradient" x1="0" x2="0" y1="0" y2="1">

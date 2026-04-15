@@ -18,7 +18,7 @@ export async function refreshAccessToken(): Promise<RefreshTokenResponse> {
 }
 
 
-export async function logout(): Promise<void> {
+export async function logoutService(): Promise<void> {
   return api<void>("logout", {
     method: "POST",
   });

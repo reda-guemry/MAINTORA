@@ -58,6 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => {
       cancelled = true;
     };
+    
   }, []);
 
   const value = useMemo(

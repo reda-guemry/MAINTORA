@@ -1,4 +1,5 @@
 import { useAuth } from "@/context/useAuth";
+import { logoutService } from "../services/auth";
 
 export function useLogout() {
     
@@ -6,7 +7,9 @@ export function useLogout() {
 
     async function logout() {
         try {
-            await logout();
+            await logoutService();
+
+            // console.log("Logout response:", reponse);
             clearAuth() ;
 
         }catch (error) {
