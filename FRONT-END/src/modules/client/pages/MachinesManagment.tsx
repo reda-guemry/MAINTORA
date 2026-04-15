@@ -10,6 +10,7 @@ import {
   type MachineStatus,
 } from "@/features/machines";
 import { Button, Input } from "@/shared/components/ui";
+import { usePaginateMachines } from "@/features/machines/hooks/usePaginateMachines";
 
 const initialMachines: Machine[] = [
   {
@@ -68,6 +69,8 @@ export default function MachinesManagement() {
 
     return matchesSearch && matchesStatus;
   });
+
+  const { paginate, isLoading, currentPage, setPage, error } = usePaginateMachines();
 
   function handleOpenAdd() {
     setIsAddModalOpen(true);

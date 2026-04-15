@@ -32,7 +32,7 @@ function ClientAppLayout() {
           {/* Nav Menu */}
           <nav className="px-4 mt-2 space-y-1">
             <NavLink
-              to="/admin"
+              to="/client"
               end
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-semibold transition-colors`
@@ -45,7 +45,7 @@ function ClientAppLayout() {
             </NavLink>
 
             <NavLink
-              to="/admin/users"
+              to="/client/users"
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-semibold transition-colors`
               }
@@ -57,7 +57,7 @@ function ClientAppLayout() {
             </NavLink>
 
             <NavLink
-              to="/admin/machines"
+              to="/client/machines"
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-medium transition-colors`
               }

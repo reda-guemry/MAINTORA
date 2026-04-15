@@ -62,3 +62,20 @@ export type MachinesPaginationProps = {
   onPrevious: () => void;
   onNext: () => void;
 };
+
+export type PaginateMachineResponse = {
+  data: {
+    data: Machine[];
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number | null;
+    to: number | null;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+  };
+  success: boolean;
+  message: string;
+};
+
