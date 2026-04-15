@@ -14,7 +14,7 @@ export function EditUserModal({
   editError = null,
 }: EditUserModalProps) {
 
-  const { roles , error } = useUserRoles();
+  const { roles } = useUserRoles();
 
 
   

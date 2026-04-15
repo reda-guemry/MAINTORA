@@ -1,4 +1,3 @@
-import type { User } from "@/features/auth/types/auth.type";
 import { useApi } from "@/shared/hooks/useApi";
 import { useState } from "react";
 

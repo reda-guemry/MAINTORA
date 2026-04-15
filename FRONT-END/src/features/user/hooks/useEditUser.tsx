@@ -1,5 +1,5 @@
 import { useApi } from "@/shared/hooks/useApi";
-import type { EditUserModalProps, EditUserPayload } from "../types/usersComponents";
+import type { EditUserPayload } from "../types/usersComponents";
 import { useState } from "react";
 
 
