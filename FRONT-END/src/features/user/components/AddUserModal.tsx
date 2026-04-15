@@ -33,7 +33,7 @@ export function AddUserModal({
     defaultValues,
   });
 
-  const { roles, error } = useUserRoles();
+  const { roles } = useUserRoles();
 
   useEffect(() => {
     if (!isOpen) {
