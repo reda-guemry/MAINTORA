@@ -1,5 +1,6 @@
 import RoleGuard from "@/app/router/guards/RoleGuard";
 import Dashboard from "../client/pages/Dashboard";
+import MachinesManagement from "./pages/MachinesManagment";
 
 export const clientRoutes = [
   {
@@ -9,7 +10,10 @@ export const clientRoutes = [
         index: true,
         element: <Dashboard />,
       },
-      
+      {
+        path: "machines",
+        element: <MachinesManagement />,
+      }
     ],
   },
 ];

@@ -1,10 +1,9 @@
-import { MapView } from "../components/Maplibre";
 
 function DashboardPage() {
   // console.log("Rendering DashboardPage component");
 
   return (
-    <div className="max-w-[1400px] mx-auto">
+    <div className="max-w-350 mx-auto">
       {/* Page Title Row */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
@@ -22,7 +21,7 @@ function DashboardPage() {
             </span>
             Export Report
           </button>
-          <button className="flex items-center gap-2 rounded-lg bg-[#398e8e] px-4 py-2 text-sm font-semibold text-white hover:bg-[#398e8e]/90">
+          <button className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90">
             <span className="material-symbols-outlined text-[20px]">
               refresh
             </span>
@@ -319,7 +318,6 @@ function DashboardPage() {
               </tbody>
             </table>
           </div>
-        <MapView />
         </div>
       </div>
     </div>
