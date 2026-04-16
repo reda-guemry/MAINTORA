@@ -10,7 +10,7 @@ export function MachinesTable({
   children,
 }: MachinesTableProps) {
 
-  // console.log({ machines});
+  console.log({ machines});
   return (
     <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
       <div className="overflow-x-auto">
@@ -23,9 +23,9 @@ export function MachinesTable({
               <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
                 Machine Name
               </th>
-              {/* <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
-                Last Service
-              </th> */}
+              <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+                Location
+              </th>
               <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
                 Status
               </th>
