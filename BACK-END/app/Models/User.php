@@ -61,5 +61,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Machine::class, 'created_by');
     }
 
+    public function checklistTemplates()
+    {
+        return $this->hasMany(ChecklistTemplate::class, 'created_by');
+    }
+
 
 }
