@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
+import { Button } from "@/shared/components/ui";
 
 type MapViewProps = {
-  onMapClick?: (lat: number, lng: number) => void;
+  onMapClick?: (lat: number, lng: number) => string | Promise<string>;
 };
 
 export function MapView({ onMapClick }: MapViewProps) {
@@ -56,11 +57,18 @@ export function MapView({ onMapClick }: MapViewProps) {
 
     new maplibregl.Marker().setLngLat([-6.84, 34.02]).addTo(mapRef.current);
 
-    const handleClick = (e: maplibregl.MapMouseEvent) => {
+    const handleClick = async (e: maplibregl.MapMouseEvent) => {
       const lng = e.lngLat.lng;
       const lat = e.lngLat.lat;
+      const city = await onMapClick?.(lat, lng);
 
-      onMapClick?.(lat, lng);
+      new maplibregl.Popup()
+        .setLngLat([lng, lat])
+        .setHTML(
+          `Selected Location ${city || "Unknown"}:<br/>Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`,
+        )
+        .addTo(mapRef.current!);
+
     };
 
     mapRef.current.on("click", handleClick);
@@ -80,8 +88,9 @@ export function MapView({ onMapClick }: MapViewProps) {
   }, []);
 
   return (
-    <div className="w-full h-full rounded-xl overflow-hidden border bg-gray-100 relative shadow-sm">
-      <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
-    </div>
+    
+      <div className="w-full h-full rounded-xl overflow-hidden border bg-gray-100 relative shadow-sm">
+        <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
+      </div>
   );
 }
