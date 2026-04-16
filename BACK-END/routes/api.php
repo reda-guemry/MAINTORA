@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
+use App\Http\Controllers\ChecklistTemplateController;
 use App\Http\Controllers\Client\MachineController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,12 +52,11 @@ Route::middleware(['auth:api'])->group(function () {
         /*
          * Manage users Routes
          */
-        Route::apiResource('checklist', ChecklistController::class)->middleware('can:manage technicians');
+        Route::apiResource('checklist', ChecklistTemplateController::class)->middleware('can:manage technicians');
 
     });
 
 
 });
-
-
+    
 

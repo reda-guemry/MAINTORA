@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Client;
+namespace App\Services\Machine;
 
-use App\Repositories\Client\MachineRepositoty;
+use App\Repositories\Machine\MachineRepositoty;
 
 class MachineService
 {
