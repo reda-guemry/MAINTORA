@@ -2,18 +2,22 @@ import { useEffect, useRef } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
 
-export function MapView() {
+type MapViewProps = {
+  onMapClick?: (lat: number, lng: number) => void;
+};
+
+export function MapView({ onMapClick }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
 
   useEffect(() => {
     if (!mapContainer.current || mapRef.current) return;
 
-    if (maplibregl.getRTLTextPluginStatus() === 'unavailable') {
+    if (maplibregl.getRTLTextPluginStatus() === "unavailable") {
       try {
         maplibregl.setRTLTextPlugin(
           "https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.3.0/dist/mapbox-gl-rtl-text.js",
-          true
+          true,
         );
       } catch (e) {
         console.error("RTL Plugin error:", e);
@@ -26,11 +30,11 @@ export function MapView() {
         "carto-tiles": {
           type: "raster",
           tiles: [
-            "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"
+            "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
           ],
           tileSize: 256,
-          attribution: "&copy; OpenStreetMap"
-        }
+          attribution: "&copy; OpenStreetMap",
+        },
       },
       layers: [
         {
@@ -38,23 +42,30 @@ export function MapView() {
           type: "raster",
           source: "carto-tiles",
           minzoom: 0,
-          maxzoom: 20
-        }
-      ]
+          maxzoom: 20,
+        },
+      ],
     };
 
     mapRef.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: cartoStyle, 
-      center: [-7.5898, 33.5731] ,
+      style: cartoStyle,
+      center: [-7.5898, 33.5731],
       zoom: 12,
     });
 
-    new maplibregl.Marker()
-  .setLngLat([-6.84, 34.02])
-  .addTo(mapRef.current);
+    new maplibregl.Marker().setLngLat([-6.84, 34.02]).addTo(mapRef.current);
 
-    mapRef.current.on('load', () => {
+    const handleClick = (e: maplibregl.MapMouseEvent) => {
+      const lng = e.lngLat.lng;
+      const lat = e.lngLat.lat;
+
+      onMapClick?.(lat, lng);
+    };
+
+    mapRef.current.on("click", handleClick);
+
+    mapRef.current.on("load", () => {
       mapRef.current?.resize();
     });
 
