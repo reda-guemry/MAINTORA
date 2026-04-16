@@ -75,6 +75,7 @@ export function AddMachineForm({
               {...register("location")}
               readOnly
               placeholder="Choose from map"
+              type="hidden"
             />
 
             <input type="hidden" {...register("latitude", { valueAsNumber: true })} />

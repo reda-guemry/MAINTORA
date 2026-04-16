@@ -46,9 +46,13 @@ export function MapView() {
     mapRef.current = new maplibregl.Map({
       container: mapContainer.current,
       style: cartoStyle, 
-      center: [-6.84, 34.02],
+      center: [-7.5898, 33.5731] ,
       zoom: 12,
     });
+
+    new maplibregl.Marker()
+  .setLngLat([-6.84, 34.02])
+  .addTo(mapRef.current);
 
     mapRef.current.on('load', () => {
       mapRef.current?.resize();
@@ -65,7 +69,7 @@ export function MapView() {
   }, []);
 
   return (
-    <div className="w-full h-112.5 rounded-xl overflow-hidden border bg-gray-100 relative shadow-sm">
+    <div className="w-full h-full rounded-xl overflow-hidden border bg-gray-100 relative shadow-sm">
       <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
     </div>
   );

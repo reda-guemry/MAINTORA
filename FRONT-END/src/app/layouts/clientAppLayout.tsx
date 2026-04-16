@@ -45,18 +45,6 @@ function ClientAppLayout() {
             </NavLink>
 
             <NavLink
-              to="/client/users"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-semibold transition-colors`
-              }
-            >
-              <span className="material-symbols-outlined text-[20px]">
-                person
-              </span>
-              <span className="text-[13px]">Users</span>
-            </NavLink>
-
-            <NavLink
               to="/client/machines"
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-medium transition-colors`
