@@ -1,22 +1,23 @@
 import type { ReactNode } from "react";
 
-export type MachineStatus = "operational" | "maintenance" | "offline";
+export type MachineStatus = "active" | "anomalous" | "maintenance" ;
 
 export type Machine = {
   id: number;
-  asset_id: string;
+  code: string;
   name: string;
-  category: string;
-  last_service: string;
+  location: string;
+  latitude: number;
+  longitude: number;
   status: MachineStatus;
 };
 
 export type MachinePayload = {
-  asset_id: string;
+  code: string;
   name: string;
-  category: string;
-  last_service: string;
-  status: MachineStatus;
+  location: string;
+  latitude: number;
+  longitude: number;
 };
 
 export type MachinesTableProps = {

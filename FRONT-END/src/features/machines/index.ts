@@ -1,5 +1,6 @@
 export * from "./types/machineComponents";
-export * from "./components/AddMachineModal";
+export * from "./components/AddMachineForm";
+export * from "./components/PickLocationStep";
 export * from "./components/DeleteMachineDialog";
 export * from "./components/EditMachineModal";
 export * from "./components/MachineStatusBadge";

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  AddMachineModal,
   DeleteMachineDialog,
   EditMachineModal,
   MachinesPagination,
@@ -10,44 +9,14 @@ import {
   type MachineStatus,
 } from "@/features/machines";
 import { Button, Input } from "@/shared/components/ui";
+
 import { usePaginateMachines } from "@/features/machines/hooks/usePaginateMachines";
+import { AddMachineFlow } from "../components/AddMachineFlow";
 
-const initialMachines: Machine[] = [
-  {
-    id: 1,
-    asset_id: "CNC-2824-001",
-    name: "Precision Mill Pro V4",
-    category: "CNC Milling Machine",
-    last_service: "2024-03-12",
-    status: "operational",
-  },
-  {
-    id: 2,
-    asset_id: "HYD-2824-012",
-    name: "Hydraulic Press 50T",
-    category: "Fabrication Unit",
-    last_service: "2024-02-28",
-    status: "maintenance",
-  },
-  {
-    id: 3,
-    asset_id: "LSR-2824-005",
-    name: "Laser Cutter Alpha-G",
-    category: "Precision Cutting",
-    last_service: "2024-01-15",
-    status: "offline",
-  },
-];
 
-const statusFilters: Array<MachineStatus | "all"> = [
-  "all",
-  "operational",
-  "maintenance",
-  "offline",
-];
 
 export default function MachinesManagement() {
-  const [machines, setMachines] = useState<Machine[]>(initialMachines);
+  const [machines, setMachines] = useState<Machine[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<MachineStatus | "all">(
     "all"
@@ -57,20 +26,9 @@ export default function MachinesManagement() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSavingMachine, setIsSavingMachine] = useState(false);
 
-  const filteredMachines = machines.filter((machine) => {
-    const normalizedSearch = search.trim().toLowerCase();
-    const matchesSearch =
-      normalizedSearch.length === 0 ||
-      machine.name.toLowerCase().includes(normalizedSearch) ||
-      machine.asset_id.toLowerCase().includes(normalizedSearch) ||
-      machine.category.toLowerCase().includes(normalizedSearch);
-    const matchesStatus =
-      statusFilter === "all" || machine.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
-  });
 
-  const { paginate, isLoading, currentPage, setPage, error } = usePaginateMachines();
+  // const { paginate, isLoading, currentPage, setPage, error } = usePaginateMachines();
 
   function handleOpenAdd() {
     setIsAddModalOpen(true);
@@ -96,24 +54,6 @@ export default function MachinesManagement() {
     setDeleteMachine(null);
   }
 
-  async function handleAddSubmit(payload: MachinePayload) {
-    setIsSavingMachine(true);
-
-    try {
-      // Replace this local update with the create machine API when it is ready.
-      setMachines((currentMachines) => [
-        {
-          id: Date.now(),
-          ...payload,
-        },
-        ...currentMachines,
-      ]);
-      handleCloseAdd();
-    } finally {
-      setIsSavingMachine(false);
-    }
-  }
-
   async function handleEditSubmit(payload: MachinePayload) {
     if (!editMachine) return;
 
@@ -135,7 +75,6 @@ export default function MachinesManagement() {
   function handleDeleteConfirm() {
     if (!deleteMachine) return;
 
-    // Replace this local update with the delete machine API when it is ready.
     setMachines((currentMachines) =>
       currentMachines.filter((machine) => machine.id !== deleteMachine.id)
     );
@@ -188,11 +127,7 @@ export default function MachinesManagement() {
                 }
                 className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
               >
-                {statusFilters.map((status) => (
-                  <option key={status} value={status}>
-                    Status: {status === "all" ? "All Assets" : status}
-                  </option>
-                ))}
+                <option value="all">All Assets</option>
               </select>
             </div>
 
@@ -208,16 +143,16 @@ export default function MachinesManagement() {
         </div>
 
         <MachinesTable
-          machines={filteredMachines}
+          machines={machines}
           isLoading={false}
           error={null}
           onEdit={handleOpenEdit}
           onDelete={handleOpenDelete}
         >
           <MachinesPagination
-            from={filteredMachines.length > 0 ? 1 : 0}
-            to={filteredMachines.length}
-            total={filteredMachines.length}
+            from={1}
+            to={machines.length}
+            total={machines.length}
             isLoading={false}
             onPrevious={() => undefined}
             onNext={() => undefined}
@@ -225,10 +160,10 @@ export default function MachinesManagement() {
         </MachinesTable>
       </div>
 
-      <AddMachineModal
+      <AddMachineFlow
         isOpen={isAddModalOpen}
         onClose={handleCloseAdd}
-        onSubmit={handleAddSubmit}
+        onSubmit={() => undefined}
         isLoading={isSavingMachine}
       />
 

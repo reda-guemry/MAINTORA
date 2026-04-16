@@ -29,7 +29,6 @@ class StoreMachineRequest extends FormRequest
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'status' => 'nullable|string|in:active,anomalous,maintenance',
-            'created_by' => 'required|exists:users,id',
         ];
     }
 }

@@ -16,7 +16,7 @@ class MachineRepositoty
 
     public function getPaginate()
     {
-        return Machine::paginate(10);
+        return Machine::paginate(10)->where('client_id', auth('api')->id()); ;
     }
 
     public function create($data)
