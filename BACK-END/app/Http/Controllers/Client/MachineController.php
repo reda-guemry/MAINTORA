@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMachineRequest;
 use App\Http\Requests\UpdateMachineRequest;
-use App\Services\Client\MachineService;
+use App\Services\Machine\MachineService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
