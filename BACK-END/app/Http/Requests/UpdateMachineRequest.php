@@ -23,7 +23,6 @@ class UpdateMachineRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'sometimes|required|string|max:255|unique:machines,code,' . $this->route('id'),
             'name' => 'sometimes|required|string|max:255',
             'location' => 'sometimes|required|string|max:255',
             'latitude' => 'nullable|numeric',

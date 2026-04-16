@@ -18,7 +18,7 @@ export function DeleteMachineDialog({
           <p className="mt-2 text-sm text-gray-600">
             Are you sure you want to delete{" "}
             <span className="font-semibold text-gray-900">{machine.name}</span>{" "}
-            ({machine.asset_id})?
+            ({machine.code})?
           </p>
         </div>
 
