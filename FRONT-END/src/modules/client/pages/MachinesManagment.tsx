@@ -4,15 +4,15 @@ import {
   EditMachineModal,
   MachinesPagination,
   MachinesTable,
+  useDeleteMachine,
+  useEditMachine,
+  usePaginateMachines,
   type Machine,
   type MachinePayload,
   type MachineStatus,
 } from "@/features/machines";
 import { Button, Input } from "@/shared/components/ui";
-import { usePaginateMachines } from "@/features/machines/hooks/usePaginateMachines";
 import { AddMachineFlow } from "../components/AddMachineFlow";
-
-
 
 export default function MachinesManagement() {
   const [search, setSearch] = useState("");
@@ -24,14 +24,33 @@ export default function MachinesManagement() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSavingMachine, setIsSavingMachine] = useState(false);
 
+  const { editMachineCall } = useEditMachine();
+  const { deleteMachineCall } = useDeleteMachine();
+  const {
+    paginate,
+    isLoading,
+    currentPage,
+    setPage,
+    error,
+    addMachineToList,
+    updateMachineInList,
+    removeMachineFromList,
+  } = usePaginateMachines();
+  
 
+  const machines = paginate?.data ?? [];
+  const filteredMachines = machines.filter((machine) => {
+    const normalizedSearch = search.trim().toLowerCase();
+    const matchesSearch =
+      normalizedSearch.length === 0 ||
+      machine.name.toLowerCase().includes(normalizedSearch) ||
+      machine.code.toLowerCase().includes(normalizedSearch) ||
+      machine.location.toLowerCase().includes(normalizedSearch);
+    const matchesStatus =
+      statusFilter === "all" || machine.status === statusFilter;
 
-  const { paginate, isLoading, currentPage, setPage, error } = usePaginateMachines();
-
-  const machines = paginate || [];
-  console.log(paginate);
-
-  // console.log({ machines, isLoading, error });
+    return matchesSearch && matchesStatus;
+  });
 
   function handleOpenAdd() {
     setIsAddModalOpen(true);
@@ -63,25 +82,32 @@ export default function MachinesManagement() {
     setIsSavingMachine(true);
 
     try {
-      // Replace this local update with the update machine API when it is ready.
-      // setMachines((currentMachines) =>
-      //   currentMachines.map((machine) =>
-      //     machine.id === editMachine.id ? { ...machine, ...payload } : machine
-      //   )
-      // );
-      handleCloseEdit();
+      const response = await editMachineCall(editMachine.id, payload);
+
+      if (response?.data) {
+        updateMachineInList(response.data);
+        handleCloseEdit();
+      }
     } finally {
       setIsSavingMachine(false);
     }
   }
 
-  function handleDeleteConfirm() {
+  async function handleDeleteConfirm() {
     if (!deleteMachine) return;
 
-    // setMachines((currentMachines) =>
-    //   currentMachines.filter((machine) => machine.id !== deleteMachine.id)
-    // );
-    handleCloseDelete();
+    setIsSavingMachine(true);
+
+    try {
+      const response = await deleteMachineCall(deleteMachine.id);
+
+      if (response !== undefined) {
+        removeMachineFromList(deleteMachine.id);
+        handleCloseDelete();
+      }
+    } finally {
+      setIsSavingMachine(false);
+    }
   }
 
   return (
@@ -131,6 +157,9 @@ export default function MachinesManagement() {
                 className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
               >
                 <option value="all">All Assets</option>
+                <option value="active">Active</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="anomalous">Anomalous</option>
               </select>
             </div>
 
@@ -146,19 +175,19 @@ export default function MachinesManagement() {
         </div>
 
         <MachinesTable
-          machines={machines}
-          isLoading={false}
-          error={null}
+          machines={filteredMachines}
+          isLoading={isLoading}
+          error={error}
           onEdit={handleOpenEdit}
           onDelete={handleOpenDelete}
         >
           <MachinesPagination
-            from={1}
-            to={machines.length}
-            total={machines.length}
-            isLoading={false}
-            onPrevious={() => undefined}
-            onNext={() => undefined}
+            from={paginate?.from ?? 0}
+            to={paginate?.to ?? 0}
+            total={paginate?.total ?? 0}
+            isLoading={isLoading}
+            onPrevious={() => setPage(currentPage - 1)}
+            onNext={() => setPage(currentPage + 1)}
           />
         </MachinesTable>
       </div>
@@ -166,6 +195,7 @@ export default function MachinesManagement() {
       <AddMachineFlow
         isOpen={isAddModalOpen}
         onClose={handleCloseAdd}
+        onCreated={addMachineToList}
         isLoading={isSavingMachine}
       />
 

@@ -1,4 +1,4 @@
-import type { MachinePayload } from "@/features/machines";
+import type { Machine, MachinePayload } from "@/features/machines";
 import { AddMachineForm } from "@/features/machines/components/AddMachineForm";
 import { PickLocationStep } from "@/features/machines/components/PickLocationStep";
 import { useCreateMachine } from "@/features/machines/hooks/useCreateMachine";
@@ -20,10 +20,12 @@ type Step = "form" | "map";
 export function AddMachineFlow({
   isOpen,
   onClose,
+  onCreated,
   isLoading = false,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onCreated?: (machine: Machine) => void;
   isLoading?: boolean;
 }) {
 
@@ -53,8 +55,13 @@ export function AddMachineFlow({
     setStep("form");
   }
 
-  function submitForm(data: MachinePayload) {
-    createMachineCall(data);
+  async function submitForm(data: MachinePayload) {
+    const response = await createMachineCall(data);
+
+    if (response?.data) {
+      onCreated?.(response.data);
+      handleClose();
+    }
   }
 
   if (!isOpen) return null;
