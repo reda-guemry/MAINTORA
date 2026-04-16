@@ -19,6 +19,9 @@ export function MachineTableRow({
           Machine #{machine.id}
         </p>
       </td>
+      <td className="px-6 py-5 text-sm font-medium text-gray-500">
+        {machine.location || "No location"}
+      </td>
       <td className="px-6 py-5">
         <MachineStatusBadge status={machine.status} />
       </td>

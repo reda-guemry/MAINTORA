@@ -1,131 +1,110 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Button, FormField, Input } from "@/shared/components/ui";
-import type {
-  EditMachineModalProps,
-  MachinePayload,
-} from "../types/machineComponents";
+import { useState } from "react";
+import { Button } from "@/shared/components/ui";
+import { reverseGeocode } from "../services/reverceGeocode";
+import { MapView } from "@/modules/client/components/Maplibre";
+
+type PickLocationStepProps = {
+  location: string;
+  latitude: number;
+  longitude: number;
+  onSave: (
+    location: string,
+    latitude: number,
+    longitude: number
+  ) => void;
+  onBack: () => void;
+};
 
 export function EditMachineModal({
-  machine,
-  onClose,
-  onSubmit,
-  isLoading = false,
-}: EditMachineModalProps) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors },
-  } = useForm<MachinePayload>({
-    defaultValues: {
-      code: "",
-      name: "",
-      location: "",
-      latitude: 0,
-      longitude: 0,
-    },
-  });
+  location,
+  latitude,
+  longitude,
+  onSave,
+  onBack,
+}: PickLocationStepProps) {
+  const [selectedLocation, setSelectedLocation] = useState<{
+    location: string;
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
-  useEffect(() => {
-    if (!machine) return;
+  async function handleMapClick(lat: number, lng: number) {
+    try {
+      const { city } = await reverseGeocode(lat, lng);
 
-    reset({
-      code: machine.code ?? "",
-      name: machine.name ?? "",
-      location: machine.location ?? "",
-      latitude: machine.latitude ?? 0,
-      longitude: machine.longitude ?? 0,
-    });
-  }, [machine, reset]);
+      const resolvedLocation = city ?? `${lat}, ${lng}`;
 
-  const location = watch("location");
-  const latitude = watch("latitude");
-  const longitude = watch("longitude");
+      setSelectedLocation({
+        location: resolvedLocation,
+        latitude: lat,
+        longitude: lng,
+      });
 
-  if (!machine) {
-    return null;
+      return resolvedLocation;
+    } catch (error) {
+      console.error("Failed to reverse geocode location:", error);
+
+      setSelectedLocation({
+        location: `${lat}, ${lng}`,
+        latitude: lat,
+        longitude: lng,
+      });
+    }
+  }
+
+  function onSelectLocation() {
+    onSave(
+      selectedLocation?.location || location || "",
+      selectedLocation?.latitude || latitude,
+      selectedLocation?.longitude || longitude
+    );
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-lg rounded-xl bg-white shadow-xl">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-3xl rounded-2xl bg-white shadow-2xl">
         <div className="border-b border-gray-200 px-6 py-4">
-          <h3 className="text-lg font-bold text-gray-900">Edit Machine</h3>
+          <h3 className="text-lg font-bold text-gray-900">
+            Pick machine location
+          </h3>
           <p className="mt-1 text-sm text-gray-500">
-            Update machine details.
+            Click on the map to select a new location.
           </p>
         </div>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-4 px-6 py-5"
-        >
-          <div className="grid grid-cols-1 gap-4 ">
-            <FormField label="Machine Code" htmlFor="edit_code" >
-              <Input
-                id="edit_code"
-                {...register("code", {
-                  required: "Machine code is required",
-                })}
-                disabled={true}
-                hasError={!!errors.code}
-              />
-              {errors.code && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.code.message}
-                </p>
-              )}
-            </FormField>
+        <div className="px-6 py-5">
+          <div className="h-80 overflow-hidden rounded-xl border border-gray-200">
+            <MapView onMapClick={handleMapClick} />
           </div>
 
-          <FormField label="Machine name" htmlFor="edit_name" required>
-            <Input
-              id="edit_name"
-              {...register("name", {
-                required: "Machine name is required",
-              })}
-              hasError={!!errors.name}
-            />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.name.message}
-              </p>
+          <div className="mt-4 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-600">
+            {selectedLocation ? (
+              <span>
+                Selected: <strong>{selectedLocation.location}</strong> (
+                {selectedLocation.latitude}, {selectedLocation.longitude})
+              </span>
+            ) : (
+              <span>
+                Current: <strong>{location || "No location selected"}</strong> (
+                {latitude}, {longitude})
+              </span>
             )}
-          </FormField>
+          </div>
 
-          <FormField label="Location" htmlFor="edit_location">
-            <Input
-              id="edit_location"
-              {...register("location")}
-              readOnly
-              placeholder="Location selected from map"
-            />
-            <input
-              type="hidden"
-              {...register("latitude", { valueAsNumber: true })}
-            />
-            <input
-              type="hidden"
-              {...register("longitude", { valueAsNumber: true })}
-            />
-            {location && (
-              <p className="mt-1 text-sm text-gray-500">
-                Selected: {location} ({latitude}, {longitude})
-              </p>
-            )}
-          </FormField>
-
-          <div className="flex justify-end gap-3 pt-2">
-            <Button type="button" variant="secondary" onClick={onClose}>
-              Cancel
+          <div className="mt-5 flex items-center justify-end gap-3">
+            <Button type="button" variant="secondary" onClick={onBack}>
+              Back
             </Button>
-            <Button type="submit" isLoading={isLoading}>
-              {isLoading ? "Saving..." : "Save Changes"}
+
+            <Button
+              type="button"
+              onClick={onSelectLocation}
+              disabled={!selectedLocation}
+            >
+              Save Location
             </Button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
