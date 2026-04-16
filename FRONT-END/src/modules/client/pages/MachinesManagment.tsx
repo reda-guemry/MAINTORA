@@ -9,7 +9,6 @@ import {
   type MachineStatus,
 } from "@/features/machines";
 import { Button, Input } from "@/shared/components/ui";
-
 import { usePaginateMachines } from "@/features/machines/hooks/usePaginateMachines";
 import { AddMachineFlow } from "../components/AddMachineFlow";
 
@@ -28,7 +27,9 @@ export default function MachinesManagement() {
 
 
 
-  // const { paginate, isLoading, currentPage, setPage, error } = usePaginateMachines();
+  const { paginate, isLoading, currentPage, setPage, error } = usePaginateMachines();
+
+  console.log({ machines, isLoading, error });
 
   function handleOpenAdd() {
     setIsAddModalOpen(true);
@@ -163,7 +164,6 @@ export default function MachinesManagement() {
       <AddMachineFlow
         isOpen={isAddModalOpen}
         onClose={handleCloseAdd}
-        onSubmit={() => undefined}
         isLoading={isSavingMachine}
       />
 

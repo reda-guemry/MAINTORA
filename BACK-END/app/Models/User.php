@@ -56,5 +56,10 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    public function machines()
+    {
+        return $this->hasMany(Machine::class, 'created_by');
+    }
+
 
 }

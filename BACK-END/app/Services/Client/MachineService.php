@@ -21,7 +21,9 @@ class MachineService
 
     public function create($data)
     {
-        return $this->machineRepositoty->create($data);
+        $user = auth('api')->user();
+
+        return $this->machineRepositoty->create($data , $user);
     }
 
     public function findOrFail($id)

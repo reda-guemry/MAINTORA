@@ -19,9 +19,9 @@ class MachineRepositoty
         return Machine::paginate(10)->where('client_id', auth('api')->id()); ;
     }
 
-    public function create($data)
+    public function create($data , $user)
     {
-        return Machine::create($data);
+        return $user->machines()->create($data);
     }
 
     public function find($id)

@@ -1,8 +1,10 @@
 import type { MachinePayload } from "@/features/machines";
 import { AddMachineForm } from "@/features/machines/components/AddMachineForm";
 import { PickLocationStep } from "@/features/machines/components/PickLocationStep";
+import { useCreateMachine } from "@/features/machines/hooks/useCreateMachine";
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+
 
 const defaultValues: MachinePayload = {
   code: "",
@@ -18,16 +20,16 @@ type Step = "form" | "map";
 export function AddMachineFlow({
   isOpen,
   onClose,
-  onSubmit,
   isLoading = false,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: MachinePayload) => void;
   isLoading?: boolean;
 }) {
+
   const methods = useForm<MachinePayload>({ defaultValues });
   const [step, setStep] = useState<Step>("form");
+  const { createMachineCall } = useCreateMachine();
 
   function handleClose() {
     methods.reset(defaultValues);
@@ -52,7 +54,7 @@ export function AddMachineFlow({
   }
 
   function submitForm(data: MachinePayload) {
-    onSubmit(data);
+    createMachineCall(data);
   }
 
   if (!isOpen) return null;
