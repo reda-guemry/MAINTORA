@@ -23,6 +23,7 @@ class RolePermissionSeeder extends Seeder
         Permission::findOrCreate('manage users', 'api');
         Permission::findOrCreate('manage roles', 'api');
         Permission::findOrCreate('manage machines', 'api');
+        Permission::findOrCreate('manage technicians', 'api');
 
 
 
@@ -37,7 +38,11 @@ class RolePermissionSeeder extends Seeder
         * Create a regular user role without permissions
          */
         $roleClient = Role::findOrCreate('client' , 'api');
-        $roleClient->givePermissionTo([Permission::where('name', 'manage machines')->first()]) ; 
+        $roleClient->givePermissionTo([Permission::where('name', 'manage machines')->first()]) ;
+        
+        
+        $roleChefTechnician = Role::findOrCreate('chef technician' , 'api');
+        $roleChefTechnician->givePermissionTo([Permission::where('name', 'manage technicians')->first()]) ;
 
 
     }
