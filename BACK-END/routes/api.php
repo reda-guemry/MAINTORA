@@ -46,6 +46,15 @@ Route::middleware(['auth:api'])->group(function () {
 
     });
 
+    Route::prefix('chef-technician')->middleware(['chef-technician'])->group(function () {
+
+        /*
+         * Manage users Routes
+         */
+        Route::apiResource('checklist', ChecklistController::class)->middleware('can:manage technicians');
+
+    });
+
 
 });
 
