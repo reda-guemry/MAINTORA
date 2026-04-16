@@ -80,3 +80,4 @@ export type PaginateMachineResponse = {
   message: string;
 };
 
+export type PaginateMachineData = PaginateMachineResponse["data"];

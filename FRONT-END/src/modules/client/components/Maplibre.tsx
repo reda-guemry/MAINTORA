@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
-import { Button } from "@/shared/components/ui";
 
 type MapViewProps = {
   onMapClick?: (lat: number, lng: number) => string | Promise<string>;

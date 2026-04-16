@@ -39,12 +39,12 @@ export function Button({
       type={type}
       disabled={isDisabled}
       className={cn(
+        className,
         'inline-flex items-center justify-center gap-2 rounded-lg font-bold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60',
         'focus:outline-none focus:ring-2 focus:ring-primary/20',
         variantClasses[variant],
         sizeClasses[size],
         fullWidth && 'w-full',
-        className
       )}
       {...props}
     >
