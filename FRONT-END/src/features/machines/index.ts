@@ -7,3 +7,7 @@ export * from "./components/MachineStatusBadge";
 export * from "./components/MachineTableRow";
 export * from "./components/MachinesPagination";
 export * from "./components/MachinesTable";
+export * from "./hooks/useCreateMachine";
+export * from "./hooks/useDeleteMachine";
+export * from "./hooks/useEditMachine";
+export * from "./hooks/usePaginateMachines";
