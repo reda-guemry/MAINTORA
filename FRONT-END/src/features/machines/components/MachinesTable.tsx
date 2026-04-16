@@ -9,6 +9,8 @@ export function MachinesTable({
   onDelete,
   children,
 }: MachinesTableProps) {
+
+  // console.log({ machines});
   return (
     <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
       <div className="overflow-x-auto">
@@ -16,17 +18,14 @@ export function MachinesTable({
           <thead>
             <tr className="border-b border-gray-50">
               <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
-                Asset ID
+                Code
               </th>
               <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
                 Machine Name
               </th>
-              <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
-                Category/Type
-              </th>
-              <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+              {/* <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
                 Last Service
-              </th>
+              </th> */}
               <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
                 Status
               </th>

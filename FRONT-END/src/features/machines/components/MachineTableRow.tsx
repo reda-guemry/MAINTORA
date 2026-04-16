@@ -9,7 +9,7 @@ export function MachineTableRow({
   return (
     <tr className="group transition-colors hover:bg-[#F9FBFB]">
       <td className="px-6 py-5 font-mono text-[11px] text-gray-400">
-        #{machine.asset_id}
+        #{machine.code}
       </td>
       <td className="px-6 py-5">
         <p className="text-[15px] font-black text-[#1A1A1A]">
@@ -18,12 +18,6 @@ export function MachineTableRow({
         <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-gray-400">
           Machine #{machine.id}
         </p>
-      </td>
-      <td className="px-6 py-5 text-sm font-medium text-gray-500">
-        {machine.category}
-      </td>
-      <td className="px-6 py-5 text-sm font-medium text-gray-500">
-        {machine.last_service}
       </td>
       <td className="px-6 py-5">
         <MachineStatusBadge status={machine.status} />

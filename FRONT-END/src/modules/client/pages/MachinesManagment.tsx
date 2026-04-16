@@ -15,7 +15,6 @@ import { AddMachineFlow } from "../components/AddMachineFlow";
 
 
 export default function MachinesManagement() {
-  const [machines, setMachines] = useState<Machine[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<MachineStatus | "all">(
     "all"
@@ -29,7 +28,10 @@ export default function MachinesManagement() {
 
   const { paginate, isLoading, currentPage, setPage, error } = usePaginateMachines();
 
-  console.log({ machines, isLoading, error });
+  const machines = paginate || [];
+  console.log(paginate);
+
+  // console.log({ machines, isLoading, error });
 
   function handleOpenAdd() {
     setIsAddModalOpen(true);
@@ -62,11 +64,11 @@ export default function MachinesManagement() {
 
     try {
       // Replace this local update with the update machine API when it is ready.
-      setMachines((currentMachines) =>
-        currentMachines.map((machine) =>
-          machine.id === editMachine.id ? { ...machine, ...payload } : machine
-        )
-      );
+      // setMachines((currentMachines) =>
+      //   currentMachines.map((machine) =>
+      //     machine.id === editMachine.id ? { ...machine, ...payload } : machine
+      //   )
+      // );
       handleCloseEdit();
     } finally {
       setIsSavingMachine(false);
@@ -76,9 +78,9 @@ export default function MachinesManagement() {
   function handleDeleteConfirm() {
     if (!deleteMachine) return;
 
-    setMachines((currentMachines) =>
-      currentMachines.filter((machine) => machine.id !== deleteMachine.id)
-    );
+    // setMachines((currentMachines) =>
+    //   currentMachines.filter((machine) => machine.id !== deleteMachine.id)
+    // );
     handleCloseDelete();
   }
 

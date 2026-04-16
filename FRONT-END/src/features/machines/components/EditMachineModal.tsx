@@ -20,7 +20,7 @@ export function EditMachineModal({
     formState: { errors },
   } = useForm<MachinePayload>({
     defaultValues: {
-      asset_id: "",
+      code: "",
       name: "",
       category: "",
       last_service: "",
