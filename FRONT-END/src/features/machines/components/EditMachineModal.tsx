@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormField, Input } from "@/shared/components/ui";
-import { cn } from "@/shared/utils/cn";
 import type {
   EditMachineModalProps,
   MachinePayload,
@@ -17,14 +16,15 @@ export function EditMachineModal({
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<MachinePayload>({
     defaultValues: {
       code: "",
       name: "",
-      category: "",
-      last_service: "",
-      status: "operational",
+      location: "",
+      latitude: 0,
+      longitude: 0,
     },
   });
 
@@ -32,13 +32,17 @@ export function EditMachineModal({
     if (!machine) return;
 
     reset({
-      asset_id: machine.asset_id ?? "",
+      code: machine.code ?? "",
       name: machine.name ?? "",
-      category: machine.category ?? "",
-      last_service: machine.last_service ?? "",
-      status: machine.status ?? "operational",
+      location: machine.location ?? "",
+      latitude: machine.latitude ?? 0,
+      longitude: machine.longitude ?? 0,
     });
   }, [machine, reset]);
+
+  const location = watch("location");
+  const latitude = watch("latitude");
+  const longitude = watch("longitude");
 
   if (!machine) {
     return null;
@@ -50,7 +54,7 @@ export function EditMachineModal({
         <div className="border-b border-gray-200 px-6 py-4">
           <h3 className="text-lg font-bold text-gray-900">Edit Machine</h3>
           <p className="mt-1 text-sm text-gray-500">
-            Update asset details and status.
+            Update machine details.
           </p>
         </div>
 
@@ -58,38 +62,19 @@ export function EditMachineModal({
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-4 px-6 py-5"
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <FormField label="Asset ID" htmlFor="edit_asset_id" required>
+          <div className="grid grid-cols-1 gap-4 ">
+            <FormField label="Machine Code" htmlFor="edit_code" >
               <Input
-                id="edit_asset_id"
-                {...register("asset_id", {
-                  required: "Asset ID is required",
+                id="edit_code"
+                {...register("code", {
+                  required: "Machine code is required",
                 })}
-                hasError={!!errors.asset_id}
+                disabled={true}
+                hasError={!!errors.code}
               />
-              {errors.asset_id && (
+              {errors.code && (
                 <p className="mt-1 text-sm text-red-500">
-                  {errors.asset_id.message}
-                </p>
-              )}
-            </FormField>
-
-            <FormField
-              label="Last service"
-              htmlFor="edit_last_service"
-              required
-            >
-              <Input
-                id="edit_last_service"
-                type="date"
-                {...register("last_service", {
-                  required: "Last service date is required",
-                })}
-                hasError={!!errors.last_service}
-              />
-              {errors.last_service && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.last_service.message}
+                  {errors.code.message}
                 </p>
               )}
             </FormField>
@@ -110,40 +95,24 @@ export function EditMachineModal({
             )}
           </FormField>
 
-          <FormField label="Category/Type" htmlFor="edit_category" required>
+          <FormField label="Location" htmlFor="edit_location">
             <Input
-              id="edit_category"
-              {...register("category", {
-                required: "Category is required",
-              })}
-              hasError={!!errors.category}
+              id="edit_location"
+              {...register("location")}
+              readOnly
+              placeholder="Location selected from map"
             />
-            {errors.category && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.category.message}
-              </p>
-            )}
-          </FormField>
-
-          <FormField label="Status" htmlFor="edit_status" required>
-            <select
-              id="edit_status"
-              {...register("status", {
-                required: "Status is required",
-              })}
-              className={cn(
-                "w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-text-main outline-none transition-colors",
-                "focus:ring-2 focus:ring-primary/20",
-                !!errors.status && "border-red-500 focus:border-red-500"
-              )}
-            >
-              <option value="operational">Operational</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="offline">Offline</option>
-            </select>
-            {errors.status && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.status.message}
+            <input
+              type="hidden"
+              {...register("latitude", { valueAsNumber: true })}
+            />
+            <input
+              type="hidden"
+              {...register("longitude", { valueAsNumber: true })}
+            />
+            {location && (
+              <p className="mt-1 text-sm text-gray-500">
+                Selected: {location} ({latitude}, {longitude})
               </p>
             )}
           </FormField>
