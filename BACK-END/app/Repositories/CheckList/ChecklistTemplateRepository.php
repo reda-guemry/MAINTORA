@@ -9,7 +9,7 @@ class ChecklistTemplateRepository
 {
     public function paginateChecklistTemplates($perPage = 10)
     {
-        return ChecklistTemplate::where('created_by', auth('api')->id())->paginate($perPage);
+        return ChecklistTemplate::where('created_by', auth('api')->id())->with('checklistItems')->paginate($perPage);
     }
 
     public function create(array $data, User $user)
@@ -19,7 +19,7 @@ class ChecklistTemplateRepository
 
     public function find($id)
     {
-        return ChecklistTemplate::where('created_by', auth('api')->id())->findOrFail($id);
+        return ChecklistTemplate::where('created_by', auth('api')->id())->with('checklistItems')->findOrFail($id);
     }
 
     public function update($id, array $data)

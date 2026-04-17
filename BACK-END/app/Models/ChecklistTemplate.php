@@ -26,7 +26,14 @@ class ChecklistTemplate extends Model
 
     public function checklistItems()
     {
-        return $this->hasMany(ChecklistTemplateItem::class ) ;
+        return $this->belongsToMany(
+            ChecklistItem::class,
+            'checklist_template_items' , 
+            'checklist_template_id' , 
+            'checklist_item_id'
+        )->using(ChecklistTemplateItem::class)
+         ->withPivot('id' , 'order')
+         ->withTimestamps() ;
     }
 
 }

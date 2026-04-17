@@ -51,10 +51,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('chef-technician')->middleware(['chef-technician'])->group(function () {
 
         /*
-         * Manage users Routes
+         *  checklist templates and items management routes
          */
         Route::apiResource('checklist', ChecklistTemplateController::class)->middleware('can:manage technicians');
         Route::apiResource('checklist-items', ChecklistItemsController::class)->middleware('can:manage technicians');
+        Route::post('/checklist-items/{id}', [ChecklistTemplateController::class, 'assignToMachine'])->middleware('can:manage technicians');
+        Route::put('/checklist-items/{id}', [ChecklistTemplateController::class, ''])->middleware('can:manage technicians');
+        Route::delete('/checklist-items/{id}', [ChecklistTemplateController::class, ''])->middleware('can:manage technicians');
+
+
 
     });
 

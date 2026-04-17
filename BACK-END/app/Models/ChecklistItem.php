@@ -13,12 +13,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChecklistItem extends Model
 {
-    use HasFactory ;
-    
+    use HasFactory;
 
-    public function checklistTemplateItems()
+
+    public function checklistTemplate()
     {
-        return $this->hasMany(ChecklistTemplateItem::class) ;
+        return $this->belongsToMany(
+            ChecklistTemplate::class,
+            'checklist_template_items' , 
+            'checklist_template_id' , 
+            'checklist_item_id'
+        )->using(ChecklistTemplateItem::class)
+         ->withPivot('id' , 'order')
+         ->withTimestamps() ;
     }
 
 
