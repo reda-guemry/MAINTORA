@@ -99,40 +99,44 @@ export function ChecklistTemplatesPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <section className="rounded-[32px] bg-[linear-gradient(135deg,#0f766e_0%,#115e59_52%,#0f172a_100%)] px-6 py-8 text-white shadow-[0_26px_70px_rgba(15,23,42,0.28)] md:px-8">
+    <div className="space-y-6">
+      <section className="rounded-[26px] border border-[#d9d1c5] bg-[linear-gradient(180deg,#eee7da_0%,#ece2d3_100%)] px-6 py-7 shadow-[0_18px_45px_rgba(62,52,39,0.08)]">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.32em] text-white/70">
+            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#948674]">
               Checklist Templates
             </p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">
+            <h1 className="mt-3 text-4xl font-black tracking-tight text-[#2d241c] md:text-[42px]">
               Standardize every preventive inspection.
             </h1>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-white/75">
+            <p className="mt-4 max-w-xl text-sm leading-7 text-[#6f6254]">
               Build clean reusable templates for your technician team and keep
               every routine check aligned across shifts.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-4 backdrop-blur">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-white/60">
+            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
                 Live Templates
               </p>
-              <p className="mt-3 text-3xl font-black">{paginate?.total ?? 0}</p>
+              <p className="mt-3 text-3xl font-black text-[#2d241c]">
+                {paginate?.total ?? 0}
+              </p>
             </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-4 backdrop-blur">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-white/60">
+            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
                 Current Page
               </p>
-              <p className="mt-3 text-3xl font-black">{currentPage}</p>
+              <p className="mt-3 text-3xl font-black text-[#2d241c]">
+                {currentPage}
+              </p>
             </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-4 backdrop-blur">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-white/60">
+            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
                 Search View
               </p>
-              <p className="mt-3 text-3xl font-black">
+              <p className="mt-3 text-3xl font-black text-[#2d241c]">
                 {filteredTemplates.length}
               </p>
             </div>
@@ -140,16 +144,16 @@ export function ChecklistTemplatesPage() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-4 rounded-[28px] border border-white/70 bg-white/85 p-5 shadow-[0_20px_50px_rgba(15,23,42,0.06)] backdrop-blur md:flex-row md:items-center md:justify-between">
+      <section className="flex flex-col gap-4 rounded-[24px] border border-[#ddd5c8] bg-white p-5 shadow-[0_16px_40px_rgba(62,52,39,0.07)] md:flex-row md:items-center md:justify-between">
         <div className="relative w-full md:max-w-md">
-          <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+          <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9d9388]">
             search
           </span>
           <Input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search by template name or description..."
-            className="pl-10"
+            className="border-[#ddd5c8] bg-[#fcfaf7] pl-10"
           />
         </div>
 

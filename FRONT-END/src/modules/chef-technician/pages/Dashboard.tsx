@@ -1,126 +1,131 @@
 export function Dashboard() {
   return (
-    <div className="space-y-8">
-      <section className="overflow-hidden rounded-[32px] bg-[radial-gradient(circle_at_top_left,#34d399_0%,#0f766e_42%,#0f172a_100%)] px-6 py-8 text-white shadow-[0_26px_70px_rgba(15,23,42,0.28)] md:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.32em] text-white/70">
-              Chef Technician Hub
-            </p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">
-              Keep every preventive round sharp and on schedule.
-            </h1>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-white/75">
-              Monitor execution quality, template readiness, and field coverage
-              from one clean control surface.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {[
-              { label: "Open Rounds", value: "08" },
-              { label: "Templates Ready", value: "14" },
-              { label: "Assets Covered", value: "42" },
-              { label: "Alerts Today", value: "03" },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-2xl border border-white/15 bg-white/10 px-4 py-4 backdrop-blur"
-              >
-                <p className="text-[10px] uppercase tracking-[0.24em] text-white/60">
-                  {stat.label}
-                </p>
-                <p className="mt-3 text-3xl font-black">{stat.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className="space-y-6">
+      <section className="rounded-[26px] border border-[#d9d1c5] bg-[linear-gradient(180deg,#eee7da_0%,#ece2d3_100%)] px-6 py-7 shadow-[0_18px_45px_rgba(62,52,39,0.08)]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#8f8477]">
+          Maintenance Overview
+        </p>
+        <h1 className="mt-3 text-[34px] font-black tracking-tight text-[#2d241c] md:text-[40px]">
+          Chef technician dashboard for preventive control.
+        </h1>
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-[#6f6254]">
+          Track inspections, align templates, and keep the team ready for every
+          field round with a cleaner command surface.
+        </p>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-        <div className="rounded-[28px] border border-white/70 bg-white/90 p-6 shadow-[0_20px_50px_rgba(15,23,42,0.06)] backdrop-blur">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-400">
-                This Week
-              </p>
-              <h2 className="mt-2 text-2xl font-black text-slate-900">
-                Inspection performance snapshot
-              </h2>
-            </div>
-            <span className="rounded-full bg-[#e8faf5] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-              Stable Flow
-            </span>
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {[
+          ["Pending validation", "12 Reports"],
+          ["Active templates", "18"],
+          ["Checklist items", "64"],
+          ["Open anomalies", "07"],
+        ].map(([label, value]) => (
+          <div
+            key={label}
+            className="rounded-[22px] border border-[#ddd5c8] bg-white px-5 py-5 shadow-[0_16px_40px_rgba(62,52,39,0.07)]"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#998d7e]">
+              {label}
+            </p>
+            <p className="mt-4 text-[32px] font-black tracking-tight text-[#2d241c]">
+              {value}
+            </p>
+          </div>
+        ))}
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
+        <div className="rounded-[24px] border border-[#ddd5c8] bg-white shadow-[0_16px_40px_rgba(62,52,39,0.07)]">
+          <div className="border-b border-[#f0ebe2] px-5 py-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#998d7e]">
+              Pending Validation
+            </p>
           </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="divide-y divide-[#f0ebe2]">
             {[
-              {
-                title: "Completed rounds",
-                value: "27",
-                helper: "5 more than last week",
-              },
-              {
-                title: "Average completion",
-                value: "92%",
-                helper: "Field teams closing faster",
-              },
-              {
-                title: "Critical misses",
-                value: "2",
-                helper: "Both flagged for follow-up",
-              },
-            ].map((card) => (
+              ["RP-8929: HQ Inspection", "Anomaly review", "10:43"],
+              ["RP-8930: Fire Alarm Test", "Field report", "11:40"],
+              ["RP-8932: Emergency Exit Lighting", "Safety check", "13:20"],
+            ].map(([title, subtitle, time], index) => (
               <div
-                key={card.title}
-                className="rounded-3xl bg-[#f8fbfc] p-5 ring-1 ring-slate-100"
+                key={title}
+                className={`px-5 py-4 ${
+                  index === 0 ? "bg-[#eef7f7]" : "bg-white"
+                }`}
               >
-                <p className="text-sm font-semibold text-slate-500">
-                  {card.title}
-                </p>
-                <p className="mt-4 text-4xl font-black tracking-tight text-slate-900">
-                  {card.value}
-                </p>
-                <p className="mt-3 text-sm leading-6 text-slate-500">
-                  {card.helper}
-                </p>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-bold text-[#2d241c]">{title}</p>
+                    <p className="mt-1 text-[12px] text-[#7f7468]">
+                      {subtitle}
+                    </p>
+                  </div>
+                  <span className="text-[11px] font-semibold text-[#9b8f80]">
+                    {time}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-white/70 bg-white/90 p-6 shadow-[0_20px_50px_rgba(15,23,42,0.06)] backdrop-blur">
-          <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-400">
-            Focus Queue
-          </p>
-          <h2 className="mt-2 text-2xl font-black text-slate-900">
-            Priority templates
-          </h2>
+        <div className="rounded-[24px] border border-[#ddd5c8] bg-white shadow-[0_16px_40px_rgba(62,52,39,0.07)]">
+          <div className="border-b border-[#f0ebe2] px-5 py-4">
+            <h2 className="text-xl font-black text-[#2d241c]">
+              Report validation workspace
+            </h2>
+            <p className="mt-1 text-sm text-[#7f7468]">
+              Snapshot inspired by your review flow and checklist operations.
+            </p>
+          </div>
 
-          <div className="mt-6 space-y-4">
-            {[
-              "Boiler startup safety checklist",
-              "Weekly conveyor alignment review",
-              "Hydraulic pressure validation set",
-              "Cooling line anomaly follow-up",
-            ].map((item, index) => (
-              <div
-                key={item}
-                className="flex items-start gap-4 rounded-3xl bg-[#f8fbfc] px-4 py-4 ring-1 ring-slate-100"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-sm font-black text-primary">
-                  0{index + 1}
-                </div>
-                <div>
-                  <p className="text-sm font-bold leading-6 text-slate-900">
-                    {item}
+          <div className="space-y-5 px-5 py-5">
+            <div className="grid gap-3 md:grid-cols-3">
+              {[
+                ["Asset name", "AHU-01 North Wing"],
+                ["Last maintenance", "Sept 22, 2023"],
+                ["Location", "Rooftop Section A"],
+              ].map(([label, value]) => (
+                <div key={label} className="rounded-2xl bg-[#f7f3ec] px-4 py-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#a09282]">
+                    {label}
                   </p>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Ready for field execution review.
+                  <p className="mt-2 text-sm font-bold text-[#2d241c]">
+                    {value}
                   </p>
                 </div>
+              ))}
+            </div>
+
+            <div>
+              <h3 className="text-sm font-black uppercase tracking-[0.16em] text-[#4b9c99]">
+                Inspection Checklist
+              </h3>
+              <div className="mt-3 space-y-2">
+                {[
+                  ["Check filter condition and replace if necessary", "done"],
+                  ["Inspect fan belt for wear and proper tension", "done"],
+                  ["Verify lubrication of motor and fan bearings", "done"],
+                  ["Measure compressor refrigerant levels", "warning"],
+                ].map(([line, state]) => (
+                  <div
+                    key={line}
+                    className={`flex items-center justify-between rounded-xl border px-4 py-3 text-sm ${
+                      state === "warning"
+                        ? "border-[#f1d7b3] bg-[#fff5e8] text-[#9a5b19]"
+                        : "border-[#dcece9] bg-[#f8fcfb] text-[#2d241c]"
+                    }`}
+                  >
+                    <span>{line}</span>
+                    <span className="material-symbols-outlined text-[18px]">
+                      {state === "warning" ? "warning" : "check_circle"}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
