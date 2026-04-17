@@ -49,6 +49,7 @@ export function usePaginateMachines() {
     const boundedPage = Math.max(1, Math.min(page, paginate.last_page));
     setCurrentPage(boundedPage);
   }
+  
   function updateMachineInList(updatedMachine: Machine) {
     setPaginate((prev) => {
       if (!prev) return prev;
