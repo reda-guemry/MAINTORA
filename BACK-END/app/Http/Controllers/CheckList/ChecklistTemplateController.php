@@ -21,6 +21,13 @@ class ChecklistTemplateController extends Controller
     {
         $data = $this->checklistTemplateService->getPaginate();
 
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Checklist items retrieved successfully',
+        //     'data' => $data,
+        // ]);
+
         $data->through(function ($checklistTemplate) {
             return new ChecklistTemplateResource($checklistTemplate);
         });
