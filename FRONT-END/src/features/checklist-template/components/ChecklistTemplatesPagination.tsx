@@ -11,8 +11,8 @@ export function ChecklistTemplatesPagination({
   onPageChange,
 }: ChecklistTemplatesPaginationProps) {
   return (
-    <div className="flex flex-col gap-4 border-t border-slate-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
+    <div className="flex flex-col gap-4 border-t border-[#ece6dc] px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#9d9388]">
         Showing {from ?? 0}-{to ?? 0} of {total} templates
       </span>
 

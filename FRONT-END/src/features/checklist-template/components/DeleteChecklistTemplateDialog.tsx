@@ -11,20 +11,20 @@ export function DeleteChecklistTemplateDialog({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 p-4">
-      <div className="w-full max-w-md rounded-[24px] bg-white shadow-[0_30px_80px_rgba(15,23,42,0.2)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2d2d2d]/45 p-4">
+      <div className="w-full max-w-md rounded-[24px] border border-[#ddd5c8] bg-[#fcfaf7] shadow-[0_30px_80px_rgba(0,0,0,0.22)]">
         <div className="px-6 py-5">
-          <h3 className="text-lg font-bold text-slate-900">
+          <h3 className="text-lg font-bold text-[#2d241c]">
             Delete Template
           </h3>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
+          <p className="mt-2 text-sm leading-6 text-[#6f6254]">
             Are you sure you want to delete{" "}
-            <span className="font-semibold text-slate-900">{template.name}</span>
+            <span className="font-semibold text-[#2d241c]">{template.name}</span>
             ? This action cannot be undone.
           </p>
         </div>
 
-        <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+        <div className="flex justify-end gap-3 border-t border-[#ece6dc] px-6 py-4">
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
