@@ -4,103 +4,97 @@ import { MaintoraLogo } from "@/shared/components/ui";
 import { NavLink, Outlet } from "react-router-dom";
 
 export function ChefAppLayout() {
-    const { user } = useAuth();
-    const { logout } = useLogout();
-    // console.log(user) ;
+  const { user } = useAuth();
+  const { logout } = useLogout();
 
+  
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,#dff7f1_0%,#eef7f7_38%,#f8fafc_100%)] text-slate-900">
-      <header className="sticky top-0 z-20 border-b border-white/60 bg-white/75 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 md:px-8 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-center gap-8">
+    <div className="min-h-screen flex flex-col font-sans text-[#1A1A1A] bg-[#F8F6F0]" >
+      
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2E2D1] shadow-sm">
+        <div className="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between">
+          
+          <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/20">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#388E8E] text-white shadow-sm">
                 <MaintoraLogo />
               </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-primary/70">
-                  Chef Technician
-                </p>
-                <h2 className="text-lg font-black tracking-tight text-slate-900">
-                    MAINTORA  
-                </h2>
-              </div>
+              <h2 className="text-[14px] font-[900] tracking-tighter text-[#1A1A1A] uppercase">
+                Maintora
+              </h2>
             </div>
-            <nav className="hidden items-center gap-2 md:flex">
-              <NavLink
-                    to="/chef-technician"
-                    end
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                      isActive
-                        ? "bg-primary text-white shadow-lg shadow-primary/20"
-                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-                    }`
-                  }
-                >
-                    Dashboard
-                </NavLink>
-                <NavLink
-                    to="/chef-technician/checklist/templates"
-                    end
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                      isActive
-                        ? "bg-primary text-white shadow-lg shadow-primary/20"
-                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-                    }`
-                  }
-                >
-                    Checklist Templates
-                </NavLink>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1">
+              <NavElement to="/chef-technician" label="Dashboard" end />
+              <NavElement to="/chef-technician/checklist/templates" label="Checklists" />
+              <NavElement to="/chef-technician/checklist/items" label="Item Library" />
+              
+              <div className="w-[1px] h-4 bg-gray-200 mx-3" />
+              
+              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-3">Assets</span>
+              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-3">Calendar</span>
             </nav>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden rounded-2xl border border-slate-200 bg-white px-4 py-3 sm:block">
-              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-400">
-                Signed In
-              </p>
-              <p className="mt-1 text-sm font-bold text-slate-900">
-                {user?.first_name} {user?.last_name}
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={logout}
-              className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white transition-colors hover:bg-primary"
-            >
-              <span className="material-symbols-outlined text-[20px]">
-                logout
-              </span>
+          <div className="flex items-center gap-4">
+            <button className="p-2 text-gray-400 hover:text-[#388E8E] transition-colors relative">
+              <span className="material-symbols-outlined text-[20px]">notifications</span>
+              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
+
+            <div className="h-8 w-[1px] bg-gray-100 mx-1" />
+
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#388E8E]/20 bg-white text-[12px] font-black text-[#388E8E] shadow-sm">
+                {user?.first_name?.[0]}{user?.last_name?.[0]}
+              </div>
+              <button
+                type="button"
+                onClick={logout}
+                className="hidden sm:block text-[11px] font-black uppercase tracking-widest text-gray-500 hover:text-red-500 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:hidden border-t border-gray-50 bg-[#FBFBFB] px-4 py-2 overflow-x-auto no-scrollbar">
+          <div className="flex gap-6">
+            <NavElement to="/chef-technician" label="Dashboard" end />
+            <NavElement to="/chef-technician/checklist/templates" label="Checklists" />
+            <NavElement to="/chef-technician/checklist/items" label="Library" />
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 md:px-8">
-        <div className="mb-6 flex gap-2 overflow-x-auto md:hidden">
-          {/* {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) =>
-                `whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                  isActive
-                    ? "bg-primary text-white"
-                    : "bg-white text-slate-500 shadow-sm"
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))} */}
-        </div>
+      <main 
+        className="flex-1 relative bg-[#F8F6F0] overflow-y-auto"
 
-        <Outlet />
+      >
+        <div className="max-w-[1440px] mx-auto px-6 py-8">
+          <Outlet />
+        </div>
       </main>
     </div>
+  );
+}
+
+function NavElement({ to, label, end = false }) {
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      className={({ isActive }) =>
+        `px-4 py-2 text-[12px] font-bold uppercase tracking-wider transition-all rounded-md ${
+          isActive 
+            ? "text-[#388E8E] bg-[#388E8E]/5" 
+            : "text-gray-400 hover:text-[#388E8E] hover:bg-gray-50"
+        }`
+      }
+    >
+      {label}
+    </NavLink>
   );
 }
