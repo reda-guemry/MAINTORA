@@ -29,6 +29,7 @@ export function ChefAppLayout() {
             <nav className="hidden items-center gap-2 md:flex">
               <NavLink
                     to="/chef-technician"
+                    end
                   className={({ isActive }) =>
                     `flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                       isActive
@@ -41,6 +42,7 @@ export function ChefAppLayout() {
                 </NavLink>
                 <NavLink
                     to="/chef-technician/checklist/templates"
+                    end
                   className={({ isActive }) =>
                     `flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                       isActive

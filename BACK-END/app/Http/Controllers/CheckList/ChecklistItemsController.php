@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\CheckList;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreChecklistItemRequest;
 use App\Http\Requests\StoreChecklistTemplateRequest;
 use App\Http\Requests\UpdateChecklistTemplateRequest;
+use App\Http\Resources\ChecklistItemResource;
 use App\Http\Resources\ChecklistTemplateResource;
 use App\Services\CheckList\ChecklistItemsService;
 use Exception;
@@ -32,7 +34,7 @@ class ChecklistItemsController extends Controller
         ]);
     }
 
-    public function store(StoreChecklistTemplateRequest $request)
+    public function store(StoreChecklistItemRequest $request)
     {
         try {
             $checklistItem = $this->checklistItemsService->create($request->validated());
@@ -75,7 +77,7 @@ class ChecklistItemsController extends Controller
         }
     }
 
-    public function update(UpdateChecklistTemplateRequest $request, int $id)
+    public function update(UpdateChecklistItemRequest $request, int $id)
     {
         try {
             $checklistItem = $this->checklistItemsService->update($id, $request->validated());
