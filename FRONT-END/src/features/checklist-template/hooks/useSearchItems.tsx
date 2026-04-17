@@ -1,16 +1,32 @@
 import { useApi } from "@/shared/hooks/useApi";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import type { ChecklistTemplateItem } from "../types/checklistTemplateComponents";
+
+type SearchChecklistItemsResponse = {
+  success: boolean;
+  message: string;
+  data: ChecklistTemplateItem[];
+};
 
 export function useSearchItems() {
   const { callApi } = useApi();
   const [error, setError] = useState<string | null>(null);
 
-  async function searchChecklistItemsCall($search: string | null) {
-    try {
-      const response = await callApi(`chef-technician/checklist/search?search=${$search}`, {});
+  const searchChecklistItemsCall = useCallback(async (search: string) => {
+    const normalizedSearch = search.trim();
 
-        console.log(response)
-      return response;
+    if (!normalizedSearch) {
+      setError(null);
+      return [];
+    }
+
+    try {
+      const response = await callApi<SearchChecklistItemsResponse>(
+        `chef-technician/checklist/search?search=${encodeURIComponent(normalizedSearch)}`,
+        {}
+      );
+
+      return response.data ?? [];
 
     } catch (err) {
       if (err instanceof Error) {
@@ -18,8 +34,10 @@ export function useSearchItems() {
       } else {
         setError("Failed to search checklist items");
       }
+
+      return [];
     }
-  }
+  }, [callApi]);
 
   return { searchChecklistItemsCall, error };
 }

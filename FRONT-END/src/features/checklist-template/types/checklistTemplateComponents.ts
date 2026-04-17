@@ -1,25 +1,32 @@
 import type { ReactNode } from "react";
 
+export type ChecklistTemplateItem = {
+  id: number;
+  label: string;
+  pivot?: {
+    id?: number;
+    order: number;
+  };
+};
+
+export type ChecklistTemplateItemAssignment = {
+  checklist_item_id: number;
+  order: number;
+};
+
 export type ChecklistTemplate = {
   id: number;
   name: string;
   description: string | null;
   created_by: number;
-  checklist_items?: ChecklistItem[];
-};
-
-type ChecklistItem = {
-  id: number;
-  label: string;
-  pivot: {
-    id: number;
-    order: number;
-  }
+  checklist_items?: ChecklistTemplateItem[];
 };
 
 export type ChecklistTemplatePayload = {
   name: string;
   description: string;
+  items?: ChecklistTemplateItemAssignment[];
+  checklist_items?: ChecklistTemplateItemAssignment[];
 };
 
 export type PaginateChecklistTemplateResponse = {
