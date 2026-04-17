@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Machine;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,20 @@ class MachineFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'code' => strtoupper(fake()->bothify('MCH-####-??')),
+            'name' => fake()->randomElement([
+                'Hydraulic Press',
+                'Packaging Line',
+                'Cooling Pump',
+                'CNC Lathe',
+                'Conveyor Unit',
+                'Boiler System',
+            ]) . ' ' . fake()->randomDigitNotNull(),
+            'location' => fake()->city(),
+            'latitude' => fake()->latitude(),
+            'longitude' => fake()->longitude(),
+            'status' => fake()->randomElement(['active', 'anomalous', 'maintenance']),
+            'created_by' => User::factory(),
         ];
     }
 }
