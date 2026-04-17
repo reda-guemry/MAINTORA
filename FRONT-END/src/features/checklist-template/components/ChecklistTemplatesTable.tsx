@@ -21,9 +21,6 @@ export function ChecklistTemplatesTable({
               <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-[0.24em] text-[#9d9388]">
                 Description
               </th>
-              <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-[0.24em] text-[#9d9388]">
-                Updated
-              </th>
               <th className="px-6 py-5 text-right text-[11px] font-bold uppercase tracking-[0.24em] text-[#9d9388]">
                 Actions
               </th>
@@ -33,7 +30,7 @@ export function ChecklistTemplatesTable({
           <tbody className="divide-y divide-[#f0ebe2]">
             {isLoading && (
               <tr>
-                <td colSpan={4} className="py-10 text-center text-[#7f7468]">
+                <td colSpan={3} className="py-10 text-center text-[#7f7468]">
                   Loading checklist templates...
                 </td>
               </tr>
@@ -41,7 +38,7 @@ export function ChecklistTemplatesTable({
 
             {!isLoading && error && (
               <tr>
-                <td colSpan={4} className="py-10 text-center text-red-500">
+                <td colSpan={3} className="py-10 text-center text-red-500">
                   {error}
                 </td>
               </tr>
@@ -49,7 +46,7 @@ export function ChecklistTemplatesTable({
 
             {!isLoading && !error && templates.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-10 text-center text-[#7f7468]">
+                <td colSpan={3} className="py-10 text-center text-[#7f7468]">
                   No checklist templates found.
                 </td>
               </tr>

@@ -5,8 +5,16 @@ export type ChecklistTemplate = {
   name: string;
   description: string | null;
   created_by: number;
-  created_at: string;
-  updated_at: string;
+  checklist_items?: ChecklistItem[];
+};
+
+type ChecklistItem = {
+  id: number;
+  label: string;
+  pivot: {
+    id: number;
+    order: number;
+  }
 };
 
 export type ChecklistTemplatePayload = {

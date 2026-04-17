@@ -1,13 +1,5 @@
 import type { ChecklistTemplateRowProps } from "../types/checklistTemplateComponents";
 
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
 export function ChecklistTemplateRow({
   template,
   onEdit,
@@ -40,22 +32,19 @@ export function ChecklistTemplateRow({
       <td className="px-6 py-5 text-sm leading-6 text-[#6f6254]">
         {template.description || "No description provided."}
       </td>
-      <td className="px-6 py-5 text-sm font-medium text-[#6f6254]">
-        {formatDate(template.updated_at)}
-      </td>
       <td className="px-6 py-5 text-right">
-        <div className="flex justify-end gap-2 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
+        <div className="flex justify-end gap-2">
           <button
             type="button"
             onClick={() => onEdit(template)}
-            className="rounded-full bg-[#f3eee7] p-2 text-[#6f6254] transition-colors hover:bg-[#dff1ef] hover:text-[#4b9c99]"
+            className="rounded-full border border-[#e5ddd1] bg-[#f3eee7] p-2 text-[#6f6254] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#bfe3df] hover:bg-[#dff1ef] hover:text-[#4b9c99]"
           >
             <span className="material-symbols-outlined text-[18px]">edit</span>
           </button>
           <button
             type="button"
             onClick={() => onDelete(template)}
-            className="rounded-full bg-[#f3eee7] p-2 text-[#6f6254] transition-colors hover:bg-red-50 hover:text-red-500"
+            className="rounded-full border border-[#e5ddd1] bg-[#f3eee7] p-2 text-[#6f6254] transition-all duration-200 hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-500"
           >
             <span className="material-symbols-outlined text-[18px]">
               delete
