@@ -15,6 +15,8 @@ class MaintenanceTaskCheck extends Model
 {
     use HasFactory ;
 
+    protected $table = 'maintenance_task_check_items';
+
 
     public function maintenanceTask()
     {

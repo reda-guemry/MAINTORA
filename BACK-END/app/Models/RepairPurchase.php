@@ -17,6 +17,8 @@ class RepairPurchase extends Model
 {
     use HasFactory ; 
 
+    protected $table = 'repair_purchase_orders';
+
 
     public function repairRequest()
     {
