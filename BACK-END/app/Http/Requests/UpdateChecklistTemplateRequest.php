@@ -25,6 +25,9 @@ class UpdateChecklistTemplateRequest extends FormRequest
         return [
             'name' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
+            'checklist_items' => 'sometimes|required|array',
+            'checklist_items.*.id' => 'required|integer|exists:checklist_items,id',
+            'checklist_items.*.order' => 'required|integer|min:1' 
         ];
     }
 }

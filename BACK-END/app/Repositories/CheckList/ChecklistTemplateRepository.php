@@ -19,7 +19,7 @@ class ChecklistTemplateRepository
 
     public function find($id)
     {
-        return ChecklistTemplate::where('created_by', auth('api')->id())->with('checklistItems')->findOrFail($id);
+        return ChecklistTemplate::with('checklistItems')->findOrFail($id);
     }
 
     public function update($id, array $data)

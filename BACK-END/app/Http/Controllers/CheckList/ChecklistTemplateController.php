@@ -84,6 +84,8 @@ class ChecklistTemplateController extends Controller
 
     public function update(UpdateChecklistTemplateRequest $request, int $id)
     {
+        // return response()->json($request->validated());
+
         try {
             $checklistTemplate = $this->checklistTemplateService->update($id, $request->validated());
 

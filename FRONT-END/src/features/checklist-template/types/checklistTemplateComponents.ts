@@ -9,8 +9,9 @@ export type ChecklistTemplateItem = {
   };
 };
 
+
 export type ChecklistTemplateItemAssignment = {
-  checklist_item_id: number;
+  id: number;
   order: number;
 };
 
@@ -18,14 +19,12 @@ export type ChecklistTemplate = {
   id: number;
   name: string;
   description: string | null;
-  created_by: number;
   checklist_items?: ChecklistTemplateItem[];
 };
 
 export type ChecklistTemplatePayload = {
   name: string;
   description: string;
-  items?: ChecklistTemplateItemAssignment[];
   checklist_items?: ChecklistTemplateItemAssignment[];
 };
 

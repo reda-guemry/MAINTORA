@@ -149,13 +149,13 @@ export function EditChecklistTemplateModal({
 
   function handleFormSubmit(values: ChecklistTemplatePayload) {
     const orderedItems = templateItems.map((item, index) => ({
-      checklist_item_id: item.id,
+      id: item.id,
       order: item.pivot?.order ?? index + 1,
     }));
 
+
     onSubmit({
       ...values,
-      items: orderedItems,
       checklist_items: orderedItems,
     });
   }

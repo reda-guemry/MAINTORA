@@ -3,6 +3,7 @@
 namespace App\Services\CheckList;
 
 use App\Repositories\CheckList\ChecklistTemplateRepository;
+use DB;
 
 class ChecklistTemplateService
 {
@@ -30,7 +31,21 @@ class ChecklistTemplateService
 
     public function update($id, array $data)
     {
-        return $this->checklistTemplateRepository->update($id, $data);
+        return DB::transaction(function () use ($id, $data) {
+            $checklistTemplate = $this->checklistTemplateRepository->find($id);
+
+            $syncData = [];
+
+            foreach ($data['checklist_items'] as $item) {
+                $syncData[$item['id']] = ['order' => $item['order']];
+            }
+
+            $checklistTemplate->checklistItems()->sync($syncData);
+
+            $updatedTemplate = $this->checklistTemplateRepository->update($id, $data);
+
+            return $updatedTemplate;
+        });
     }
 
     public function delete($id)
