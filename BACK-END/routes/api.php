@@ -3,8 +3,8 @@
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
-use App\Http\Controllers\ChecklistTemplateController;
-use App\Http\Controllers\Client\MachineController;
+use App\Http\Controllers\CheckList\ChecklistTemplateController;
+use App\Http\Controllers\Machine\MachineController;
 use Illuminate\Support\Facades\Route;
 
 

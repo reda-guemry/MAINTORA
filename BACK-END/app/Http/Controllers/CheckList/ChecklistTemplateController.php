@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\CheckList;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChecklistTemplateRequest;
 use App\Http\Requests\UpdateChecklistTemplateRequest;
 use App\Http\Resources\ChecklistTemplateResource;
