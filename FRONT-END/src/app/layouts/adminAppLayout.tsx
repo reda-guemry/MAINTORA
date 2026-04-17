@@ -9,7 +9,6 @@ function AdminAppLayout() {
 
   return (
     <div className="flex h-screen bg-[#F7F6F2] font-sans text-slate-800 overflow-hidden">
-      {/* Sidebar */}
       <aside className="w-[260px] bg-white flex flex-col justify-between shadow-[2px_0_15px_rgba(0,0,0,0.03)] z-20">
         <div>
           <div className="p-6 flex items-center gap-3">
@@ -26,7 +25,6 @@ function AdminAppLayout() {
             </div>
           </div>
 
-          {/* Nav Menu */}
           <nav className="px-4 mt-2 space-y-1">
             <NavLink
               to="/admin"
@@ -117,9 +115,7 @@ function AdminAppLayout() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Header */}
         <header className="h-[76px] px-8 flex items-center justify-between z-10">
           <div className="flex items-center gap-2 text-[13px] font-medium text-gray-400">
             <span className="material-symbols-outlined text-[18px]">home</span>
@@ -141,7 +137,6 @@ function AdminAppLayout() {
         <div className="flex-1 overflow-y-auto px-8 pb-8">
           <div className="max-w-[1100px] mx-auto">
             {" "}
-            {/* Hna zdt max-w bach maytjebeedch bezaf */}
             <Outlet />
           </div>
         </div>

@@ -6,6 +6,8 @@ import { GuestRoute } from "./guards/GuestRoute";
 import AdminAppLayout from "../layouts/adminAppLayout";
 import ClientAppLayout from "../layouts/clientAppLayout";
 import { clientRoutes } from "@/modules/client/route";
+import { ChefAppLayout } from "../layouts/chefAppLayout";
+import { chefRoutes } from "@/modules/chef-technician/route";
 
 export const router = createBrowserRouter([
   {
@@ -34,7 +36,12 @@ export const router = createBrowserRouter([
         element: <ClientAppLayout /> ,
         children: [...clientRoutes] ,
       } , 
+      {
+        path: 'chef-technician' ,
+        element: <ChefAppLayout /> , 
+        children: [...chefRoutes]
+      }
       
     ],
-  },
+  }, 
 ]);
