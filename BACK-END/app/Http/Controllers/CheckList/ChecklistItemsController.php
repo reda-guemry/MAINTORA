@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CheckList;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChecklistItemRequest;
 use App\Http\Requests\StoreChecklistTemplateRequest;
+use App\Http\Requests\UpdateChecklistItemRequest;
 use App\Http\Requests\UpdateChecklistTemplateRequest;
 use App\Http\Resources\ChecklistItemResource;
 use App\Http\Resources\ChecklistTemplateResource;
