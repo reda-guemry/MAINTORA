@@ -10,9 +10,9 @@ export function ChecklistTemplatesTable({
   children,
 }: ChecklistTemplatesTableProps) {
   return (
-    <div className="overflow-hidden rounded-[24px] border border-[#e8e0d4] bg-white shadow-[0_18px_45px_rgba(62,52,39,0.08)]">
+    <div className="overflow-hidden rounded-3xl border border-[#e8e0d4] bg-white shadow-[0_18px_45px_rgba(62,52,39,0.08)]">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[860px] text-left">
+        <table className="w-full min-w-215 text-left">
           <thead>
             <tr className="border-b border-[#f0ebe2] bg-[#fcfaf7]">
               <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-[0.24em] text-[#9d9388]">

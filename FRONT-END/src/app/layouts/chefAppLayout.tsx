@@ -1,25 +1,26 @@
 import { useAuth } from "@/context/useAuth";
 import { useLogout } from "@/features/auth";
+import { NavElement } from "@/modules/chef-technician/components/NavElement";
 import { MaintoraLogo } from "@/shared/components/ui";
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 export function ChefAppLayout() {
   const { user } = useAuth();
   const { logout } = useLogout();
 
-  
+
   return (
     <div className="min-h-screen flex flex-col font-sans text-[#1A1A1A] bg-[#F8F6F0]" >
       
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2E2D1] shadow-sm">
-        <div className="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-360 mx-auto px-6 h-16 flex items-center justify-between">
           
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#388E8E] text-white shadow-sm">
                 <MaintoraLogo />
               </div>
-              <h2 className="text-[14px] font-[900] tracking-tighter text-[#1A1A1A] uppercase">
+              <h2 className="text-[14px] font-black  tracking-tighter text-[#1A1A1A] uppercase">
                 Maintora
               </h2>
             </div>
@@ -28,9 +29,8 @@ export function ChefAppLayout() {
             <nav className="hidden lg:flex items-center gap-1">
               <NavElement to="/chef-technician" label="Dashboard" end />
               <NavElement to="/chef-technician/checklist/templates" label="Checklists" />
-              <NavElement to="/chef-technician/checklist/items" label="Item Library" />
               
-              <div className="w-[1px] h-4 bg-gray-200 mx-3" />
+              <div className="w-px h-4 bg-gray-200 mx-3" />
               
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-3">Assets</span>
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-3">Calendar</span>
@@ -43,7 +43,7 @@ export function ChefAppLayout() {
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
 
-            <div className="h-8 w-[1px] bg-gray-100 mx-1" />
+            <div className="h-8 w-px bg-gray-100 mx-1" />
 
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#388E8E]/20 bg-white text-[12px] font-black text-[#388E8E] shadow-sm">
@@ -64,7 +64,6 @@ export function ChefAppLayout() {
           <div className="flex gap-6">
             <NavElement to="/chef-technician" label="Dashboard" end />
             <NavElement to="/chef-technician/checklist/templates" label="Checklists" />
-            <NavElement to="/chef-technician/checklist/items" label="Library" />
           </div>
         </div>
       </header>
@@ -73,28 +72,10 @@ export function ChefAppLayout() {
         className="flex-1 relative bg-[#F8F6F0] overflow-y-auto"
 
       >
-        <div className="max-w-[1440px] mx-auto px-6 py-8">
+        <div className="max-w-360 mx-auto px-6 py-8">
           <Outlet />
         </div>
       </main>
     </div>
-  );
-}
-
-function NavElement({ to, label, end = false }) {
-  return (
-    <NavLink
-      to={to}
-      end={end}
-      className={({ isActive }) =>
-        `px-4 py-2 text-[12px] font-bold uppercase tracking-wider transition-all rounded-md ${
-          isActive 
-            ? "text-[#388E8E] bg-[#388E8E]/5" 
-            : "text-gray-400 hover:text-[#388E8E] hover:bg-gray-50"
-        }`
-      }
-    >
-      {label}
-    </NavLink>
   );
 }

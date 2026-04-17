@@ -13,12 +13,13 @@ import {
   type ChecklistTemplatePayload,
 } from "@/features/checklist-template";
 import { Button, Input } from "@/shared/components/ui";
+import { NavElement } from "../components/NavElement";
 
 export function ChecklistTemplatesPage() {
   const [search, setSearch] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editTemplate, setEditTemplate] = useState<ChecklistTemplate | null>(
-    null
+    null,
   );
   const [deleteTemplate, setDeleteTemplate] =
     useState<ChecklistTemplate | null>(null);
@@ -70,7 +71,10 @@ export function ChecklistTemplatesPage() {
     setIsSaving(true);
 
     try {
-      const response = await editChecklistTemplateCall(editTemplate.id, payload);
+      const response = await editChecklistTemplateCall(
+        editTemplate.id,
+        payload,
+      );
 
       if (response?.data) {
         updateTemplateInList(response.data);
@@ -113,6 +117,13 @@ export function ChecklistTemplatesPage() {
               Build clean reusable templates for your technician team and keep
               every routine check aligned across shifts.
             </p>
+          </div>
+
+          <div>
+            <div className="flex gap-6">
+              <NavElement to="/chef-technician/checklist/items" label="Checklists" end />
+              
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
