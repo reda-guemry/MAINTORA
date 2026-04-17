@@ -40,13 +40,13 @@ export function AddChecklistTemplateModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 p-4">
-      <div className="w-full max-w-xl rounded-[28px] bg-white shadow-[0_30px_80px_rgba(15,23,42,0.2)]">
-        <div className="border-b border-slate-100 px-6 py-5">
-          <h3 className="text-lg font-bold text-slate-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2d2d2d]/45 p-4">
+      <div className="w-full max-w-xl rounded-[24px] border border-[#ddd5c8] bg-[#fcfaf7] shadow-[0_30px_80px_rgba(0,0,0,0.22)]">
+        <div className="border-b border-[#ece6dc] px-6 py-5">
+          <h3 className="text-lg font-bold text-[#2d241c]">
             Create Checklist Template
           </h3>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-[#6f6254]">
             Start a reusable inspection template for your team.
           </p>
         </div>
@@ -74,7 +74,7 @@ export function AddChecklistTemplateModal({
               id="template_description"
               {...register("description")}
               rows={5}
-              className="w-full rounded-lg border border-neutral-gray bg-white px-4 py-3 text-sm text-text-main outline-none transition-colors placeholder:text-text-muted/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border border-[#ddd5c8] bg-white px-4 py-3 text-sm text-text-main outline-none transition-colors placeholder:text-text-muted/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
               placeholder="Add a short note about how and when this template is used..."
             />
           </FormField>
