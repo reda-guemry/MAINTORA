@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMachineRequest;
 use App\Http\Requests\UpdateMachineRequest;
+use App\Http\Resources\MachineResource;
 use App\Services\Machine\MachineService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -18,22 +19,27 @@ class MachineController extends Controller
 
     public function index()
     {
-        $machines = $this->machineService->getPaginate();
+        $data = $this->machineService->getPaginate();
+
+        $data->through(function ($machine) {
+            return new MachineResource($machine);
+        });
 
         return response()->json([
             'success' => true,
             'message' => 'Machines retrieved successfully',
-            'data' => $machines,
+            'data' => $data,
         ]);
     }
 
     public function store(StoreMachineRequest $request)
     {
         try{
-            $this -> machineService -> create($request->validated());
+            $machine = $this -> machineService -> create($request->validated());
             return response()->json([
                 'success' => true,
                 'message' => 'Machine created successfully',
+                'data' => MachineResource::make($machine),
             ], 201);
         } catch (Exception $e) {
             return response()->json([
@@ -51,7 +57,7 @@ class MachineController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Machine retrieved successfully',
-                'data' => $machine,
+                'data' => MachineResource::make($machine),
             ]);
         }catch (ModelNotFoundException $e) {
             return response()->json([
@@ -75,7 +81,7 @@ class MachineController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Machine updated successfully',
-                'data' => $machine,
+                'data' => MachineResource::make($machine),
             ]);
 
         }catch( ModelNotFoundException $e) {
