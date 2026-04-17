@@ -35,4 +35,13 @@ class ChecklistItemsService
     {
         return $this->checklistItemsRepository->delete($id);
     }
+
+    public function search($request)
+    {
+        $search = $request->query('search', '');
+
+        return $this->checklistItemsRepository->search($search);
+
+    }
+
 }

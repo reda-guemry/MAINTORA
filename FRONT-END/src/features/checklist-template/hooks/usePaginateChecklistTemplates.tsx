@@ -26,7 +26,6 @@ export function usePaginateChecklistTemplates() {
             method: "GET",
           }
         );
-        console.log(response)
 
         setPaginate(response.data);
       } catch (err) {

@@ -6,6 +6,7 @@ import type {
   ChecklistTemplatePayload,
   EditChecklistTemplateModalProps,
 } from "../types/checklistTemplateComponents";
+import { useSearchItems } from "../hooks/useSearchItems";
 
 export function EditChecklistTemplateModal({
   template,
@@ -15,6 +16,7 @@ export function EditChecklistTemplateModal({
 }: EditChecklistTemplateModalProps) {
   const [templateItems, setTemplateItems] = useState<ChecklistItem[]>([]);
   const [itemsSearch, setItemsSearch] = useState("");
+  const { searchChecklistItemsCall } = useSearchItems();
 
   const {
     register,
@@ -41,6 +43,10 @@ export function EditChecklistTemplateModal({
 
   const filteredTemplateItems = useMemo(() => {
     const normalizedSearch = itemsSearch.trim().toLowerCase();
+
+    searchChecklistItemsCall(normalizedSearch);
+
+    console.log(normalizedSearch);
 
     if (!normalizedSearch) {
       return templateItems;

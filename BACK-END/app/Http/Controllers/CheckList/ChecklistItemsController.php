@@ -8,10 +8,13 @@ use App\Http\Requests\StoreChecklistTemplateRequest;
 use App\Http\Requests\UpdateChecklistItemRequest;
 use App\Http\Requests\UpdateChecklistTemplateRequest;
 use App\Http\Resources\ChecklistItemResource;
+use App\Http\Resources\ChecklistItemSearchResource;
 use App\Http\Resources\ChecklistTemplateResource;
 use App\Services\CheckList\ChecklistItemsService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+
 
 class ChecklistItemsController extends Controller
 {
@@ -124,4 +127,32 @@ class ChecklistItemsController extends Controller
             ], 404);
         }
     }
+
+
+    public function search(Request $request)
+    {
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Search query received successfully',
+        //     'search' => $request->query('search', ''),
+        // ]);
+
+        try {
+            $data = $this->checklistItemsService->search($request);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Checklist items retrieved successfully',
+                'data' => ChecklistItemSearchResource::collection($data),
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error occurred while searching checklist items.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

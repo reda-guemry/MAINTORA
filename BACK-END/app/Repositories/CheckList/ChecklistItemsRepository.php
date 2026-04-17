@@ -37,4 +37,11 @@ class ChecklistItemsRepository
 
         return $checklistItem->delete();
     }
+
+    public function search($search)
+    {
+        return ChecklistItem::where('label', 'like', "%{$search}%")->limit(7)->get();
+    }
+
+
 }
