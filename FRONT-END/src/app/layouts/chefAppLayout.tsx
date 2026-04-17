@@ -1,66 +1,104 @@
+import { useAuth } from "@/context/useAuth";
+import { useLogout } from "@/features/auth";
+import { MaintoraLogo } from "@/shared/components/ui";
+import { NavLink, Outlet } from "react-router-dom";
+
 export function ChefAppLayout() {
+    const { user } = useAuth();
+    const { logout } = useLogout();
+    // console.log(user) ;
+
   return (
-    <div>
-      <header className="flex h-16 w-full items-center justify-between border-b border-primary/20 bg-white/80 dark:bg-background-dark/80 px-8 backdrop-blur-md z-10">
-        <div className="flex items-center gap-8">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center size-8 rounded bg-primary text-white">
-              <span className="material-symbols-outlined text-xl">factory</span>
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,#dff7f1_0%,#eef7f7_38%,#f8fafc_100%)] text-slate-900">
+      <header className="sticky top-0 z-20 border-b border-white/60 bg-white/75 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 md:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/20">
+                <MaintoraLogo />
+              </div>
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-primary/70">
+                  Chef Technician
+                </p>
+                <h2 className="text-lg font-black tracking-tight text-slate-900">
+                    MAINTORA  
+                </h2>
+              </div>
             </div>
-            <h2 className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">
-              Preventive CMMS
-            </h2>
+            <nav className="hidden items-center gap-2 md:flex">
+              <NavLink
+                    to="/chef-technician"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                      isActive
+                        ? "bg-primary text-white shadow-lg shadow-primary/20"
+                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                    }`
+                  }
+                >
+                    Dashboard
+                </NavLink>
+                <NavLink
+                    to="/chef-technician/checklist/templates"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                      isActive
+                        ? "bg-primary text-white shadow-lg shadow-primary/20"
+                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                    }`
+                  }
+                >
+                    Checklist Templates
+                </NavLink>
+            </nav>
           </div>
-          <nav className="hidden md:flex items-center gap-6">
-            <a
-              className="text-sm font-medium text-neutral-teal hover:text-primary transition-colors"
-              href="#"
+
+          <div className="flex items-center gap-3">
+            <div className="hidden rounded-2xl border border-slate-200 bg-white px-4 py-3 sm:block">
+              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-400">
+                Signed In
+              </p>
+              <p className="mt-1 text-sm font-bold text-slate-900">
+                {user?.first_name} {user?.last_name}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={logout}
+              className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white transition-colors hover:bg-primary"
             >
-              Dashboard
-            </a>
-            <a
-              className="text-sm font-medium text-neutral-teal hover:text-primary transition-colors"
-              href="#"
-            >
-              Assets
-            </a>
-            <a
-              className="text-sm font-medium text-neutral-teal hover:text-primary transition-colors"
-              href="#"
-            >
-              Work Orders
-            </a>
-            <a
-              className="text-sm font-semibold text-primary border-b-2 border-primary py-5"
-              href="#"
-            >
-              Checklists
-            </a>
-          </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="relative hidden sm:block">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-teal text-xl">
-              search
-            </span>
-            <input
-              className="h-10 w-64 rounded-lg border-primary/10 bg-primary/5 pl-10 text-sm focus:border-primary focus:ring-1 focus:ring-primary dark:bg-slate-800/50"
-              placeholder="Search resources..."
-              type="text"
-            />
-          </div>
-          <button className="flex items-center justify-center size-10 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all">
-            <span className="material-symbols-outlined">notifications</span>
-          </button>
-          <div className="size-10 rounded-full border-2 border-primary/20 overflow-hidden">
-            <img
-              className="w-full h-full object-cover"
-              data-alt="Technical supervisor profile headshot"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV-SMCoFcj5Wg9faLjcYHZcsR4hFGWt8TFKoYHiVMGcEsnNXpXqeTZwL-epyVPp8imDQ2hbl73P0W3ulj15mxLOddw8n7SdHTxDxIFpj1cISwzpsxILmBmLlZUrt1NpxlGCeer0DMZNf9Pguj92xG2LpbKONi7TN4Vx3cNaOtI9YR9qFy6FLGop2j7P2W7xIwWCTMM5dioj7OR9nHr-6RnnSa2jcDzhEwWJEzibcJyoe-cPVZkuI7agL-vUPpfPr2CAFZINPH2qtQ"
-            />
+              <span className="material-symbols-outlined text-[20px]">
+                logout
+              </span>
+            </button>
           </div>
         </div>
       </header>
+
+      <main className="mx-auto max-w-7xl px-4 py-8 md:px-8">
+        <div className="mb-6 flex gap-2 overflow-x-auto md:hidden">
+          {/* {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                `whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                  isActive
+                    ? "bg-primary text-white"
+                    : "bg-white text-slate-500 shadow-sm"
+                }`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))} */}
+        </div>
+
+        <Outlet />
+      </main>
     </div>
   );
 }
