@@ -41,6 +41,11 @@ class MachineService
         return $this->machineRepositoty->delete($id);
     }
 
+    public function getAll()
+    {
+        return $this->machineRepositoty->All();
+    }
+
 
 
 }

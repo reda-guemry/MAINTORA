@@ -67,4 +67,9 @@ class UserService
         return $this -> userRepository -> delete($id);
     }
 
+    public function gettechnicians()
+    {
+        return $this -> userRepository -> getTechnicians();
+    }
+
 }

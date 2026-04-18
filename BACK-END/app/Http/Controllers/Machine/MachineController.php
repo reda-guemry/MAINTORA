@@ -110,4 +110,23 @@ class MachineController extends Controller
     }
 
 
+    public function getAll()
+    {
+        try{
+            $machines = $this -> machineService -> getAll();
+            return response()->json([
+                'success' => true,
+                'message' => 'Machines retrieved successfully',
+                'data' => MachineResource::collection($machines),
+            ]);
+        }catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error occurred while retrieving machines.',
+                'error' => $e->getMessage()
+            ], $e->getCode() ?: 500);
+        }
+    }
+
+
 }

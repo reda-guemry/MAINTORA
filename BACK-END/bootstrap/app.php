@@ -3,6 +3,7 @@
 use App\Http\Middleware\ChefTechnicianMiddleware;
 use App\Http\Middleware\ClientMiddleware;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\TechnicianMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => AdminMiddleware::class,
             'client' => ClientMiddleware::class,
             'chef-technician' => ChefTechnicianMiddleware::class,
+            'technician' => TechnicianMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

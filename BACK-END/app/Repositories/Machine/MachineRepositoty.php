@@ -42,5 +42,10 @@ class MachineRepositoty
         return $machine->delete();
     }
 
+    public function All()
+    {
+        return Machine::get() ;
+    }
+
 
 }

@@ -42,4 +42,9 @@ class UserRepository
         return $user->delete();
     }
 
+    public function getTechnicians()
+    {
+        return User::role('technician')->get() ;
+    }
+
 }
