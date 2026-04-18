@@ -7,6 +7,7 @@ type MapViewProps = {
 };
 
 export function MapView({ onMapClick }: MapViewProps) {
+  
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
 
