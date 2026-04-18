@@ -9,7 +9,7 @@ export type Machine = {
   location: string;
   latitude: number;
   longitude: number;
-  status: MachineStatus;
+  status: MachineStatus;  
 };
 
 export type MachinePayload = {

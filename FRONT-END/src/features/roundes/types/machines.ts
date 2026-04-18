@@ -1,4 +1,5 @@
 import type { User } from "@/features/auth";
+import type { status } from "@/modules/chef-technician/components/AssetMap";
 
 
 
@@ -17,7 +18,7 @@ export type Machine = {
     location : string ;
     latitude : number ;
     longitude : number ;
-    status : string ;
+    status : status;
     created_by : User ;
 
 }
