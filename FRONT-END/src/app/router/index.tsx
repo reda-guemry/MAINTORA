@@ -8,6 +8,8 @@ import ClientAppLayout from "../layouts/clientAppLayout";
 import { clientRoutes } from "@/modules/client/route";
 import { ChefAppLayout } from "../layouts/chefAppLayout";
 import { chefRoutes } from "@/modules/chef-technician/route";
+import { technicianRoutes } from "@/modules/technician/route";
+import TechnicianAppLayout from "../layouts/technician";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +42,11 @@ export const router = createBrowserRouter([
         path: 'chef-technician' ,
         element: <ChefAppLayout /> , 
         children: [...chefRoutes]
+      }, 
+      {
+        path: 'technician' ,
+        element: <TechnicianAppLayout /> , 
+        children: [...technicianRoutes]
       }
       
     ],

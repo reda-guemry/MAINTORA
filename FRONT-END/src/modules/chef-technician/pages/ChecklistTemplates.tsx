@@ -158,7 +158,7 @@ export function ChecklistTemplatesPage() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-4 rounded-[24px] border border-[#ddd5c8] bg-white p-5 shadow-[0_16px_40px_rgba(62,52,39,0.07)] md:flex-row md:items-center md:justify-between">
+      <section className="flex flex-col gap-4 rounded-3xl border border-[#ddd5c8] bg-white p-5 shadow-[0_16px_40px_rgba(62,52,39,0.07)] md:flex-row md:items-center md:justify-between">
         <div className="relative w-full md:max-w-md">
           <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9d9388]">
             search

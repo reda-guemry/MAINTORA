@@ -25,6 +25,8 @@ class RolePermissionSeeder extends Seeder
         Permission::findOrCreate('manage roles', 'api');
         Permission::findOrCreate('manage machines', 'api');
         Permission::findOrCreate('manage technicians', 'api');
+        Permission::findOrCreate('manage machines rounds', 'api');
+
 
 
 
@@ -44,6 +46,10 @@ class RolePermissionSeeder extends Seeder
         
         $roleChefTechnician = Role::findOrCreate('chef technician' , 'api');
         $roleChefTechnician->givePermissionTo([Permission::where('name', 'manage technicians')->first()]) ;
+
+
+        $roleChefTechnician = Role::findOrCreate('technician' , 'api');
+        $roleChefTechnician->givePermissionTo([Permission::where('name', 'manage machines rounds')->first()]) ;
 
 
     }
