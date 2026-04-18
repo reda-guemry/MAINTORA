@@ -1,14 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AssetMap } from "../components/AssetMap";
+import { useTechnicians } from "@/features/roundes/hooks/useTechnisian";
 
 export function Rounde() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  const { technicians , fetchTechnicians } = useTechnicians() ;
+
+  useEffect(() => {
+    fetchTechnicians() ;
+  }, []) ;
 
   const activeAssets = [
     { lng: -7.5898, lat: 33.5731, status: 'critical' as const },
     { lng: -7.5950, lat: 33.5780, status: 'optimal' as const },
     { lng: -7.5850, lat: 34.5680, status: 'warning' as const },
   ];
+
+  
 
   return (
     <div className="flex h-[calc(100vh-80px)] w-full overflow-hidden bg-[#F8F6F0]">
