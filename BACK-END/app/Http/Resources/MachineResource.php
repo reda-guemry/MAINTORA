@@ -22,7 +22,7 @@ class MachineResource extends JsonResource
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'status' => $this->status,
-            'created_by' => $this->created_by,
+            'created_by' => UserResource::make($this->whenLoaded('creator')),
         ];
     }
 }

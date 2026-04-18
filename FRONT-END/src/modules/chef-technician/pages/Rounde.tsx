@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { AssetMap } from "../components/AssetMap";
 import { useTechnicians } from "@/features/roundes/hooks/useTechnisian";
+import { useMachines } from "@/features/roundes/hooks/useMachines";
 
 export function Rounde() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   const { technicians , fetchTechnicians } = useTechnicians() ;
+  const { machines , fetchMachines } = useMachines() ;
+
 
   useEffect(() => {
     fetchTechnicians() ;
+    fetchMachines() ;
   }, []) ;
 
   const activeAssets = [
