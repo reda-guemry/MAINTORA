@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
     'repeat_unit',
     'start_date',
     'status',
+    'created_by',
 ])]
 class MaintenancePlan extends Model
 {

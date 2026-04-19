@@ -28,5 +28,15 @@ class Machine extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function maintenancePlans()
+    {
+        return $this->hasMany(MaintenancePlan::class);
+    }
 
+    
+
+    public function haveActiveMaintenancePlan()
+    {
+        return $this->maintenancePlans()->where('status', 'active')->exists();
+    }
 }

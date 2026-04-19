@@ -47,5 +47,11 @@ class MachineService
     }
 
 
+    public function isUnderPlanMaintenance($machineId)
+    {
+        $machine = $this->machineRepositoty->find($machineId);
+        return $machine->haveActiveMaintenancePlan();
+    }
+
 
 }

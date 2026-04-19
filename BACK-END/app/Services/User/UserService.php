@@ -72,4 +72,6 @@ class UserService
         return $this -> userRepository -> getTechnicians();
     }
 
+
+
 }

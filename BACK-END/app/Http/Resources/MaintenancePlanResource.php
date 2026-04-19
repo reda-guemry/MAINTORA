@@ -16,7 +16,7 @@ class MaintenancePlanResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'assigned_to' => UserResource::make($this->whenLoaded('assignedUser')),
+            'assigned_to' => UserResource::make($this->whenLoaded('assignedTo')),
             'checklist_template_id' => ChecklistTemplateResource::make($this->whenLoaded('checklistTemplate')),
             'machine_id' => MachineResource::make($this->whenLoaded('machine')),
             'repeat_every' => $this->repeat_every,

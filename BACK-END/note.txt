@@ -69,7 +69,7 @@ maintenance_plans:
     - updated_at
 
 
-rounds:
+maintenance_tasks:
     - id (PK)
     - maintenance_plan_id (FK -> maintenance_plans.id)
     - machine_id (FK -> machines.id)
