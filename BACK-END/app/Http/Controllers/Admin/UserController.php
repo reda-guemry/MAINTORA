@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreatUserRequest;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\User\UserService;
@@ -36,7 +36,7 @@ class UserController extends Controller
 
     }
 
-    public function store(CreatUserRequest $request)
+    public function store(StoreUserRequest $request)
     {
         try {
             $user = $this->userService->create($request->validated());

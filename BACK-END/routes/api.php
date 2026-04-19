@@ -74,7 +74,7 @@ Route::middleware(['auth:api'])->group(function () {
          *  maintenance plans management routes
          */
 
-        Route::apiResource('maintenance-plans', MaintenancePlanController::class)->middleware('can:manage technicians');
+        Route::apiResource('maintenance-plans', MaintenancePlanController::class)->middleware('can:manage machines rounds')->except(['index', 'show']) ;
 
 
 

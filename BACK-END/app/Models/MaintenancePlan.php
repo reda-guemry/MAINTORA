@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 
 #[Fillable([
+    'machine_id',
+    'checklist_template_id',
+    'assigned_to',
     'repeat_every',
     'repeat_unit',
     'start_date',

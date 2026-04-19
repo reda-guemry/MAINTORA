@@ -26,6 +26,7 @@ class RolePermissionSeeder extends Seeder
         Permission::findOrCreate('manage machines', 'api');
         Permission::findOrCreate('manage technicians', 'api');
         Permission::findOrCreate('manage machines rounds', 'api');
+        
 
 
 
