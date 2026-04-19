@@ -23,7 +23,6 @@ class UpdateMaintenancePlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'machine_id' => 'sometimes|required|exists:machines,id',
             'checklist_template_id' => 'sometimes|required|exists:checklist_templates,id',
             'assigned_to' => 'sometimes|required|exists:users,id',
             'repeat_every' => 'sometimes|required|integer|min:1',
