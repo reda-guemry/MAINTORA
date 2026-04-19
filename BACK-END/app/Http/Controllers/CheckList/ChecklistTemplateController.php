@@ -124,4 +124,20 @@ class ChecklistTemplateController extends Controller
             ], 404);
         }
     }
+
+    public function search()
+    {
+        $query = request()->query('q', '');
+
+        $data = $this->checklistTemplateService->search($query);
+
+        $data->through(function ($checklistTemplate) {
+            return new ChecklistTemplateResource($checklistTemplate);
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Checklist templates retrieved successfully',
+            'data' => $data,
+        ]);
 }

@@ -44,7 +44,11 @@ class MachineRepositoty
 
     public function All()
     {
-        return Machine::with('creator')->get() ;
+        return Machine::with([
+            'creator',
+            'maintenancePlans.assignedTo.roles',
+            'maintenancePlans.checklistTemplate',
+        ])->get() ;
     }
 
 

@@ -23,6 +23,7 @@ class MachineResource extends JsonResource
             'longitude' => $this->longitude,
             'status' => $this->status,
             'created_by' => UserResource::make($this->whenLoaded('creator')),
+            'maintenance_plans' => MaintenancePlanResource::collection($this->whenLoaded('maintenancePlans')),
         ];
     }
 }

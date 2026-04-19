@@ -155,4 +155,23 @@ class ChecklistItemsController extends Controller
         }
     }
 
+    public function all()
+    {
+        try {
+            $data = $this->checklistItemsService->all();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Checklist items retrieved successfully',
+                'data' => ChecklistItemResource::collection($data),
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error occurred while retrieving checklist items.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }
