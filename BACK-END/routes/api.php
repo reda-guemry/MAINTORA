@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\CheckList\ChecklistItemsController;
 use App\Http\Controllers\CheckList\ChecklistTemplateController;
 use App\Http\Controllers\Machine\MachineController;
+use App\Http\Controllers\Rounde\MaintenancePlanController;
 use App\Http\Controllers\Technician\TechnicianController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,14 +52,14 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('chef-technician')->middleware(['chef-technician'])->group(function () {
 
-        
+
         /*
          *  checklist templates and items management routes
          */
-    
+
         Route::get('checklist/search', [ChecklistItemsController::class, 'search'])->middleware('can:manage technicians');
-        Route::get('machines' , [MachineController::class, 'getAll'])->middleware('can:manage technicians');
-        Route::get('technicians' , [TechnicianController::class, 'getAll'])->middleware('can:manage technicians');
+        Route::get('machines', [MachineController::class, 'getAll'])->middleware('can:manage technicians');
+        Route::get('technicians', [TechnicianController::class, 'getAll'])->middleware('can:manage technicians');
 
 
 
@@ -69,13 +70,19 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('checklist-items', ChecklistItemsController::class)->middleware('can:manage technicians');
 
 
+        /*
+         *  maintenance plans management routes
+         */
+
+        Route::apiResource('maintenance-plans', MaintenancePlanController::class)->middleware('can:manage technicians');
+
 
 
     });
 
 
     Route::prefix('technician')->middleware(['technician'])->group(function () {
-        
+
 
 
 

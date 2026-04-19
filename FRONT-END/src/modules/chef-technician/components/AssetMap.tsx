@@ -85,7 +85,7 @@ export function AssetMap({
       container: mapContainer.current,
       style: cartoStyle,
       center: [-7.62, 33.59],
-      zoom: 12,
+      zoom: 16,
       attributionControl: false,
     });
 
@@ -154,7 +154,7 @@ export function AssetMap({
         event.stopPropagation();
         map.flyTo({
           center: [machine.longitude, machine.latitude],
-          zoom: Math.max(map.getZoom(), 15.5),
+          zoom: map.getZoom() ,
           essential: true,
         });
         onMarkerSelect?.(machine);
