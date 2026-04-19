@@ -57,7 +57,10 @@ Route::middleware(['auth:api'])->group(function () {
          *  checklist templates and items management routes
          */
 
-        Route::get('checklist/search', [ChecklistItemsController::class, 'search'])->middleware('can:manage technicians');
+        Route::get('checklist/items/search', [ChecklistItemsController::class, 'search'])->middleware('can:manage technicians');
+        Route::get('checklist/templates/search', [ChecklistTemplateController::class, 'search'])->middleware('can:manage technicians');
+
+
         Route::get('machines', [MachineController::class, 'getAll'])->middleware('can:manage technicians');
         Route::get('technicians', [TechnicianController::class, 'getAll'])->middleware('can:manage technicians');
 
@@ -66,15 +69,15 @@ Route::middleware(['auth:api'])->group(function () {
         /*
          *  checklist templates and items management routes
          */
-        Route::apiResource('checklist', ChecklistTemplateController::class)->middleware('can:manage technicians');
-        Route::apiResource('checklist-items', ChecklistItemsController::class)->middleware('can:manage technicians');
+        Route::apiResource('checklist/templates', ChecklistTemplateController::class)->middleware('can:manage technicians');
+        Route::apiResource('checklist/items', ChecklistItemsController::class)->middleware('can:manage technicians');
 
 
         /*
          *  maintenance plans management routes
          */
 
-        Route::apiResource('maintenance-plans', MaintenancePlanController::class)->middleware('can:manage machines rounds')->except(['index', 'show']) ;
+        Route::apiResource('maintenance-plans', MaintenancePlanController::class)->except(['index', 'show']) ;
 
 
 
