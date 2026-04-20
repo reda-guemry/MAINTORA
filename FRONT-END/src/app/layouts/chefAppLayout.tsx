@@ -9,29 +9,24 @@ export function ChefAppLayout() {
   const { logout } = useLogout();
 
 
-  return (
-    <div className="min-h-screen flex flex-col font-sans text-[#1A1A1A] bg-[#F8F6F0]" >
-      
+  return (<div className="min-h-screen flex flex-col font-sans text-[#1A1A1A] bg-[#F8F6F0]">
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2E2D1] shadow-sm">
-        <div className="max-w-360 mx-auto px-6 h-16 flex items-center justify-between">
-          
+        <div className="max-w-[1600px] w-full mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#388E8E] text-white shadow-sm">
                 <MaintoraLogo />
               </div>
-              <h2 className="text-[14px] font-black  tracking-tighter text-[#1A1A1A] uppercase">
+              <h2 className="text-[14px] font-black tracking-tighter text-[#1A1A1A] uppercase">
                 Maintora
               </h2>
             </div>
 
-            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">
               <NavElement to="/chef-technician" label="Dashboard" end />
               <NavElement to="/chef-technician/checklist/templates" label="Checklists" />
-              <NavElement to="/chef-technician/mape" label="mape" />
+              <NavElement to="/chef-technician/mape" label="Map" />
 
-              
               <div className="w-px h-4 bg-gray-200 mx-3" />
               
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-3">Assets</span>
@@ -66,18 +61,15 @@ export function ChefAppLayout() {
           <div className="flex gap-6">
             <NavElement to="/chef-technician" label="Dashboard" end />
             <NavElement to="/chef-technician/checklist/templates" label="Checklists" />
+            <NavElement to="/chef-technician/mape" label="Map" />
           </div>
         </div>
       </header>
 
-      <main 
-        className="flex-1 relative bg-[#F8F6F0] overflow-y-auto"
-
-      >
-        <div className="max-w-360 mx-auto px-6 py-8">
+      <main className="flex-1 relative bg-[#F8F6F0] overflow-y-auto">
+        <div className="max-w-[1600px] w-full mx-auto px-6 py-6 h-full">
           <Outlet />
         </div>
       </main>
-    </div>
-  );
+    </div>);
 }

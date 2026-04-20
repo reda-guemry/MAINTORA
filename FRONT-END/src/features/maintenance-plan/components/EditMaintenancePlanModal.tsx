@@ -8,7 +8,6 @@ function normalizeDateInputValue(date: string) {
 export function EditMaintenancePlanModal({
   maintenancePlan,
   technicians,
-  templates,
   onClose,
   onSubmit,
   isLoading = false,
@@ -32,7 +31,7 @@ export function EditMaintenancePlanModal({
         status: maintenancePlan.status,
       }}
       technicians={technicians}
-      templates={templates}
+      templates={[maintenancePlan.checklist_template_id]}
       onClose={onClose}
       onSubmit={onSubmit}
       isLoading={isLoading}

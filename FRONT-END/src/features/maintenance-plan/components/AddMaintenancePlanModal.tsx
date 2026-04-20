@@ -14,7 +14,6 @@ export function AddMaintenancePlanModal({
   isOpen,
   machineId,
   technicians,
-  templates,
   onClose,
   onSubmit,
   isLoading = false,
@@ -31,7 +30,7 @@ export function AddMaintenancePlanModal({
       submitLabel="Create Plan"
       defaultValues={defaultValues}
       technicians={technicians}
-      templates={templates}
+      templates={[]}
       onClose={onClose}
       onSubmit={onSubmit}
       isLoading={isLoading}
