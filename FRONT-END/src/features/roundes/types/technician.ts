@@ -1,6 +1,6 @@
 
 
-export type ReponseTechnicians = {
+export type TechniciansResponse = {
     message : string ;
     success : boolean ;
     data : Technician[] ; 

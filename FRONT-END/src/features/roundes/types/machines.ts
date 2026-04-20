@@ -1,13 +1,14 @@
 import type { User } from "@/features/auth";
-import type { status } from "@/modules/chef-technician/components/AssetMap";
+import type { MaintenancePlan } from "@/features/maintenance-plan";
 
 
 
 
-export type ReponseMachines = {
+export type MachineStatus = "active" | "anomalous" | "maintenance";
+
+export type MachinesResponse = {
     message : string ;
     success : boolean ;
-
     data : Machine[] ; 
 }
 
@@ -18,7 +19,7 @@ export type Machine = {
     location : string ;
     latitude : number ;
     longitude : number ;
-    status : status;
+    status : MachineStatus;
     created_by : User ;
-
+    maintenance_plans?: MaintenancePlan[];
 }
