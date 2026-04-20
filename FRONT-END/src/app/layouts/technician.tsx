@@ -1,13 +1,10 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useLogout } from "@/features/auth/";
 import { MaintoraLogo } from "@/shared/components/ui";
-import { useAuth } from "@/context/useAuth";
 
 function TechnicianAppLayout() {
 
   const { logout } = useLogout() ;
-
-  const { user } = useAuth() ;
 
 
   return (
