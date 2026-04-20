@@ -1,33 +1,41 @@
 import { useApi } from "@/shared/hooks/useApi";
 import { useState } from "react";
-import type { ReponseTechnicians, Technician } from "../types/technician";
+import type { Technician, TechniciansResponse } from "../types/technician";
 
 
 
 export function useTechnicians() {
     const [ technicians, setTechnicians] = useState<Technician[]>([]);
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ error, setError ] = useState<string | null>(null);
     
     const { callApi } = useApi();
 
     async function fetchTechnicians() {
         try{
-            const reponse = await callApi<ReponseTechnicians>(
+            setIsLoading(true);
+            setError(null);
+
+            const reponse = await callApi<TechniciansResponse>(
                 'chef-technician/technicians' , 
                 {
                     method: "GET",
                 }
             )
 
-            console.log(reponse) ;
             setTechnicians(reponse.data);
 
         }catch(err) {
-            console.error("Failed to fetch technicians:", err);
+            const message =
+                err instanceof Error ? err.message : "Failed to fetch technicians";
+            setError(message);
+        } finally {
+            setIsLoading(false);
         }
 
 
     }
 
-    return { technicians , fetchTechnicians };
+    return { technicians , isLoading, error, fetchTechnicians };
 
 }
