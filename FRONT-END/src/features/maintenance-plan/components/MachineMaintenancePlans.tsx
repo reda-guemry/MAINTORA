@@ -17,36 +17,47 @@ export function MachineMaintenancePlans({
     return firstPlan.start_date.localeCompare(secondPlan.start_date);
   });
 
-  return (
-    <div className="mt-5 rounded-[24px] border border-[#e6dbcd] bg-white p-5 shadow-[0_16px_35px_rgba(62,52,39,0.08)]">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#988a79]">
-            Maintenance Plans
-          </p>
-          <h3 className="mt-2 text-lg font-black text-[#2d241c]">
-            {machineName}
-          </h3>
-          <p className="mt-2 text-sm leading-6 text-[#6f6254]">
-            Create, update, or remove preventive routines without leaving the
-            round workspace.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <span className="rounded-full bg-[#e1efed] px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-[#3b8f88]">
+  return (<div className="rounded-[20px] border border-[#e6dbcd] bg-[#fcfaf7] p-4 shadow-sm">
+      <div className="flex flex-col gap-3">
+        {/* Header: Title & Badge */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-[#988a79]">
+              Maintenance Plans
+            </p>
+            <h3 className="mt-1 truncate text-base font-black text-[#2d241c]">
+              {machineName}
+            </h3>
+          </div>
+          <span className="shrink-0 rounded-full bg-[#e1efed] px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-[#3b8f88]">
             {maintenancePlans.length} Total
           </span>
-          <Button type="button" size="sm" onClick={onAdd}>
+        </div>
+
+        {/* Description */}
+        <p className="text-[11px] leading-5 text-[#6f6254]">
+          Create, update, or remove preventive routines without leaving the
+          round workspace.
+        </p>
+
+        {/* Action Button - Rdito kayakhod l'3erd kaml bach yji zwin f l'espace sghir */}
+        <div className="mt-1">
+          <Button 
+            type="button" 
+            size="sm" 
+            onClick={onAdd}
+            className="w-full flex items-center justify-center gap-1.5"
+          >
             <span className="material-symbols-outlined text-[18px]">add</span>
             New Plan
           </Button>
         </div>
       </div>
 
-      <div className="mt-4 space-y-3">
+      {/* Plans List */}
+      <div className="mt-4 space-y-2.5">
         {sortedPlans.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[#ddd5c8] bg-[#fbf8f2] px-4 py-5 text-sm text-[#7f7468]">
+          <div className="rounded-[16px] border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-center text-xs text-[#7f7468]">
             No maintenance plans are linked to this machine yet.
           </div>
         ) : (
@@ -60,6 +71,5 @@ export function MachineMaintenancePlans({
           ))
         )}
       </div>
-    </div>
-  );
+    </div>);
 }
