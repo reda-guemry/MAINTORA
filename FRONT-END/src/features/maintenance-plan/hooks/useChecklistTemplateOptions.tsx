@@ -15,24 +15,16 @@ export function useChecklistTemplateOptions() {
         setIsLoading(true);
         setError(null);
 
-        const allTemplates: ChecklistTemplate[] = [];
-        let currentPage = 1;
-        let lastPage = 1;
+        let search = '';
 
-        do {
           const response = await callApi<ChecklistTemplateOptionsResponse>(
-            `chef-technician/checklist?page=${currentPage}`,
+            `chef-technician/checklist/templates/search?search=&page=${search}`,
             {
               method: "GET",
             },
           );
 
-          allTemplates.push(...response.data.data);
-          lastPage = response.data.last_page;
-          currentPage += 1;
-        } while (currentPage <= lastPage);
-
-        setTemplates(allTemplates);
+        setTemplates(response.data);
       } catch (err) {
         const message =
           err instanceof Error

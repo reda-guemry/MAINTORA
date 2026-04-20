@@ -52,4 +52,10 @@ class ChecklistTemplateService
     {
         return $this->checklistTemplateRepository->delete($id);
     }
+
+    public function search(string $query)
+    {
+        return $this->checklistTemplateRepository->search($query);
+    }
+
 }

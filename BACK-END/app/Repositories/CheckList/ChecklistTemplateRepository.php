@@ -36,4 +36,12 @@ class ChecklistTemplateRepository
 
         return $checklistTemplate->delete();
     }
+
+    public function search(string $query)
+    {
+        return ChecklistTemplate::where('created_by', auth('api')->id())
+            ->where('name', 'like', "%$query%")
+            ->get() ; 
+    }
+
 }

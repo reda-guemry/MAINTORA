@@ -9,6 +9,7 @@ use App\Http\Resources\ChecklistTemplateResource;
 use App\Services\CheckList\ChecklistTemplateService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Request;
 
 class ChecklistTemplateController extends Controller
 {
@@ -125,19 +126,17 @@ class ChecklistTemplateController extends Controller
         }
     }
 
-    public function search()
+    public function search(Request  $request)
     {
-        $query = request()->query('q', '');
-
+        $query = $request->query('search', '');
         $data = $this->checklistTemplateService->search($query);
-
-        $data->through(function ($checklistTemplate) {
-            return new ChecklistTemplateResource($checklistTemplate);
-        });
 
         return response()->json([
             'success' => true,
             'message' => 'Checklist templates retrieved successfully',
-            'data' => $data,
+            'data' => ChecklistTemplateResource::collection($data) ,
         ]);
-}
+
+    }
+
+} ; 

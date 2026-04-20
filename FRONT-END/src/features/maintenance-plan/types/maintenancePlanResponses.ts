@@ -15,9 +15,5 @@ export type MaintenancePlanDeleteResponse = {
 export type ChecklistTemplateOptionsResponse = {
   success: boolean;
   message: string;
-  data: {
-    data: ChecklistTemplate[];
-    current_page: number;
-    last_page: number;
-  };
+  data:  ChecklistTemplate[];
 };

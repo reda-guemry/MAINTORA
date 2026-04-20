@@ -37,14 +37,11 @@ function getMachineBadgeClasses(status: Machine["status"]) {
 
 export function Rounde() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedMachineId, setSelectedMachineId] = useState<number | null>(
-    null,
-  );
+  const [selectedMachineId, setSelectedMachineId] = useState<number | null>(null,);
+
   const [isAddPlanModalOpen, setIsAddPlanModalOpen] = useState(false);
-  const [editMaintenancePlan, setEditMaintenancePlan] =
-    useState<MaintenancePlan | null>(null);
-  const [deleteMaintenancePlan, setDeleteMaintenancePlan] =
-    useState<MaintenancePlan | null>(null);
+  const [editMaintenancePlan, setEditMaintenancePlan] =useState<MaintenancePlan | null>(null);
+  const [deleteMaintenancePlan, setDeleteMaintenancePlan] =useState<MaintenancePlan | null>(null);
   const [isSavingMaintenancePlan, setIsSavingMaintenancePlan] = useState(false);
 
   const {
@@ -67,6 +64,7 @@ export function Rounde() {
     isLoading: isLoadingTemplates,
     error: templatesError,
   } = useChecklistTemplateOptions();
+  
   const { createMaintenancePlanCall, error: createMaintenancePlanError } =
     useCreateMaintenancePlan();
   const { editMaintenancePlanCall, error: editMaintenancePlanError } =
