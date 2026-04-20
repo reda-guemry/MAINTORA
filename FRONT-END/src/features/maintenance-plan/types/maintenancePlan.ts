@@ -95,7 +95,6 @@ export type AddMaintenancePlanModalProps = {
   isOpen: boolean;
   machineId: number | null;
   technicians: Technician[];
-  templates: MaintenancePlanChecklistTemplate[];
   onClose: () => void;
   onSubmit: (payload: CreateMaintenancePlanPayload) => void;
   isLoading?: boolean;
@@ -105,7 +104,6 @@ export type AddMaintenancePlanModalProps = {
 export type EditMaintenancePlanModalProps = {
   maintenancePlan: MaintenancePlan | null;
   technicians: Technician[];
-  templates: MaintenancePlanChecklistTemplate[];
   onClose: () => void;
   onSubmit: (payload: UpdateMaintenancePlanPayload) => void;
   isLoading?: boolean;
