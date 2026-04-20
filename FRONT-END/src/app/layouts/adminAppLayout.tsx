@@ -99,7 +99,7 @@ function AdminAppLayout() {
                 {user?.first_name} {user?.last_name}
               </p>
               <p className="text-[11px] text-gray-400 font-medium">
-                {user?.roles[0].name}
+                {user?.roles?.[0]?.name ?? "No role"}
               </p>
             </div>
 
