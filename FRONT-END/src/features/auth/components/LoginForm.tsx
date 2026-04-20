@@ -21,7 +21,7 @@ export function LoginForm({ onSuccess }: onSuccess) {
     const result = await loginUser(data);
 
     console.log(result);
-    onSuccess(result.data.user.roles);
+    onSuccess(result.data.user.roles ?? []);
   };
 
   return (

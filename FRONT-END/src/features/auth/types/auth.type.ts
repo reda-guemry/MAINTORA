@@ -41,7 +41,7 @@ export type RefreshTokenResponse = {
 
 
 export type onSuccess = {
-    onSuccess: (roles: User["roles"]) => void;
+    onSuccess: (roles: NonNullable<User["roles"]>) => void;
 }
 
 
@@ -72,4 +72,3 @@ export type AuthContextType = {
 export type AuthProviderProps = {
     children: ReactNode;
 };
-

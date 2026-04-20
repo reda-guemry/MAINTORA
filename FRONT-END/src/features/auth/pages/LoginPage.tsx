@@ -13,7 +13,7 @@ export function LoginPage() {
 
   const navigate = useNavigate();
 
-  function handleLoginSuccess(roles: User["roles"] ) {
+  function handleLoginSuccess(roles: NonNullable<User["roles"]>) {
     const defaultRoute = getDefaultRouteByRole(roles.map(role => role.name));
     navigate(defaultRoute);
     
