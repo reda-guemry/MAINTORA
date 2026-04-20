@@ -3,7 +3,7 @@ export * from "./types/maintenancePlanResponses";
 export * from "./hooks/useCreateMaintenancePlan";
 export * from "./hooks/useEditMaintenancePlan";
 export * from "./hooks/useDeleteMaintenancePlan";
-export * from "./hooks/useChecklistTemplateOptions";
+export * from "./hooks/useSearchChecklistTemplates";
 export * from "./components/MachineMaintenancePlans";
 export * from "./components/AddMaintenancePlanModal";
 export * from "./components/EditMaintenancePlanModal";

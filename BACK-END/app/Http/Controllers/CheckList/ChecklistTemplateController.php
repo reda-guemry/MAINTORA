@@ -9,7 +9,7 @@ use App\Http\Resources\ChecklistTemplateResource;
 use App\Services\CheckList\ChecklistTemplateService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Request;
+use Illuminate\Http\Request;
 
 class ChecklistTemplateController extends Controller
 {

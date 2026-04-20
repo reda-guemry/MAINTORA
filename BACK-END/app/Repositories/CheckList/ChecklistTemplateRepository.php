@@ -41,6 +41,7 @@ class ChecklistTemplateRepository
     {
         return ChecklistTemplate::where('created_by', auth('api')->id())
             ->where('name', 'like', "%$query%")
+            ->limit(7)
             ->get() ; 
     }
 
