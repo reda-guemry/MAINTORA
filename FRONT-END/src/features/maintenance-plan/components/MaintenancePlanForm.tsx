@@ -109,16 +109,15 @@ export function MaintenancePlanForm({ ...props }: MaintenancePlanFormProps) {
     props.onSubmit(payload);
   }
 
-  return (<div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2d241c]/40 p-4 backdrop-blur-sm transition-opacity">
-      <div className="w-full max-w-[680px] overflow-hidden rounded-[32px] border border-[#e6dbcd] bg-[#fcfaf7] shadow-[0_24px_60px_rgba(62,52,39,0.2)]">
-        
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2d241c]/40 p-4 backdrop-blur-sm transition-opacity">
+      <div className="w-full max-w-170 overflow-hidden rounded-4xl border border-[#e6dbcd] bg-[#fcfaf7] shadow-[0_24px_60px_rgba(62,52,39,0.2)]">
         {/* Header */}
         <div className="border-b border-[#ece3d7] bg-white/50 px-6 py-5 sm:px-8">
           <h3 className="text-xl font-black text-[#2d241c]">{props.title}</h3>
           <p className="mt-1.5 text-sm text-[#6f6254]">{props.description}</p>
         </div>
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit(handleFormSubmit)}
           className="px-6 py-6 sm:px-8 sm:py-7"
@@ -134,8 +133,6 @@ export function MaintenancePlanForm({ ...props }: MaintenancePlanFormProps) {
           />
 
           <div className="flex flex-col gap-6">
-            
-            {/* Checklist Template Card */}
             <div className="rounded-[24px] border border-[#e7ddd0] bg-white p-5 shadow-[0_2px_8px_rgba(62,52,39,0.04)]">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0 flex-1">
@@ -147,7 +144,7 @@ export function MaintenancePlanForm({ ...props }: MaintenancePlanFormProps) {
                   </p>
                 </div>
 
-                <div className="relative w-full sm:max-w-[260px]">
+                <div className="relative w-full sm:max-w-65">
                   <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-[#9d9388]">
                     search
                   </span>
@@ -159,7 +156,7 @@ export function MaintenancePlanForm({ ...props }: MaintenancePlanFormProps) {
                   />
 
                   {templateSearch.trim() && (
-                    <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-20 overflow-hidden rounded-[16px] border border-[#e6dbcd] bg-white/95 shadow-[0_16px_32px_rgba(62,52,39,0.12)] backdrop-blur-md">
+                    <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-20 overflow-hidden rounded-2xl border border-[#e6dbcd] bg-white/95 shadow-[0_16px_32px_rgba(62,52,39,0.12)] backdrop-blur-md">
                       {isSearching ? (
                         <div className="px-4 py-4 text-xs text-[#7f7468]">
                           Searching checklist templates...
@@ -198,7 +195,9 @@ export function MaintenancePlanForm({ ...props }: MaintenancePlanFormProps) {
               </div>
 
               {templateSearchError && (
-                <p className="mt-3 text-xs font-medium text-[#d9534f]">{templateSearchError}</p>
+                <p className="mt-3 text-xs font-medium text-[#d9534f]">
+                  {templateSearchError}
+                </p>
               )}
 
               {errors.checklist_template_id && (
@@ -352,13 +351,17 @@ export function MaintenancePlanForm({ ...props }: MaintenancePlanFormProps) {
               <Button type="button" variant="secondary" onClick={props.onClose}>
                 Cancel
               </Button>
-              <Button type="submit" isLoading={props.isLoading} disabled={isSubmitDisabled}>
+              <Button
+                type="submit"
+                isLoading={props.isLoading}
+                disabled={isSubmitDisabled}
+              >
                 {props.isLoading ? "Saving..." : props.submitLabel}
               </Button>
             </div>
-            
           </div>
         </form>
       </div>
-    </div>);
+    </div>
+  );
 }

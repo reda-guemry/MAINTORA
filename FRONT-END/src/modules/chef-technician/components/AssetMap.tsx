@@ -11,27 +11,27 @@ interface MapProps {
 }
 
 const markerColors: Record<
-  Machine["status"] ,
+  Machine["status"],
   {
     accent: string;
     glow: string;
-    ring: string;
-  } 
+    bg: string;
+  }
 > = {
   active: {
     accent: "#3b8f88",
-    glow: "rgba(59, 143, 136, 0.24)",
-    ring: "#b7ded8",
+    glow: "rgba(59, 143, 136, 0.35)",
+    bg: "#f0f7f6",
   },
   anomalous: {
     accent: "#d9534f",
-    glow: "rgba(217, 83, 79, 0.26)",
-    ring: "#f4c4c2",
+    glow: "rgba(217, 83, 79, 0.35)",
+    bg: "#fdf3f2",
   },
   maintenance: {
     accent: "#d58a1d",
-    glow: "rgba(213, 138, 29, 0.24)",
-    ring: "#f1d2a0",
+    glow: "rgba(213, 138, 29, 0.35)",
+    bg: "#fcf6ec",
   },
 };
 
@@ -91,7 +91,7 @@ export function AssetMap({
     });
 
     mapRef.current.addControl(
-      new maplibregl.NavigationControl(),
+      new maplibregl.NavigationControl({ showCompass: false }),
       "bottom-right",
     );
 
@@ -134,39 +134,56 @@ export function AssetMap({
     machines.forEach((machine) => {
       const palette = markerColors[machine.status];
       const isSelected = machine.id === selectedMarkerId;
-      const markerElement = document.createElement("button");
+      
+      // The outer wrapper given to Maplibre (No transforms here!)
+      const markerWrapper = document.createElement("button");
+      markerWrapper.type = "button";
+      markerWrapper.setAttribute("aria-label", machine.name);
+      markerWrapper.className = "outline-none group bg-transparent border-none p-0 cursor-pointer block";
+      markerWrapper.style.zIndex = isSelected ? "50" : "1";
 
-      markerElement.type = "button";
-      markerElement.setAttribute("aria-label", machine.name);
-      markerElement.style.background = "transparent";
-      markerElement.style.border = "none";
-      markerElement.style.padding = "0";
-      markerElement.style.cursor = "pointer";
-      markerElement.innerHTML = `
-        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <div style="padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.96); border:1px solid ${isSelected ? palette.ring : "#e2d8ca"}; box-shadow:${isSelected ? `0 12px 28px ${palette.glow}` : "0 8px 18px rgba(59,45,31,0.12)"}; color:#2d241c; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">
+      // The inner wrapper holds the animation, anchored strictly to the bottom center
+      markerWrapper.innerHTML = `
+        <div class="relative flex flex-col items-center pb-1.5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]" 
+             style="transform-origin: bottom center; transform: ${isSelected ? 'scale(1.25)' : 'scale(1)'};">
+          
+          <div class="absolute bottom-[100%] mb-2 whitespace-nowrap rounded-xl border border-white/80 bg-white/95 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_8px_16px_rgba(62,52,39,0.08)] backdrop-blur-md transition-all duration-300 ${
+            isSelected 
+              ? "opacity-100 translate-y-0" 
+              : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0"
+          }" style="color: ${isSelected ? palette.accent : '#2d241c'};">
             ${machine.code}
           </div>
-          <div style="position:relative; display:flex; align-items:center; justify-content:center; width:${isSelected ? 62 : 54}px; height:${isSelected ? 62 : 54}px; border-radius:18px; background:${isSelected ? "#fffaf2" : "rgba(255,255,255,0.96)"}; border:2px solid ${isSelected ? palette.accent : "#eadfce"}; box-shadow:${isSelected ? `0 20px 34px ${palette.glow}` : "0 10px 22px rgba(59,45,31,0.14)"};">
-            <span class="material-symbols-outlined" style="font-size:28px; color:${palette.accent};">precision_manufacturing</span>
-            <span style="position:absolute; right:-2px; top:-2px; width:14px; height:14px; border-radius:999px; background:${palette.accent}; border:2px solid #fff;"></span>
+
+          <div class="relative flex h-10 w-10 items-center justify-center rounded-full border-2 bg-white shadow-md transition-colors duration-300" 
+               style="border-color: ${palette.accent}; background-color: ${isSelected ? palette.bg : 'white'}; box-shadow: ${isSelected ? `0 0 24px ${palette.glow}, 0 4px 12px rgba(0,0,0,0.1)` : '0 4px 10px rgba(0,0,0,0.08)'};">
+            <span class="material-symbols-outlined text-[20px]" style="color: ${palette.accent};">
+              memory
+            </span>
+            
+            <span class="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-white" style="background-color: ${palette.accent};"></span>
           </div>
+
+          <div class="h-2 w-0.5 mt-0.5 rounded-full opacity-80" style="background-color: ${palette.accent};"></div>
+          
+          <div class="absolute bottom-0 h-1.5 w-5 rounded-[100%] bg-[#2d241c]/30 blur-[2.5px] transition-all duration-300" style="transform: ${isSelected ? 'scale(1.2)' : 'scale(1)'};"></div>
         </div>
       `;
 
-      markerElement.addEventListener("click", (event) => {
+      markerWrapper.addEventListener("click", (event) => {
         event.stopPropagation();
         map.flyTo({
           center: [machine.longitude, machine.latitude],
-          zoom: map.getZoom(),
+          zoom: Math.max(map.getZoom(), 16),
           essential: true,
+          duration: 800,
         });
         onMarkerSelect?.(machine);
       });
 
       const markerInstance = new maplibregl.Marker({
-        element: markerElement,
-        anchor: "bottom",
+        element: markerWrapper,
+        anchor: "bottom", // Anchors the bottom center of the whole div to the coordinates
       })
         .setLngLat([machine.longitude, machine.latitude])
         .addTo(map);
@@ -186,11 +203,11 @@ export function AssetMap({
       if (selectedMarker) {
         map.flyTo({
           center: [selectedMarker.longitude, selectedMarker.latitude],
-          zoom: Math.max(map.getZoom(), 15.5),
+          zoom: Math.max(map.getZoom(), 16),
           essential: true,
+          duration: 800,
         });
       }
-
       return;
     }
 
@@ -203,12 +220,13 @@ export function AssetMap({
       bounds.extend([machine.longitude, machine.latitude]);
     });
 
+    // Padding m9ad m3a sidebar jdida
     map.fitBounds(bounds, {
-      padding: 90,
+      padding: { top: 120, bottom: 120, left: 450, right: 120 },
       maxZoom: 15,
-      duration: 900,
+      duration: 1000,
     });
   }, [machines, onMarkerSelect, selectedMarkerId]);
 
-  return <div ref={mapContainer} className="h-full w-full" />;
+  return <div ref={mapContainer} className="h-full w-full outline-none" />;
 }
