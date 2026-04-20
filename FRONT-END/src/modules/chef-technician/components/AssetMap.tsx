@@ -1,11 +1,7 @@
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import type { Machine } from "@/features/roundes" ;
-
-
-export type status = "active" | "anomalous" | "maintenance";
-
+import type { Machine } from "@/features/roundes";
 
 interface MapProps {
   machines: Machine[];
@@ -14,21 +10,28 @@ interface MapProps {
   onMapBackgroundClick?: () => void;
 }
 
-const markerColors = {
+const markerColors: Record<
+  Machine["status"] ,
+  {
+    accent: string;
+    glow: string;
+    ring: string;
+  } 
+> = {
   active: {
+    accent: "#3b8f88",
+    glow: "rgba(59, 143, 136, 0.24)",
+    ring: "#b7ded8",
+  },
+  anomalous: {
     accent: "#d9534f",
     glow: "rgba(217, 83, 79, 0.26)",
     ring: "#f4c4c2",
   },
-  anomalous: {
+  maintenance: {
     accent: "#d58a1d",
     glow: "rgba(213, 138, 29, 0.24)",
     ring: "#f1d2a0",
-  },
-  maintenance: {
-    accent: "#3b8f88",
-    glow: "rgba(59, 143, 136, 0.24)",
-    ring: "#b7ded8",
   },
 };
 
@@ -63,9 +66,7 @@ export function AssetMap({
       sources: {
         "carto-tiles": {
           type: "raster",
-          tiles: [
-            "https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-          ],
+          tiles: ["https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"],
           tileSize: 256,
           attribution: "&copy; OpenStreetMap &copy; CARTO",
         },
@@ -89,7 +90,10 @@ export function AssetMap({
       attributionControl: false,
     });
 
-    mapRef.current.addControl(new maplibregl.NavigationControl(), "bottom-right");
+    mapRef.current.addControl(
+      new maplibregl.NavigationControl(),
+      "bottom-right",
+    );
 
     return () => {
       markerRefs.current.forEach((marker) => marker.remove());
@@ -154,7 +158,7 @@ export function AssetMap({
         event.stopPropagation();
         map.flyTo({
           center: [machine.longitude, machine.latitude],
-          zoom: map.getZoom() ,
+          zoom: map.getZoom(),
           essential: true,
         });
         onMarkerSelect?.(machine);
@@ -175,7 +179,9 @@ export function AssetMap({
     }
 
     if (selectedMarkerId !== null) {
-      const selectedMarker = machines.find((machine) => machine.id === selectedMarkerId);
+      const selectedMarker = machines.find(
+        (machine) => machine.id === selectedMarkerId,
+      );
 
       if (selectedMarker) {
         map.flyTo({

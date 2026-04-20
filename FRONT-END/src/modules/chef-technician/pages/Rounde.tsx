@@ -2,6 +2,19 @@ import { useEffect, useMemo, useState } from "react";
 import { useMachines } from "@/features/roundes/hooks/useMachines";
 import { useTechnicians } from "@/features/roundes/hooks/useTechnisian";
 import type { Technician } from "@/features/roundes/types/technician";
+import {
+  AddMaintenancePlanModal,
+  DeleteMaintenancePlanDialog,
+  EditMaintenancePlanModal,
+  MachineMaintenancePlans,
+  useChecklistTemplateOptions,
+  useCreateMaintenancePlan,
+  useDeleteMaintenancePlan,
+  useEditMaintenancePlan,
+  type CreateMaintenancePlanPayload,
+  type MaintenancePlan,
+  type UpdateMaintenancePlanPayload,
+} from "@/features/maintenance-plan";
 import { AssetMap  } from "../components/AssetMap";
 import { cn } from "@/shared/utils";
 import type { Machine } from "@/features/roundes" ;
@@ -27,25 +40,72 @@ export function Rounde() {
   const [selectedMachineId, setSelectedMachineId] = useState<number | null>(
     null,
   );
+  const [isAddPlanModalOpen, setIsAddPlanModalOpen] = useState(false);
+  const [editMaintenancePlan, setEditMaintenancePlan] =
+    useState<MaintenancePlan | null>(null);
+  const [deleteMaintenancePlan, setDeleteMaintenancePlan] =
+    useState<MaintenancePlan | null>(null);
+  const [isSavingMaintenancePlan, setIsSavingMaintenancePlan] = useState(false);
 
-  const { technicians, fetchTechnicians } = useTechnicians();
-  const { machines, fetchMachines } = useMachines();
+  const {
+    technicians,
+    isLoading: isLoadingTechnicians,
+    error: techniciansError,
+    fetchTechnicians,
+  } = useTechnicians();
+  const {
+    machines,
+    isLoading: isLoadingMachines,
+    error: machinesError,
+    fetchMachines,
+    addMaintenancePlanToMachine,
+    updateMaintenancePlanInMachine,
+    removeMaintenancePlanFromMachine,
+  } = useMachines();
+  const {
+    templates,
+    isLoading: isLoadingTemplates,
+    error: templatesError,
+  } = useChecklistTemplateOptions();
+  const { createMaintenancePlanCall, error: createMaintenancePlanError } =
+    useCreateMaintenancePlan();
+  const { editMaintenancePlanCall, error: editMaintenancePlanError } =
+    useEditMaintenancePlan();
+  const { deleteMaintenancePlanCall, error: deleteMaintenancePlanError } =
+    useDeleteMaintenancePlan();
 
   useEffect(() => {
     fetchTechnicians();
     fetchMachines();
   }, []);
 
+  useEffect(() => {
+    setIsAddPlanModalOpen(false);
+    setEditMaintenancePlan(null);
+    setDeleteMaintenancePlan(null);
+  }, [selectedMachineId]);
+
   const selectedMachine = useMemo(
     () => machines.find((machine) => machine.id === selectedMachineId) ?? null,
     [machines, selectedMachineId],
+  );
+  const totalMaintenancePlans = useMemo(
+    () =>
+      machines.reduce(
+        (totalPlans, machine) =>
+          totalPlans + (machine.maintenance_plans?.length ?? 0),
+        0,
+      ),
+    [machines],
   );
 
   const sidebarTechnicians = technicians;
   const sidebarTitle = selectedMachine ? "Machine Focus" : "Technician Roster";
   const sidebarSubtitle = selectedMachine
-    ? "Review this machine and the available technicians below."
+    ? "Review this machine, manage its maintenance plans, and keep the available technicians nearby."
     : "Select a machine marker on the map to inspect it and keep the technicians list in view.";
+  const selectedMachinePlans = selectedMachine?.maintenance_plans ?? [];
+  const sidebarDataError = machinesError ?? techniciansError;
 
   function handleMarkerSelect(marker: Machine) {
     setSelectedMachineId(marker.id);
@@ -54,6 +114,73 @@ export function Rounde() {
 
   function handleClearSelection() {
     setSelectedMachineId(null);
+  }
+
+  async function handleAddMaintenancePlanSubmit(
+    payload: CreateMaintenancePlanPayload,
+  ) {
+    if (!selectedMachine) {
+      return;
+    }
+
+    setIsSavingMaintenancePlan(true);
+
+    try {
+      const response = await createMaintenancePlanCall(payload);
+
+      if (response?.data) {
+        addMaintenancePlanToMachine(selectedMachine.id, response.data);
+        setIsAddPlanModalOpen(false);
+      }
+    } finally {
+      setIsSavingMaintenancePlan(false);
+    }
+  }
+
+  async function handleEditMaintenancePlanSubmit(
+    payload: UpdateMaintenancePlanPayload,
+  ) {
+    if (!selectedMachine || !editMaintenancePlan) {
+      return;
+    }
+
+    setIsSavingMaintenancePlan(true);
+
+    try {
+      const response = await editMaintenancePlanCall(
+        editMaintenancePlan.id,
+        payload,
+      );
+
+      if (response?.data) {
+        updateMaintenancePlanInMachine(selectedMachine.id, response.data);
+        setEditMaintenancePlan(null);
+      }
+    } finally {
+      setIsSavingMaintenancePlan(false);
+    }
+  }
+
+  async function handleDeleteMaintenancePlanConfirm() {
+    if (!selectedMachine || !deleteMaintenancePlan) {
+      return;
+    }
+
+    setIsSavingMaintenancePlan(true);
+
+    try {
+      const response = await deleteMaintenancePlanCall(deleteMaintenancePlan.id);
+
+      if (response !== undefined) {
+        removeMaintenancePlanFromMachine(
+          selectedMachine.id,
+          deleteMaintenancePlan.id,
+        );
+        setDeleteMaintenancePlan(null);
+      }
+    } finally {
+      setIsSavingMaintenancePlan(false);
+    }
   }
 
   return (
@@ -92,10 +219,12 @@ export function Rounde() {
             </div>
             <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
               <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
-                Focus
+                Maintenance Plans
               </p>
-              <p className="mt-3 truncate text-lg font-black text-[#2d241c]">
-                {selectedMachine?.code ?? "All Techs"}
+              <p className="mt-3 text-3xl font-black text-[#2d241c]">
+                {selectedMachine
+                  ? selectedMachinePlans.length
+                  : totalMaintenancePlans}
               </p>
             </div>
           </div>
@@ -150,7 +279,7 @@ export function Rounde() {
                     <span
                       className={cn(
                         'rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em]' , 
-
+                        getMachineBadgeClasses(selectedMachine.status),
                       )}
                     >
                       {selectedMachine.status}
@@ -180,6 +309,16 @@ export function Rounde() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 py-4">
+              {selectedMachine && (
+                <MachineMaintenancePlans
+                  machineName={selectedMachine.name}
+                  maintenancePlans={selectedMachinePlans}
+                  onAdd={() => setIsAddPlanModalOpen(true)}
+                  onEdit={setEditMaintenancePlan}
+                  onDelete={setDeleteMaintenancePlan}
+                />
+              )}
+
               <div className="mb-3 flex items-center justify-between px-2">
                 <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#988a79]">
                   Technicians
@@ -190,7 +329,15 @@ export function Rounde() {
               </div>
 
               <div className="space-y-3">
-                {sidebarTechnicians.length === 0 ? (
+                {sidebarDataError ? (
+                  <div className="rounded-2xl border border-dashed border-[#ecd6d6] bg-white px-4 py-5 text-sm text-[#8a4f4f]">
+                    {sidebarDataError}
+                  </div>
+                ) : isLoadingMachines || isLoadingTechnicians ? (
+                  <div className="rounded-2xl border border-dashed border-[#ddd5c8] bg-white px-4 py-5 text-sm text-[#7f7468]">
+                    Loading round workspace data...
+                  </div>
+                ) : sidebarTechnicians.length === 0 ? (
                   <div className="rounded-2xl border border-dashed border-[#ddd5c8] bg-white px-4 py-5 text-sm text-[#7f7468]">
                     No technicians available right now.
                   </div>
@@ -279,6 +426,35 @@ export function Rounde() {
           </div>
         </div>
       </section>
+
+      <AddMaintenancePlanModal
+        isOpen={isAddPlanModalOpen}
+        machineId={selectedMachine?.id ?? null}
+        technicians={technicians}
+        templates={templates}
+        onClose={() => setIsAddPlanModalOpen(false)}
+        onSubmit={handleAddMaintenancePlanSubmit}
+        isLoading={isSavingMaintenancePlan || isLoadingTemplates}
+        error={createMaintenancePlanError ?? templatesError}
+      />
+
+      <EditMaintenancePlanModal
+        maintenancePlan={editMaintenancePlan}
+        technicians={technicians}
+        templates={templates}
+        onClose={() => setEditMaintenancePlan(null)}
+        onSubmit={handleEditMaintenancePlanSubmit}
+        isLoading={isSavingMaintenancePlan || isLoadingTemplates}
+        error={editMaintenancePlanError ?? templatesError}
+      />
+
+      <DeleteMaintenancePlanDialog
+        maintenancePlan={deleteMaintenancePlan}
+        onClose={() => setDeleteMaintenancePlan(null)}
+        onConfirm={handleDeleteMaintenancePlanConfirm}
+        isLoading={isSavingMaintenancePlan}
+        error={deleteMaintenancePlanError}
+      />
     </div>
   );
 }
