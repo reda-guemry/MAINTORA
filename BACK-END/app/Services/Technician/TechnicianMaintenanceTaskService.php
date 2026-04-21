@@ -49,4 +49,5 @@ class TechnicianMaintenanceTaskService
         return $this->technicianMaintenanceTaskRepository->getAssignedMachines();
     }
 
+    
 }

@@ -72,4 +72,48 @@ class TechnicianMaintenanceTaskRepository
     {
         return MaintenanceTask::where('assigned_to', auth('api')->id());
     }
+
+    public function getNextRoundDate()
+    {
+        $nextRound = $this->query()
+            ->where('status', 'pending')
+            ->orderBy('scheduled_at')
+            ->first();
+
+        return $nextRound ? $nextRound->scheduled_at : null;
+    }
+
+    public function countPendingTasks()
+    {
+        return $this->query()
+            ->where('status', 'pending')
+            ->count();
+    }
+
+    public function countCompletedTasks()
+    {
+        return $this->query()
+            ->where('status', 'completed')
+            ->count();
+    }
+
+    public function getNextRoundDateForTechnician(int $technicianId)
+    {   
+        $nextRound = MaintenanceTask::where('assigned_to', $technicianId)
+            ->where('status', 'pending')
+            ->orderBy('scheduled_at')
+            ->first();
+
+        return $nextRound ? $nextRound->scheduled_at : null;
+    }
+
+    public function getFiveNextRound()
+    {
+        return $this->query()
+            ->where('status', 'pending')
+            ->orderBy('scheduled_at')
+            ->take(5)
+            ->get();
+    }
+
 }
