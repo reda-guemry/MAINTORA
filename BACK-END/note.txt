@@ -80,7 +80,7 @@ maintenance_tasks:
     - updated_at
 
 
-round_check_items:
+maintenance_task_check_items:
     - id (PK)
     - round_id (FK -> rounds.id)
     - checklist_item_id (FK -> checklist_items.id)
