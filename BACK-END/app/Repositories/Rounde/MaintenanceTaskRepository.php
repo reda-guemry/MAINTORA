@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Rounde;
+namespace App\Repositories\Rounde;
 
 use App\Models\MaintenanceTask;
 

@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 
 
 #[Fillable([
+    'machine_id',
+    'maintenance_plan_id',
+    'assigned_to',
     'scheduled_at',
     'status',
 ])]

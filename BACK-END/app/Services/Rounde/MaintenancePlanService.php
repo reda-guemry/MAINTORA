@@ -15,6 +15,7 @@ class MaintenancePlanService
         private MaintenancePlanRepository $maintenancePlanRepository,
         private MachineService $machineService,
         private UserService $userService,
+        private GeneratePlanningService $generatePlanningService
     ) {}
 
 
@@ -26,7 +27,10 @@ class MaintenancePlanService
 
             $data['created_by'] = auth('api')->id();
 
-            return $this->maintenancePlanRepository->create($data);
+            $maintenancePlan = $this->maintenancePlanRepository->create($data);
+            $this->generatePlanningService->generateRoundsForPlan($maintenancePlan);
+
+            return $maintenancePlan;
         });
     }
 
@@ -51,7 +55,12 @@ class MaintenancePlanService
                 $this->ensureAssignedUserIsTechnician($data['assigned_to']);
             }
 
-            return $this->maintenancePlanRepository->update($id, $data);
+            $maintenancePlan = $this->maintenancePlanRepository->update($id, $data);
+
+            $this->generatePlanningService->generateRoundsForPlan($maintenancePlan);
+
+            return $maintenancePlan ->refresh();
+            
         });
     }
 
