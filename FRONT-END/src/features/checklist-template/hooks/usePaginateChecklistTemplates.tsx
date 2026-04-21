@@ -21,7 +21,7 @@ export function usePaginateChecklistTemplates() {
         setError(null);
 
         const response = await callApi<PaginateChecklistTemplateResponse>(
-          `chef-technician/checklist?page=${currentPage}`,
+          `chef-technician/checklist/templates?page=${currentPage}`,
           {
             method: "GET",
           }

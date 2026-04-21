@@ -15,7 +15,7 @@ export function useEditChecklistTemplate() {
   ) {
     try {
       const response = await callApi<{ data: ChecklistTemplate }>(
-        `chef-technician/checklist/${templateId}`,
+        `chef-technician/checklist/templates/${templateId}`,
         {
           method: "PUT",
           body: data,

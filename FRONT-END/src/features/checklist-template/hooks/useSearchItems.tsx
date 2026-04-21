@@ -22,7 +22,7 @@ export function useSearchItems() {
 
     try {
       const response = await callApi<SearchChecklistItemsResponse>(
-        `chef-technician/checklist/search?search=${encodeURIComponent(normalizedSearch)}`,
+        `chef-technician/checklist/items/search?search=${encodeURIComponent(normalizedSearch)}`,
         {}
       );
 
