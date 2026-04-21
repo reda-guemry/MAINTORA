@@ -17,10 +17,12 @@ class ChecklistItemResource extends JsonResource
         return [
             'id' => $this->id,
             'label' => $this->label,
-            'pivot' => [
-                'id' => $this->pivot->id,
-                'order' => $this->pivot->order,
-            ],
+            'pivot' =>  $this->whenLoaded('pivot', function () {
+                return [
+                    'id' => $this->pivot->id,
+                    'order' => $this->pivot->order,
+                ];
+            }),
         ];
     }
 }

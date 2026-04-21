@@ -8,6 +8,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 
-Schedule::command('app:generate-planning-rounds')->dailyAt('11:03') ;
+Schedule::command('app:generate-planning-rounds')->dailyAt('11:26') ;
 
 
