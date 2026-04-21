@@ -20,7 +20,7 @@ export function usePaginateChecklistItems() {
         setError(null);
 
         const response = await callApi<PaginateChecklistItemResponse>(
-          `chef-technician/checklist-items?page=${currentPage}`,
+          `chef-technician/checklist/items?page=${currentPage}`,
           {
             method: "GET",
           }

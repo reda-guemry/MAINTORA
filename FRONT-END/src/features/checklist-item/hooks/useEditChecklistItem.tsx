@@ -15,7 +15,7 @@ export function useEditChecklistItem() {
   ) {
     try {
       const response = await callApi<{ data: ChecklistItem }>(
-        `chef-technician/checklist-items/${itemId}`,
+        `chef-technician/checklist/items/${itemId}`,
         {
           method: "PUT",
           body: data,

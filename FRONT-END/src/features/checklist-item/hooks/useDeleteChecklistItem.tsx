@@ -7,7 +7,7 @@ export function useDeleteChecklistItem() {
 
   async function deleteChecklistItemCall(itemId: number) {
     try {
-      const response = await callApi(`chef-technician/checklist-items/${itemId}`, {
+      const response = await callApi(`chef-technician/checklist/items/${itemId}`, {
         method: "DELETE",
       });
 

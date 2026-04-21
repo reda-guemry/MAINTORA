@@ -12,7 +12,7 @@ export function useCreateChecklistItem() {
   async function createChecklistItemCall(data: ChecklistItemPayload) {
     try {
       const response = await callApi<{ data: ChecklistItem }>(
-        "chef-technician/checklist-items",
+        "chef-technician/checklist/items",
         {
           method: "POST",
           body: data,
