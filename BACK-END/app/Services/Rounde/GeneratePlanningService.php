@@ -68,7 +68,7 @@ class GeneratePlanningService
                     'status' => 'pending'
                 ],
                 [
-                    'assigned_to' => $plan->assigned_to,
+                    // 'assigned_to' => $plan->assigned_to,
                     'machine_id' => $plan->machine_id,
                 ]
             );

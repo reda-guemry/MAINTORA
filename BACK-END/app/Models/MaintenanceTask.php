@@ -11,9 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 #[Fillable([
     'machine_id',
     'maintenance_plan_id',
-    'assigned_to',
     'scheduled_at',
+    'assigned_to',
     'status',
+    'completed_at',
 ])]
 class MaintenanceTask extends Model
 {
@@ -30,6 +31,11 @@ class MaintenanceTask extends Model
     public function maintenancePlan()
     {
         return $this->belongsTo(MaintenancePlan::class) ;
+    }
+
+    public function assignedTo()
+    {
+        return $this->belongsTo(User::class, 'assigned_to') ;
     }
 
 
