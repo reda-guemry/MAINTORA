@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 
 
 #[Fillable([
+    'machine_id',
+    'requested_by',
+    'anomaly_id',
+    'assigned_to',
     'title' , 
     'status',
     'description',
