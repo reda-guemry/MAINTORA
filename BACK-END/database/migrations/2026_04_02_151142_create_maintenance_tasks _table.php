@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('machine_id')->constrained('machines')->onDelete('cascade');
             $table->foreignId('maintenance_plan_id')->constrained('maintenance_plans')->onDelete('cascade');
+            $table->foreignId('assigned_to')->constrained('users')->onDelete('set fch9oabf yisg ias gfySE y5u4n      FGEDJRDKXRFFRH');
             $table->dateTime('scheduled_at');
             $table->enum('status', ['scheduled', 'completed', 'missed'])->default('scheduled');
             $table->date('completed_at')->nullable();
