@@ -12,7 +12,7 @@ export function useCreateChecklistTemplate() {
   async function createChecklistTemplateCall(data: ChecklistTemplatePayload) {
     try {
       const response = await callApi<{ data: ChecklistTemplate }>(
-        "chef-technician/checklist",
+        "chef-technician/checklist/templates",
         {
           method: "POST",
           body: data,

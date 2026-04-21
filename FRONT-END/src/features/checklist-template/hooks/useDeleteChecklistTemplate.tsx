@@ -7,7 +7,7 @@ export function useDeleteChecklistTemplate() {
 
   async function deleteChecklistTemplateCall(templateId: number) {
     try {
-      const response = await callApi(`chef-technician/checklist/${templateId}`, {
+      const response = await callApi(`chef-technician/checklist/templates/${templateId}`, {
         method: "DELETE",
       });
 
