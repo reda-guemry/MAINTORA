@@ -97,6 +97,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('machines', [TechnicianMachineController::class, 'index']);
         Route::get('tasks', [TechnicianMaintenanceTaskController::class, 'index']);
         Route::get('tasks/{id}', [TechnicianMaintenanceTaskController::class, 'show']);
+        Route::get('technician/statistics' , [TechnicianController::class, 'statistics']);
 
         /*
          *  Maintenance task checks routes
