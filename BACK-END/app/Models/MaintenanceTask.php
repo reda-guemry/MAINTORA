@@ -38,6 +38,10 @@ class MaintenanceTask extends Model
         return $this->belongsTo(User::class, 'assigned_to') ;
     }
 
+    public function checkItems()
+    {
+        return $this->hasMany(MaintenanceTaskCheck::class) ;
+    }
 
     /* * Relationships
      * Has

@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 
 #[Fillable([
+    'machine_id',
+    'reported_by',
+    'maintenance_task_id',
     'title',
     'description',
     'severity',
@@ -27,10 +30,9 @@ class Anomaly extends Model
         return $this->belongsTo(User::class, 'reported_by') ;
     }
 
-
-     public function maintenanceTasks()
+    public function maintenanceTask()
     {
-        return $this->hasOne(MaintenanceTask::class) ;
+        return $this->belongsTo(MaintenanceTask::class) ;
     }
 
 }
