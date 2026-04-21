@@ -2,22 +2,24 @@
 
 namespace App\Services\Rounde;
 
-use App\Models\MaintenancePlan;
+use App\Models\MaintenanceTask;
 
 
 class MaintenanceTaskRepository
 {
 
-    
-    public function __construct(){}
+
+    public function __construct()
+    {
+    }
 
 
-    public function genericNextTask (MaintenancePlan $plan , string $nextDate , $machinId ) { 
-        return $plan->maintenanceTasks()->create([
-            'scheduled_at' => $nextDate,
-            'status' => 'pending',
-            'machine_id' => $machinId
-        ]) ;
+    public function createOrUpate(array $attributeCheck , array $values)
+    {
+        return MaintenanceTask::updateOrCreate(
+            $attributeCheck,
+            $values
+        );
 
     }
 
