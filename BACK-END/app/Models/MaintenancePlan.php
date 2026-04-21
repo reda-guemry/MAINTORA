@@ -32,6 +32,11 @@ class MaintenancePlan extends Model
         return $this->belongsTo(ChecklistTemplate::class) ;
     }
 
+    public function maintenanceTasks()
+    {
+        return $this->hasMany(MaintenanceTask::class) ;
+    }
+
     public function assignedTo()
     {
         return $this->belongsTo(User::class, 'assigned_to') ;
