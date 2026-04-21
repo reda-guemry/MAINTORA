@@ -7,6 +7,11 @@ use App\Http\Controllers\CheckList\ChecklistItemsController;
 use App\Http\Controllers\CheckList\ChecklistTemplateController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Rounde\MaintenancePlanController;
+use App\Http\Controllers\Technician\AnomalyController;
+use App\Http\Controllers\Technician\MaintenanceTaskCheckController;
+use App\Http\Controllers\Technician\TechnicianMachineController;
+use App\Http\Controllers\Technician\TechnicianMaintenanceTaskController;
+use App\Http\Controllers\Technician\TechnicianRepairRequestController;
 use App\Http\Controllers\Technician\TechnicianController;
 use Illuminate\Support\Facades\Route;
 
@@ -86,11 +91,36 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('technician')->middleware(['technician'])->group(function () {
 
+        /*
+         *  Technician dashboard routes
+         */
+        Route::get('machines', [TechnicianMachineController::class, 'index']);
+        Route::get('tasks', [TechnicianMaintenanceTaskController::class, 'index']);
+        Route::get('tasks/{id}', [TechnicianMaintenanceTaskController::class, 'show']);
+
+        /*
+         *  Maintenance task checks routes
+         */
+        Route::patch('tasks/{id}', [TechnicianMaintenanceTaskController::class, 'update']);
+        
+        
+        /*
+         *  Maintenance task check routes
+         */
+        Route::post('tasks/{id}', [MaintenanceTaskCheckController::class, 'create']);
 
 
+        /*
+         *  Anomalies and repair requests routes
+         */
+        Route::post('tasks/{taskId}/anomalies', [AnomalyController::class, 'store']);
 
+        /*
+         *  Anomalies  requests listing routes
+         */
+        Route::get('anomalies', [AnomalyController::class, 'index']);
+        
 
     });
 
 });
-
