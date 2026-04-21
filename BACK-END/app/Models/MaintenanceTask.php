@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
     'status',
     'completed_at',
 ])]
+
+
 class MaintenanceTask extends Model
 {
     use HasFactory ; 
@@ -23,6 +25,8 @@ class MaintenanceTask extends Model
     /* * Relationships
      * belongs
      */
+
+    protected $dates = ['scheduled_at', 'completed_at'];
     public function machine()
     {
         return $this->belongsTo(Machine::class) ;
