@@ -3,6 +3,7 @@
 namespace App\Repositories\Rounde;
 
 use App\Models\MaintenancePlan;
+use Illuminate\Database\Eloquent\Collection;
 
 class MaintenancePlanRepository
 {
@@ -47,6 +48,11 @@ class MaintenancePlanRepository
             ->exists();
     }
 
+    public function getActivePlans(): Collection 
+    {
+        return MaintenancePlan::with('maintenanceTasks' )->where('status', 'active')->get();
+    }
+
     private function query()
     {
         return MaintenancePlan::where('created_by', auth('api')->id())
@@ -57,5 +63,6 @@ class MaintenancePlanRepository
     {
         return $maintenancePlan->load(['machine.creator', 'checklistTemplate', 'assignedTo.roles']);
     }
+
 
 }
