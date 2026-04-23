@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 
 #[Fillable([
+    'maintenance_task_id',
     'checklist_item_id',
     'status',
     'comment',

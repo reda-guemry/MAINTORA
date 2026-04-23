@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Technician;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreMaintenanceTaskRequest;
 use App\Http\Requests\UpdateTechnicianMaintenanceTaskRequest;
 use App\Http\Resources\MaintenanceTaskResource;
 use App\Services\Technician\TechnicianMaintenanceTaskService;
@@ -45,18 +44,17 @@ class TechnicianMaintenanceTaskController extends Controller
                 'message' => 'Maintenance task retrieved successfully',
                 'data' => new MaintenanceTaskResource($task),
             ]);
-        }catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Maintenance task not found.',
+            ], 404);
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error occurred while retrieving maintenance task.',
                 'error' => $e->getMessage(),
             ], $e->getCode() ?: 500);
-        }
-        catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Maintenance task not found.',
-            ], 404);
         }
     }
 
