@@ -2,16 +2,17 @@
 
 namespace App\Services\Technician;
 
-use App\Models\MaintenanceTask;
 use App\Repositories\Technician\TechnicianMaintenanceTaskRepository;
+use Carbon\Carbon;
+use DB;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TechnicianMaintenanceTaskService
 {
     public function __construct(
         private TechnicianMaintenanceTaskRepository $technicianMaintenanceTaskRepository,
-    ) {}
+    ) {
+    }
 
     public function getPaginate(array $filters = [], int $perPage = 10)
     {
@@ -22,8 +23,8 @@ class TechnicianMaintenanceTaskService
     {
         $task = $this->technicianMaintenanceTaskRepository->findAssignedTask($taskId);
 
-        if($task->assignedTo() !== auth('api')->user()) {
-            throw new Exception('Unauthorized access to this maintenance task.' , 403);
+        if ((int) $task->assigned_to !== (int) auth('api')->id()) {
+            throw new Exception('Unauthorized access to this maintenance task.', 403);
         }
 
         return $task;
@@ -49,5 +50,41 @@ class TechnicianMaintenanceTaskService
         return $this->technicianMaintenanceTaskRepository->getAssignedMachines();
     }
 
-    
+    public function submitMaintenanceTask(int $taskId, array $checks)
+    {
+        return DB::transaction(function () use ($taskId, $checks) {
+            $task = $this->findAssignedTask($taskId);
+
+            if ($task->machine?->status !== 'maintenance') {
+                throw new Exception('Machine is not under maintenance today.', 400);
+            }
+
+            if (!Carbon::parse($task->scheduled_at)->isSameDay(now())) {
+                throw new Exception('This maintenance task is not scheduled for today.', 400);
+            }
+
+            if ($task->status === 'completed') {
+                throw new Exception('This maintenance task is already completed.', 400);
+            }
+
+            DB::transaction(function () use ($task, $checks) {
+
+                $this->technicianMaintenanceTaskRepository->saveChecks($task, $checks);
+
+                $this->technicianMaintenanceTaskRepository->update($task, [
+                    'status' => 'completed',
+                    'completed_at' => now()->toDateString(),
+                ]);
+
+                $task->machine->update([
+                    'status' => 'active',
+                ]);
+
+            });
+            
+            return $this->findAssignedTask($task->id);
+        });
+    }
+
+
 }

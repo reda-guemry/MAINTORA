@@ -4,6 +4,7 @@ namespace App\Repositories\Technician;
 
 use App\Models\Machine;
 use App\Models\MaintenanceTask;
+use App\Models\MaintenanceTaskCheck;
 
 class TechnicianMaintenanceTaskRepository
 {
@@ -55,6 +56,22 @@ class TechnicianMaintenanceTaskRepository
         $maintenanceTask->update($data);
 
         return $maintenanceTask->refresh();
+    }
+
+    public function saveChecks(MaintenanceTask $maintenanceTask, array $checks): void
+    {
+        foreach ($checks as $check) {
+            MaintenanceTaskCheck::updateOrCreate(
+                [
+                    'maintenance_task_id' => $maintenanceTask->id,
+                    'checklist_item_id' => $check['checklist_item_id'],
+                ],
+                [
+                    'status' => $check['status'],
+                    'comment' => $check['comment'] ?? null,
+                ],
+            );
+        }
     }
 
     public function getAssignedMachines()
