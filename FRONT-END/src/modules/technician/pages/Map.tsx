@@ -3,11 +3,15 @@ import { Alert } from "@/shared/components/feedback";
 import { Spinner } from "@/shared/components/ui";
 import { cn } from "@/shared/utils";
 import { useTechnicianMachines } from "@/features/technician-map";
+import { useTodayMaintenanceTasks } from "@/features/technician-maintenance";
 import { TechnicianAssetMap } from "../components/TechnicianAssetMap";
 import { getStatusClasses, getStatusLabel } from "../utils/getStatus";
+import { useNavigate } from "react-router-dom";
 
 function MapPage() {
+  const navigate = useNavigate();
   const { machines, isLoading, error } = useTechnicianMachines();
+  const { tasks } = useTodayMaintenanceTasks();
   const [selectedMachineId, setSelectedMachineId] = useState<number | null>(null);
 
   const selectedMachine = useMemo(
@@ -20,6 +24,23 @@ function MapPage() {
     anomalous: machines.filter((m) => m.status === "anomalous").length,
     maintenance: machines.filter((m) => m.status === "maintenance").length,
   }), [machines]);
+
+  const selectedTodayTask = useMemo(() => {
+    if (!selectedMachine || selectedMachine.status !== "maintenance") {
+      return null;
+    }
+
+
+
+    return (
+      tasks.find((task) => {
+        return (
+          task.machine.id === selectedMachine.id &&
+          task.status == "pending"
+        );
+      }) ?? null
+    );
+  }, [selectedMachine, tasks]);
 
   if (isLoading) {
     return (
@@ -115,13 +136,38 @@ function MapPage() {
                 </div>
 
                 <div className="mt-8 grid grid-cols-2 gap-3">
-                  <button className="flex items-center justify-center gap-2 rounded-2xl bg-[#2d241c] py-4 text-[10px] font-black uppercase tracking-widest text-white transition-transform active:scale-95 shadow-lg">
-                    Manage
-                  </button>
+                  {selectedMachine.status === "maintenance" ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        selectedTodayTask &&
+                        navigate(`/technician/maintenance/${selectedTodayTask.id}`)
+                      }
+                      disabled={!selectedTodayTask}
+                      className="flex items-center p-2 justify-center gap-2 rounded-2xl bg-[#2d241c] py-4 text-[10px] font-black uppercase tracking-widest text-white shadow-lg transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Submit Maintenance
+                    </button>
+                  ) : (
+                    <button className="flex items-center justify-center gap-2 rounded-2xl bg-[#2d241c] py-4 text-[10px] font-black uppercase tracking-widest text-white transition-transform active:scale-95 shadow-lg">
+                      Manage
+                    </button>
+                  )}
                   <button className="flex items-center justify-center gap-2 rounded-2xl border-2 border-[#e6dbcd] py-4 text-[10px] font-black uppercase tracking-widest text-[#2d241c] transition-all hover:bg-[#fcfaf7]">
                     History
                   </button>
                 </div>
+
+                {selectedMachine.status === "maintenance" && (
+                  <div className="mt-4 rounded-2xl border border-[#b9dfdc] bg-[#edf8f7] px-4 py-3">
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#398e8e]">
+                      Maintenance today
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-[#2d241c]">
+                      Cette machine est en maintenance aujourd'hui.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>

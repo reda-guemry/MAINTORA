@@ -34,31 +34,30 @@ export function TechnicianAssetMap({
       }
     }
 
-    const osmStyle: maplibregl.StyleSpecification = {
+    const cartoVoyagerStyle: maplibregl.StyleSpecification = {
       version: 8,
       sources: {
-        "osm-tiles": {
+        "carto-voyager": {
           type: "raster",
-          tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+          tiles: [
+            "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+          ],
           tileSize: 256,
-          attribution: "&copy; OpenStreetMap contributors",
-          maxzoom: 19,
+          attribution: "&copy; OpenStreetMap &copy; CARTO",
         },
       },
       layers: [
         {
-          id: "osm-standard",
+          id: "carto-layer",
           type: "raster",
-          source: "osm-tiles",
-          minzoom: 0,
-          maxzoom: 19,
+          source: "carto-voyager",
         },
       ],
     };
 
     mapRef.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: osmStyle,
+      style: cartoVoyagerStyle,
       center: [-7.62, 33.59],
       zoom: 12,
       attributionControl: false,
@@ -173,7 +172,7 @@ export function TechnicianAssetMap({
       if (selectedMachine) {
         map.flyTo({
           center: [selectedMachine.longitude, selectedMachine.latitude],
-          zoom:  15,
+          zoom: 15,
           essential: true,
           duration: 900,
         });
