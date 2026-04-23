@@ -1,6 +1,7 @@
 import RoleGuard from "@/app/router/guards/RoleGuard";
 import DashboardPage from "./pages/Dashboard";
 import MapPage from "./pages/Map";
+import SubmitMaintenancePage from "./pages/SubmitMaintenance";
 
 
 export const technicianRoutes = [
@@ -14,6 +15,10 @@ export const technicianRoutes = [
       {
         path: "map",
         element: <MapPage />,
+      },
+      {
+        path: "maintenance/:taskId",
+        element: <SubmitMaintenancePage />,
       },
     ],
   },
