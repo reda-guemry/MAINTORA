@@ -136,7 +136,7 @@ function MapPage() {
                 </div>
 
                 <div className="mt-8 grid grid-cols-2 gap-3">
-                  {selectedMachine.status === "maintenance" ? (
+                  {selectedMachine.status === "maintenance" && (
                     <button
                       type="button"
                       onClick={() =>
@@ -148,11 +148,7 @@ function MapPage() {
                     >
                       Submit Maintenance
                     </button>
-                  ) : (
-                    <button className="flex items-center justify-center gap-2 rounded-2xl bg-[#2d241c] py-4 text-[10px] font-black uppercase tracking-widest text-white transition-transform active:scale-95 shadow-lg">
-                      Manage
-                    </button>
-                  )}
+                  ) }
                   <button className="flex items-center justify-center gap-2 rounded-2xl border-2 border-[#e6dbcd] py-4 text-[10px] font-black uppercase tracking-widest text-[#2d241c] transition-all hover:bg-[#fcfaf7]">
                     History
                   </button>
@@ -160,7 +156,7 @@ function MapPage() {
 
                 {selectedMachine.status === "maintenance" && (
                   <div className="mt-4 rounded-2xl border border-[#b9dfdc] bg-[#edf8f7] px-4 py-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#398e8e]">
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-primary">
                       Maintenance today
                     </p>
                     <p className="mt-1 text-sm font-semibold text-[#2d241c]">
