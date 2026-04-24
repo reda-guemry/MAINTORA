@@ -19,7 +19,7 @@ class MachineRepositoty
         return Machine::where('created_by', auth('api')->id())->paginate(10);
     }
 
-    public function create($data , $user)
+    public function create($data, $user)
     {
         return $user->machines()->create($data);
     }
@@ -48,8 +48,20 @@ class MachineRepositoty
             'creator',
             'maintenancePlans.assignedTo.roles',
             'maintenancePlans.checklistTemplate',
-        ])->get() ;
+        ])->get();
     }
+
+    //modifier machiine have machintask today to status maintenance in progress
+    public function getMachinesWithScheduledMaintenance()
+    {
+        return Machine::with('maintenanceTasks')
+            ->whereHas('maintenanceTasks', function ($query) {
+                $query->whereDate('scheduled_at', now()->toDateString())
+                    ->where('status', 'pending');
+            })
+            ->get();
+    }
+
 
 
 }

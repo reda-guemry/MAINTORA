@@ -16,8 +16,8 @@ class StartScheduledMaintenanceService
     {
         $machines = $this->machineRepository->getMachinesWithScheduledMaintenance();
 
-        foreach ($machines as $machine) {
-            $this->machineRepository->startMaintenance($machine);
+        foreach ($machines as $machine ) {
+            $this->machineRepository->update($machine->id, ['status' => 'maintenance']); 
         }
     }
 
