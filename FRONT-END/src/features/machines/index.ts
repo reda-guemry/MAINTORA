@@ -11,3 +11,4 @@ export * from "./hooks/useCreateMachine";
 export * from "./hooks/useDeleteMachine";
 export * from "./hooks/useEditMachine";
 export * from "./hooks/usePaginateMachines";
+export * from "./hooks/useClientMachines";
