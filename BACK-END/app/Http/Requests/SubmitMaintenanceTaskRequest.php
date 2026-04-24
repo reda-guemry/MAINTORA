@@ -24,14 +24,14 @@ class SubmitMaintenanceTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'checks' => ['required', 'array', 'min:1'],
-            'checks.*.checklist_item_id' => ['required', 'integer', 'exists:checklist_items,id'],
-            'checks.*.status' => ['required', Rule::in(['ok', 'not_ok', 'anomaly'])],
-            'checks.*.comment' => ['nullable', 'string', 'max:1000'],
-            'checks.*.anomaly' => ['nullable', 'array'],
-            'checks.*.anomaly.title' => ['nullable', 'string', 'max:255'],
-            'checks.*.anomaly.description' => ['nullable', 'string'],
-            'checks.*.anomaly.severity' => ['nullable', Rule::in(['low', 'medium', 'high'])],
+            'checks' => 'required|array|min:1',
+            'checks.*.checklist_item_id' => 'required|integer|exists:checklist_items,id',
+            'checks.*.status' => 'required|in:ok,not_ok,anomaly',
+            'checks.*.comment' => 'nullable|string|max:1000',
+            'checks.*.anomaly' => 'nullable|array',
+            'checks.*.anomaly.title' => 'nullable|string|max:255',
+            'checks.*.anomaly.description' => 'nullable|string',
+            'checks.*.anomaly.severity' => 'nullable|in:low,medium,high',
         ];
     }
 
@@ -39,7 +39,7 @@ class SubmitMaintenanceTaskRequest extends FormRequest
     {
         $validator->after(function (Validator $validator) {
             foreach ($this->input('checks', []) as $index => $check) {
-                if (($check['status'] ?? null) !== 'anomaly') {
+                if ($check['status']  !== 'anomaly') {
                     continue;
                 }
 

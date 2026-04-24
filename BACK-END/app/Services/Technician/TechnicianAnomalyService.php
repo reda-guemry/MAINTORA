@@ -2,6 +2,7 @@
 
 namespace App\Services\Technician;
 
+use App\Models\MaintenanceTask;
 use App\Repositories\Technician\AnomalyRepository;
 
 
@@ -9,10 +10,12 @@ use App\Repositories\Technician\AnomalyRepository;
 
 class TechnicianAnomalyService
 {
+
+
     public function __construct(
         private AnomalyRepository $technicianAnomalyRepository,
-        private TechnicianMaintenanceTaskService $technicianMaintenanceTaskService,
-    ) {}
+        private TechnicianMaintenanceTaskService $technicianMaintenanceTaskService
+        ) {}
 
     public function getPaginate(array $filters = [], int $perPage = 10)
     {
@@ -25,4 +28,6 @@ class TechnicianAnomalyService
 
         return $this->technicianAnomalyRepository->createForTask($task, $data);
     }
+
+    
 }
