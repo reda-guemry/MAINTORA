@@ -1,17 +1,17 @@
 <?php
 
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Anomaly\AnomalyController;
+use App\Http\Controllers\Anomaly\RepairRequestController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\CheckList\ChecklistItemsController;
 use App\Http\Controllers\CheckList\ChecklistTemplateController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Rounde\MaintenancePlanController;
-use App\Http\Controllers\Technician\AnomalyController;
 use App\Http\Controllers\Technician\MaintenanceTaskCheckController;
 use App\Http\Controllers\Technician\TechnicianMachineController;
 use App\Http\Controllers\Technician\TechnicianMaintenanceTaskController;
-use App\Http\Controllers\Technician\TechnicianRepairRequestController;
 use App\Http\Controllers\Technician\TechnicianController;
 use Illuminate\Support\Facades\Route;
 
@@ -83,6 +83,13 @@ Route::middleware(['auth:api'])->group(function () {
          */
 
         Route::apiResource('maintenance-plans', MaintenancePlanController::class)->except(['index', 'show']) ;
+
+        /*
+         *  anomalies and repair requests routes
+         */
+        Route::get('anomalies', [AnomalyController::class, 'index'])->middleware('can:manage technicians');
+        Route::get('anomalies/{id}', [AnomalyController::class, 'show'])->middleware('can:manage technicians');
+        Route::post('anomalies/{id}/repair-requests', [RepairRequestController::class, 'store'])->middleware('can:manage technicians');
 
 
 
