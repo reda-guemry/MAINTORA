@@ -35,4 +35,9 @@ class Anomaly extends Model
         return $this->belongsTo(MaintenanceTask::class) ;
     }
 
+    public function repairRequest()
+    {
+        return $this->hasOne(RepairRequest::class) ;
+    }
+
 }
