@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\CheckList\ChecklistItemsController;
 use App\Http\Controllers\CheckList\ChecklistTemplateController;
+use App\Http\Controllers\Client\ClientRepairRequestController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Rounde\MaintenancePlanController;
 use App\Http\Controllers\Technician\MaintenanceTaskCheckController;
@@ -52,6 +53,14 @@ Route::middleware(['auth:api'])->group(function () {
          * Manage users Routes
          */
         Route::apiResource('machines', MachineController::class)->middleware('can:manage machines');
+        
+
+        /*
+         *  Anomalies and repair requests routes
+         */
+        Route::get('machines/all', [MachineController::class, 'getMine'])->middleware('can:manage machines');
+        Route::get('repair-requests', [ClientRepairRequestController::class, 'index'])->middleware('can:manage machines');
+        Route::get('repair-requests/{id}', [ClientRepairRequestController::class, 'show'])->middleware('can:manage machines');
 
     });
 
