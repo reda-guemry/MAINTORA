@@ -26,6 +26,7 @@ export function ChefAppLayout() {
               <NavElement to="/chef-technician" label="Dashboard" end />
               <NavElement to="/chef-technician/checklist/templates" label="Checklists" />
               <NavElement to="/chef-technician/mape" label="Map" />
+              <NavElement to="/chef-technician/anomalies" label="Anomalies" />
 
               <div className="w-px h-4 bg-gray-200 mx-3" />
               
@@ -62,6 +63,7 @@ export function ChefAppLayout() {
             <NavElement to="/chef-technician" label="Dashboard" end />
             <NavElement to="/chef-technician/checklist/templates" label="Checklists" />
             <NavElement to="/chef-technician/mape" label="Map" />
+            <NavElement to="/chef-technician/anomalies" label="Anomalies" />
           </div>
         </div>
       </header>
