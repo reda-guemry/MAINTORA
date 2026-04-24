@@ -3,6 +3,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { ChecklistTemplatesPage } from "./pages/ChecklistTemplates";
 import { ChecklistItemsPage } from "./pages/ChecklistItems";
 import { Rounde } from "./pages/Rounde";
+import { AnomaliesPage } from "./pages/Anomalies";
 
 
 export const chefRoutes = [
@@ -24,6 +25,10 @@ export const chefRoutes = [
       {
         path: "mape",
         element: <Rounde />,
+      },
+      {
+        path: "anomalies",
+        element: <AnomaliesPage />,
       }
     ],
   },
