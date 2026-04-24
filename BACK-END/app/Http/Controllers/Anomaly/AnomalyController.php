@@ -62,29 +62,22 @@ class AnomalyController extends Controller
             ], $e->getCode() ?: 500);
         }
     }
-    
-     public function store(StoreRepairRequestRequest $request, int $id)
+
+
+    public function store(StoreAnomalyRequest $request , int $taskId)
     {
         try {
-            $repairRequest = $this->anomalyService->createForAnomaly(
-                $id,
-                $request->validated(),
-            );
+            $anomaly = $this->anomalyService->createForTask($taskId, $request->validated());
 
             return response()->json([
                 'success' => true,
-                'message' => 'Repair request created successfully',
-                'data' => new RepairRequestResource($repairRequest),
+                'message' => 'Anomaly created successfully',
+                'data' => new AnomalyResource($anomaly),
             ], 201);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Anomaly not found.',
-            ], 404);
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error occurred while creating repair request.',
+                'message' => 'Error occurred while creating anomaly.',
                 'error' => $e->getMessage(),
             ], $e->getCode() ?: 500);
         }
