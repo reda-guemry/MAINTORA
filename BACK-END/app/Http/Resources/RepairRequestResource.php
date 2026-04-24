@@ -23,7 +23,7 @@ class RepairRequestResource extends JsonResource
             'created_at' => $this->created_at,
             'machine' => MachineResource::make($this->whenLoaded('machine')),
             'anomaly' => AnomalyResource::make($this->whenLoaded('anomaly')),
-            'requested_by' => UserResource::make($this->whenLoaded('requester')),
+            'requested_by' => UserResource::make($this->whenLoaded('requestedBy')),
             'assigned_to' => UserResource::make($this->whenLoaded('assignedTo')),
         ];
     }

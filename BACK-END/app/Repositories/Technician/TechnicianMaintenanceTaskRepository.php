@@ -2,11 +2,10 @@
 
 namespace App\Repositories\Technician;
 
-use App\Models\Anomaly;
 use App\Models\Machine;
 use App\Models\MaintenanceTask;
 use App\Models\MaintenanceTaskCheck;
-use App\Services\Technician\TechnicianAnomalyService;
+use App\Repositories\Anomaly\AnomalyRepository;
 
 class TechnicianMaintenanceTaskRepository
 {
