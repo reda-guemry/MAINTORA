@@ -2,7 +2,7 @@
 
 namespace App\Services\Technician;
 
-use App\Repositories\Technician\AnomalyRepository;
+use App\Repositories\Anomaly\AnomalyRepository;
 use App\Repositories\Technician\TechnicianMaintenanceTaskRepository;
 use App\Repositories\User\UserRepository;
 

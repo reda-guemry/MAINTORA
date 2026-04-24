@@ -4,7 +4,9 @@ namespace App\Services\Rounde;
 
 use App\Repositories\Rounde\MaintenancePlanRepository;
 use App\Services\Machine\MachineService;
+use App\Services\Machine\StartScheduledMaintenanceService;
 use App\Services\User\UserService;
+use Carbon\Carbon;
 use DB;
 use Exception;
 
@@ -15,7 +17,8 @@ class MaintenancePlanService
         private MaintenancePlanRepository $maintenancePlanRepository,
         private MachineService $machineService,
         private UserService $userService,
-        private GeneratePlanningService $generatePlanningService
+        private GeneratePlanningService $generatePlanningService,
+        private StartScheduledMaintenanceService $startScheduledMaintenanceService,
     ) {}
 
 
@@ -28,7 +31,12 @@ class MaintenancePlanService
             $data['created_by'] = auth('api')->id();
 
             $maintenancePlan = $this->maintenancePlanRepository->create($data);
+
             $this->generatePlanningService->generateRoundsForPlan($maintenancePlan);
+
+            if(Carbon::parse($maintenancePlan->start_date)->isToday()) {
+                $this->startScheduledMaintenanceService->startShedulerMaintenanceMachine($maintenancePlan->machine);
+            }
 
             return $maintenancePlan;
         });
@@ -56,8 +64,6 @@ class MaintenancePlanService
             }
 
             $maintenancePlan = $this->maintenancePlanRepository->update($id, $data);
-
-            $this->generatePlanningService->generateRoundsForPlan($maintenancePlan);
 
             return $maintenancePlan ->refresh();
             
