@@ -2,12 +2,21 @@
 
 namespace App\Repositories\Technician;
 
+use App\Models\Anomaly;
 use App\Models\Machine;
 use App\Models\MaintenanceTask;
 use App\Models\MaintenanceTaskCheck;
+use App\Services\Technician\TechnicianAnomalyService;
 
 class TechnicianMaintenanceTaskRepository
 {
+
+    public function __construct(
+        private AnomalyRepository $anomalyService,
+
+    ) {
+    }
+
     public function paginateAssignedTasks(array $filters = [], int $perPage = 10)
     {
         return $this->query()
@@ -71,17 +80,30 @@ class TechnicianMaintenanceTaskRepository
                     'comment' => $check['comment'] ?? null,
                 ],
             );
+
+            if ($check['status'] === 'anomaly') {
+                $data = [
+                    'machine_id' => $maintenanceTask->machine_id,
+                    'reported_by' => auth('api')->id(),
+                    'maintenance_task_id' => $maintenanceTask->id,
+                    'title' => $check['anomaly']['title'],
+                    'description' => $check['anomaly']['description'],
+                    'severity' => $check['anomaly']['severity'],
+                ];
+
+                $this->anomalyService->createForTask($maintenanceTask, $data);
+            }
         }
     }
 
     public function getAssignedMachines()
     {
         return Machine::whereIn(
-                'id',
-                $this->query()
-                    ->select('machine_id')
-                    ->distinct()
-            )->with('creator')
+            'id',
+            $this->query()
+                ->select('machine_id')
+                ->distinct()
+        )->with('creator')
             ->get();
     }
 
@@ -115,7 +137,7 @@ class TechnicianMaintenanceTaskRepository
     }
 
     public function getNextRoundDateForTechnician(int $technicianId)
-    {   
+    {
         $nextRound = MaintenanceTask::where('assigned_to', $technicianId)
             ->where('status', 'pending')
             ->orderBy('scheduled_at')
