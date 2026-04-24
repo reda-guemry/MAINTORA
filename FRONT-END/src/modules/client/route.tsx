@@ -1,6 +1,8 @@
 import RoleGuard from "@/app/router/guards/RoleGuard";
 import Dashboard from "../client/pages/Dashboard";
 import MachinesManagement from "./pages/MachinesManagment";
+import ClientMapPage from "./pages/Map";
+import RepairRequestsPage from "./pages/RepairRequests";
 
 export const clientRoutes = [
   {
@@ -13,6 +15,14 @@ export const clientRoutes = [
       {
         path: "machines",
         element: <MachinesManagement />,
+      },
+      {
+        path: "map",
+        element: <ClientMapPage />,
+      },
+      {
+        path: "repair-requests",
+        element: <RepairRequestsPage />,
       }
     ],
   },

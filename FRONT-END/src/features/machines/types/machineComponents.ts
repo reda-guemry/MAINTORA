@@ -81,3 +81,9 @@ export type PaginateMachineResponse = {
 };
 
 export type PaginateMachineData = PaginateMachineResponse["data"];
+
+export type MachineListResponse = {
+  success: boolean;
+  message: string;
+  data: Machine[];
+};
