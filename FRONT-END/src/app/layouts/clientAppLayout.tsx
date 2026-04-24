@@ -24,7 +24,7 @@ function ClientAppLayout() {
                 MAINTORA
               </h1>
               <p className="text-[10px] text-gray-400 font-medium">
-                Admin Control Panel
+                Client Workspace
               </p>
             </div>
           </div>
@@ -56,26 +56,26 @@ function ClientAppLayout() {
               <span className="text-[13px]">Machines</span>
             </NavLink>
             <NavLink
-              to="/admin/reports"
+              to="/client/map"
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-medium transition-colors`
               }
             >
               <span className="material-symbols-outlined text-[20px]">
-                analytics
+                map
               </span>
-              <span className="text-[13px]">Reports</span>
+              <span className="text-[13px]">Map</span>
             </NavLink>
             <NavLink
-              to="/admin/settings"
+              to="/client/repair-requests"
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-medium transition-colors`
               }
             >
               <span className="material-symbols-outlined text-[20px]">
-                settings
+                build
               </span>
-              <span className="text-[13px]">Settings</span>
+              <span className="text-[13px]">Repair Requests</span>
             </NavLink>
           </nav>
         </div>
@@ -130,9 +130,7 @@ function ClientAppLayout() {
 
         {/* Page Content */}
         <div className="flex-1 overflow-y-auto px-8 pb-8">
-          <div className="max-w-[1100px] mx-auto">
-            {" "}
-            {/* Hna zdt max-w bach maytjebeedch bezaf */}
+          <div className="mx-auto w-full max-w-[1500px]">
             <Outlet />
           </div>
         </div>
