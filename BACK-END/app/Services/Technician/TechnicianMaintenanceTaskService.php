@@ -54,6 +54,9 @@ class TechnicianMaintenanceTaskService
     {
         return DB::transaction(function () use ($taskId, $checks) {
             $task = $this->findAssignedTask($taskId);
+            $hasAnomaly = collect($checks)->contains(function ($check) {
+                return $check['status'] === 'anomaly';
+            });
 
             if ($task->machine?->status !== 'maintenance') {
                 throw new Exception('Machine is not under maintenance today.', 400);
@@ -67,7 +70,7 @@ class TechnicianMaintenanceTaskService
                 throw new Exception('This maintenance task is already completed.', 400);
             }
 
-            DB::transaction(function () use ($task, $checks) {
+            DB::transaction(function () use ($task, $checks, $hasAnomaly) {
 
                 $this->technicianMaintenanceTaskRepository->saveChecks($task, $checks);
 
@@ -77,11 +80,11 @@ class TechnicianMaintenanceTaskService
                 ]);
 
                 $task->machine->update([
-                    'status' => 'active',
+                    'status' => $hasAnomaly ? 'anomalous' : 'active',
                 ]);
 
             });
-            
+
             return $this->findAssignedTask($task->id);
         });
     }
