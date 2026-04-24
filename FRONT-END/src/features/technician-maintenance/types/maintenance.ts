@@ -1,6 +1,8 @@
 import type { TechnicianMapMachine } from "@/features/technician-map";
 
 export type TechnicianTaskStatus = "pending" | "in_progress" | "completed";
+export type TechnicianCheckStatus = "ok" | "not_ok" | "anomaly";
+export type AnomalySeverity = "low" | "medium" | "high";
 
 export type TechnicianTaskSummary = {
   id: number;
@@ -14,7 +16,7 @@ export type TechnicianChecklistItem = {
   checklist_item_id: number;
   label: string;
   order: number | null;
-  status: boolean | null;
+  status: TechnicianCheckStatus | null;
   comment: string | null;
 };
 
@@ -43,8 +45,13 @@ export type TechnicianTaskDetailsResponse = {
 
 export type SubmitMaintenanceCheck = {
   checklist_item_id: number;
-  status: boolean;
+  status: TechnicianCheckStatus;
   comment?: string;
+  anomaly?: {
+    title: string;
+    description: string;
+    severity: AnomalySeverity;
+  };
 };
 
 export type SubmitMaintenancePayload = {
@@ -56,3 +63,16 @@ export type SubmitMaintenanceResponse = {
   message: string;
   data: TechnicianTaskDetails;
 };
+
+export type MaintenanceCheckDraft = {
+  status: TechnicianCheckStatus | null;
+  comment: string;
+  anomalyTitle: string;
+  anomalyDescription: string;
+  anomalySeverity: AnomalySeverity;
+};
+
+export type MaintenanceDraft = Record<number, MaintenanceCheckDraft>;
+
+
+
