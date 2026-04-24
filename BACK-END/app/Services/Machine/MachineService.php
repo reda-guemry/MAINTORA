@@ -46,6 +46,11 @@ class MachineService
         return $this->machineRepositoty->All();
     }
 
+    public function getMine()
+    {
+        return $this->machineRepositoty->getAllForCurrentClient();
+    }
+
 
     public function isUnderPlanMaintenance($machineId)
     {
