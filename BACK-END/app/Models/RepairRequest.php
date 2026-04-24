@@ -32,6 +32,11 @@ class RepairRequest extends Model
         return $this->belongsTo(User::class, 'requested_by') ; 
     }
 
+    public function requestedBy()
+    {
+        return $this->belongsTo(User::class, 'requested_by') ;
+    }
+
     public function anomaly()
     {
         return $this->belongsTo(Anomaly::class) ;

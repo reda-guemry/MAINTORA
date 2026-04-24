@@ -2,8 +2,8 @@
 
 namespace App\Services\Anomaly;
 
-use App\Repositories\Technician\AnomalyRepository;
-use App\Repositories\Technician\RepairRequestRepository;
+use App\Repositories\Anomaly\AnomalyRepository;
+use App\Repositories\Anomaly\RepairRequestRepository;
 use App\Services\Rounde\MaintenanceTaskService;
 use DB;
 use Exception;
@@ -34,7 +34,7 @@ class AnomalyService
         return DB::transaction(function () use ($anomalyId, $data) {
             $anomaly = $this->AnomalyRepository->findForRepairRequest($anomalyId);
 
-            if ($anomaly->status == 'open') {
+            if ($anomaly->status !== 'open') {
                 throw new Exception('Repair request can only be created for pending anomalies.', 422);
             }
 
@@ -42,7 +42,13 @@ class AnomalyService
                 throw new Exception('A repair request already exists for this anomaly.', 422);
             }
 
-            $repairRequest = $this->RepairRequestRepository->createForAnomaly($anomaly, $data);
+            $machineCreatorId = $anomaly->machine->created_by;
+
+            if (!$machineCreatorId) {
+                throw new Exception('Machine creator not found.' , 404);
+            }
+
+            $repairRequest = $this->RepairRequestRepository->createForAnomaly($anomaly, $data , $machineCreatorId);
 
             $anomaly->update([
                 'status' => 'in_progress',
