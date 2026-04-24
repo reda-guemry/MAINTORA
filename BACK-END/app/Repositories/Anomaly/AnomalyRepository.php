@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Technician;
+namespace App\Repositories\Anomaly;
 
 use App\Models\Anomaly;
 use App\Models\MaintenanceTask;
@@ -25,7 +25,7 @@ class AnomalyRepository
         return Anomaly::with(
                 'machine.creator',
                 'reportedBy.roles',
-                'repairRequest.requester.roles',
+                'repairRequest.requestedBy.roles',
                 'repairRequest.assignedTo.roles',
                 'maintenanceTask.machine',
                 'maintenanceTask.maintenancePlan.checklistTemplate',
@@ -51,7 +51,7 @@ class AnomalyRepository
         return Anomaly::with(
                 'machine.creator',
                 'reportedBy.roles',
-                'repairRequest.requester.roles',
+                'repairRequest.requestedBy.roles',
                 'repairRequest.assignedTo.roles',
                 'maintenanceTask.machine',
                 'maintenanceTask.assignedTo.roles',
