@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Technician;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SubmitMaintenanceTaskRequest;
 use App\Http\Resources\MaintenanceTaskResource;
-use App\Services\Technician\TechnicianMaintenanceTaskService;
+use App\Services\Rounde\MaintenanceTaskService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class MaintenanceTaskCheckController extends Controller
 {
     public function __construct(
-        private TechnicianMaintenanceTaskService $technicianMaintenanceTaskService,
+        private MaintenanceTaskService $technicianMaintenanceTaskService,
     ) {}
 
     public function create(SubmitMaintenanceTaskRequest $request, int $id)
