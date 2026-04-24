@@ -51,6 +51,13 @@ class MachineRepositoty
         ])->get();
     }
 
+    public function getAllForCurrentClient()
+    {
+        return Machine::where('created_by', auth('api')->id())
+            ->with('creator')
+            ->get();
+    }
+
     //modifier machiine have machintask today to status maintenance in progress
     public function getMachinesWithScheduledMaintenance()
     {
@@ -61,7 +68,5 @@ class MachineRepositoty
             })
             ->get();
     }
-
-
 
 }
