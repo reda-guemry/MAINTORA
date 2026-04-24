@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Technician;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateTechnicianMaintenanceTaskRequest;
 use App\Http\Resources\MaintenanceTaskResource;
-use App\Services\Technician\TechnicianMaintenanceTaskService;
+use App\Services\Rounde\MaintenanceTaskService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -13,16 +13,16 @@ use Illuminate\Http\Request;
 class TechnicianMaintenanceTaskController extends Controller
 {
     public function __construct(
-        private TechnicianMaintenanceTaskService $technicianMaintenanceTaskService,
+        private MaintenanceTaskService $maintenanceTaskService,
     ) {}
 
     public function index(Request $request)
     {
-        $data = $this->technicianMaintenanceTaskService->getPaginate(
+        $data = $this->maintenanceTaskService->getPaginate(
             $request->only(['status', 'scheduled_date', 'search']),
             $request->query('per_page', 10),
         );
-
+                                    
         $data->through(function ($maintenanceTask) {
             return new MaintenanceTaskResource($maintenanceTask);
         });
@@ -37,7 +37,7 @@ class TechnicianMaintenanceTaskController extends Controller
     public function show(int $id)
     {
         try {
-            $task = $this->technicianMaintenanceTaskService->findAssignedTask($id);
+            $task = $this->maintenanceTaskService->findAssignedTask($id);
 
             return response()->json([
                 'success' => true,
@@ -61,7 +61,7 @@ class TechnicianMaintenanceTaskController extends Controller
     public function update(UpdateTechnicianMaintenanceTaskRequest $request, int $id)
     {
         try {
-            $task = $this->technicianMaintenanceTaskService->updateAssignedTask(
+            $task = $this->maintenanceTaskService->updateAssignedTask(
                 $id,
                 $request->validated(),
             );
