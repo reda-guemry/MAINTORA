@@ -13,6 +13,10 @@ class MaintenanceTaskRepository
     {
     }
 
+    public function create (array $data)
+    {
+        return MaintenanceTask::create($data);
+    }
 
     public function createOrUpate(array $attributeCheck , array $values)
     {
