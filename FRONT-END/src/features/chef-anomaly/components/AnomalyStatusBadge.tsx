@@ -1,7 +1,7 @@
 import type { AnomalySeverity, AnomalyStatus } from "../types/anomaly";
 
 function getStatusClasses(status: AnomalyStatus) {
-  if (status === "pending") {
+  if (status === "open" || status === "pending") {
     return "border border-[#f4d6b3] bg-[#fff3e4] text-[#b46a1f]";
   }
 
