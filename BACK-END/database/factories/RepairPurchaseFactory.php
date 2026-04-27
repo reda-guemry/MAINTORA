@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\RepairPurchase;
+use App\Models\RepairPurchaseOrder;
 use App\Models\RepairRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<RepairPurchase>
+ * @extends Factory<RepairPurchaseOrder>
  */
 class RepairPurchaseFactory extends Factory
 {
