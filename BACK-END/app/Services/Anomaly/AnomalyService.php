@@ -7,6 +7,7 @@ use App\Repositories\Anomaly\RepairRequestRepository;
 use App\Services\Rounde\MaintenanceTaskService;
 use DB;
 use Exception;
+use Log;
 
 
 
@@ -34,11 +35,13 @@ class AnomalyService
         return DB::transaction(function () use ($anomalyId, $data) {
             $anomaly = $this->AnomalyRepository->findForRepairRequest($anomalyId);
 
+            
+
             if ($anomaly->status !== 'open') {
                 throw new Exception('Repair request can only be created for pending anomalies.', 422);
             }
 
-            if ($anomaly->repairRequest) {
+            if ($anomaly->repairRequest()->exists()) {
                 throw new Exception('A repair request already exists for this anomaly.', 422);
             }
 
