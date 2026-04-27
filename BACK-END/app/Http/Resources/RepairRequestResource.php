@@ -25,6 +25,7 @@ class RepairRequestResource extends JsonResource
             'anomaly' => AnomalyResource::make($this->whenLoaded('anomaly')),
             'requested_by' => UserResource::make($this->whenLoaded('requestedBy')),
             'assigned_to' => UserResource::make($this->whenLoaded('assignedTo')),
+            'purchase_order' => RepairPurchaseResource::make($this->whenLoaded('purchaseOrder')),
         ];
     }
 }
