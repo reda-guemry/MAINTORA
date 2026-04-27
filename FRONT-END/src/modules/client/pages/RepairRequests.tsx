@@ -1,7 +1,12 @@
 import { useMemo, useState } from "react";
 import { Alert } from "@/shared/components/feedback";
 import { Button, Input, Spinner } from "@/shared/components/ui";
-import { usePaginateClientRepairRequests } from "@/features/client-repair-request";
+import {
+  UploadPurchaseOrderModal,
+  usePaginateClientRepairRequests,
+  useUploadRepairPurchaseOrder,
+  type ClientRepairRequest,
+} from "@/features/client-repair-request";
 
 function getStatusClasses(status: string) {
   if (status === "open") {
@@ -26,6 +31,8 @@ function formatDate(value: string) {
 export default function RepairRequestsPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [search, setSearch] = useState("");
+  const [selectedRepairRequest, setSelectedRepairRequest] =
+    useState<ClientRepairRequest | null>(null);
   const {
     repairRequests,
     paginate,
@@ -33,7 +40,14 @@ export default function RepairRequestsPage() {
     setPage,
     isLoading,
     error,
+    updateRepairRequestInList,
+    fetchRepairRequests,
   } = usePaginateClientRepairRequests(statusFilter);
+  const {
+    uploadPurchaseOrderCall,
+    isUploading,
+    error: uploadError,
+  } = useUploadRepairPurchaseOrder();
 
   const filteredRepairRequests = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -62,6 +76,22 @@ export default function RepairRequestsPage() {
   const completedCount = repairRequests.filter(
     (item) => item.status === "completed",
   ).length;
+
+  async function handleUploadPurchaseOrder(file: File) {
+    if (!selectedRepairRequest) {
+      return;
+    }
+
+    const response = await uploadPurchaseOrderCall(selectedRepairRequest.id, file);
+
+    if (!response) {
+      return;
+    }
+
+    updateRepairRequestInList(response.data);
+    await fetchRepairRequests();
+    setSelectedRepairRequest(null);
+  }
 
   return (
     <div className="space-y-6">
@@ -214,12 +244,43 @@ export default function RepairRequestsPage() {
                 </div>
               </div>
 
+              {repairRequest.purchase_order && (
+                <div className="mt-5 rounded-2xl border border-[#dce5e2] bg-[#f8fbfb] px-4 py-4">
+                  <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#988a79]">
+                        Purchase order
+                      </p>
+                      <p className="mt-1 text-sm font-bold text-[#2d241c]">
+                        {repairRequest.purchase_order.original_file_name}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] ${getStatusClasses(repairRequest.purchase_order.status === "uploaded" ? "in_progress" : repairRequest.purchase_order.status)}`}
+                      >
+                        {repairRequest.purchase_order.status}
+                      </span>
+                      <a
+                        href={repairRequest.purchase_order.file_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm font-bold text-primary underline-offset-4 hover:underline"
+                      >
+                        Open file
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {repairRequest.status === "open" ? (
                 <div className="mt-5 grid gap-3 md:grid-cols-2">
                   <Button
                     variant="secondary"
                     className="rounded-2xl text-[10px] uppercase tracking-widest"
-                    onClick={() => {}}
+                    onClick={() => setSelectedRepairRequest(repairRequest)}
                   >
                     <span className="material-symbols-outlined text-[18px]">
                       upload_file
@@ -274,6 +335,15 @@ export default function RepairRequestsPage() {
           </div>
         </section>
       )}
+
+      <UploadPurchaseOrderModal
+        repairRequest={selectedRepairRequest}
+        isOpen={selectedRepairRequest !== null}
+        isUploading={isUploading}
+        error={uploadError}
+        onClose={() => setSelectedRepairRequest(null)}
+        onSubmit={handleUploadPurchaseOrder}
+      />
     </div>
   );
 }
