@@ -9,11 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 
 
 #[Fillable([
+    'repair_request_id',
+    'uploaded_by',
     'file_path',
     'original_file_name',
     'status',
 ])]
-class RepairPurchase extends Model
+class RepairPurchaseOrder extends Model
 {
     use HasFactory ; 
 
