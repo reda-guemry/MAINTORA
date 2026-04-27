@@ -4,6 +4,7 @@ namespace App\Services\RepairRequest;
 
 use App\Repositories\Anomaly\RepairRequestRepository;
 use App\Repositories\RepairRequest\RepairPurchaseOrderRepository;
+use App\Repositories\Rounde\MaintenanceTaskRepository;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,7 @@ class RepairPurchaseOrderService
     public function __construct(
         private RepairPurchaseOrderRepository $repairPurchaseOrderRepository,
         private RepairRequestRepository $repairRequestRepository,
+        private MaintenanceTaskRepository $maintenanceTaskRepository,
     ) {}
 
     public function uploadForClient(int $repairRequestId, UploadedFile $purchaseOrderFile)
@@ -78,6 +80,18 @@ class RepairPurchaseOrderService
 
                 $repairRequest->anomaly->update([
                     'status' => 'resolved',
+                ]);
+
+                $this->maintenanceTaskRepository->create([
+                    'machine_id' => $repairRequest->machine_id ,
+                    'maintenance_plan_id' => $repairRequest->anomaly->maintenanceTask->maintenancePlan->id,
+                    'scheduled_at' => now()->toDateString()  ,
+                    'assigned_to' => $repairRequest->anomaly->maintenanceTask->maintenancePlan->assigned_to,
+                    'status' => 'pending',
+                ]);
+
+                $repairRequest->machine->update([
+                    'status' => 'maintenance',
                 ]);
 
                 // $machineStatus = $this->repairPurchaseOrderRepository->countOpenAnomaliesForMachine(
