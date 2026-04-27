@@ -3,6 +3,7 @@ import type { ChecklistTemplate } from "@/features/checklist-template";
 import type { Machine } from "@/features/roundes";
 
 export type AnomalyStatus =
+  | "open"
   | "pending"
   | "in_progress"
   | "resolved"
