@@ -59,8 +59,10 @@ export function AnomalyDetailsModal({
   const repairRequests = Array.isArray(anomaly?.repair_request)
     ? anomaly.repair_request
     : [];
+  const isOpenAnomaly =
+    anomaly?.status === "open" || anomaly?.status === "pending";
   const canCreateRepairRequest =
-    anomaly?.status === "pending" && repairRequests.length === 0;
+    isOpenAnomaly && repairRequests.length === 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2d2d2d]/45 p-4">
@@ -130,7 +132,7 @@ export function AnomalyDetailsModal({
                       </Button>
                     ) : repairRequests.length > 0 ? (
                       <div className="rounded-2xl border border-[#b9dfdc] bg-[#edf8f7] px-4 py-3 text-sm text-primary">
-                        Repair request already sent.
+                        Repair request already created.
                       </div>
                     ) : null}
 
