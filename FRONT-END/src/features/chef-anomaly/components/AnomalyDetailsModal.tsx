@@ -36,8 +36,8 @@ type AnomalyDetailsModalProps = {
   isReviewingPurchaseOrder: boolean;
   onClose: () => void;
   onOpenRepairRequest: () => void;
-  onApprovePurchaseOrder: () => void;
-  onRejectPurchaseOrder: () => void;
+  onApprovePurchaseOrder: (repairRequestId: number) => void;
+  onRejectPurchaseOrder: (repairRequestId: number) => void;
 };
 
 export function AnomalyDetailsModal({
@@ -56,11 +56,11 @@ export function AnomalyDetailsModal({
     return null;
   }
 
+  const repairRequests = Array.isArray(anomaly?.repair_request)
+    ? anomaly.repair_request
+    : [];
   const canCreateRepairRequest =
-    anomaly?.status === "pending" && !anomaly.repair_request;
-  const canReviewPurchaseOrder =
-    anomaly?.repair_request?.status === "in_progress" &&
-    anomaly.repair_request.purchase_order?.status === "uploaded";
+    anomaly?.status === "pending" && repairRequests.length === 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2d2d2d]/45 p-4">
@@ -86,7 +86,7 @@ export function AnomalyDetailsModal({
 
         <div className="max-h-[calc(92vh-92px)] overflow-y-auto px-6 py-5">
           {isLoading && (
-            <div className="flex min-h-[320px] flex-col items-center justify-center">
+            <div className="flex min-h-80 flex-col items-center justify-center">
               <Spinner />
               <p className="mt-4 text-[11px] font-black uppercase tracking-[0.24em] text-[#8f8477]">
                 Loading anomaly details
@@ -128,7 +128,7 @@ export function AnomalyDetailsModal({
                         </span>
                         Send Repair Request
                       </Button>
-                    ) : anomaly.repair_request ? (
+                    ) : repairRequests.length > 0 ? (
                       <div className="rounded-2xl border border-[#b9dfdc] bg-[#edf8f7] px-4 py-3 text-sm text-primary">
                         Repair request already sent.
                       </div>
@@ -168,7 +168,8 @@ export function AnomalyDetailsModal({
                     Technician
                   </p>
                   <p className="mt-2 text-sm font-black text-[#2d241c]">
-                    {anomaly.reported_by.first_name} {anomaly.reported_by.last_name}
+                    {anomaly.reported_by.first_name}{" "}
+                    {anomaly.reported_by.last_name}
                   </p>
                   <p className="mt-1 text-xs text-[#7f7468]">
                     {anomaly.reported_by.email}
@@ -194,7 +195,8 @@ export function AnomalyDetailsModal({
                         Matched Maintenance Items
                       </p>
                       <p className="mt-1 text-sm text-[#6f6254]">
-                        Checklist items marked as anomaly during this maintenance task.
+                        Checklist items marked as anomaly during this
+                        maintenance task.
                       </p>
                     </div>
                   </div>
@@ -202,7 +204,8 @@ export function AnomalyDetailsModal({
                   <div className="mt-4 space-y-3">
                     {(anomaly.matched_check_items ?? []).length === 0 ? (
                       <div className="rounded-2xl border border-dashed border-[#d8d0c4] bg-[#fcfaf7] px-4 py-4 text-sm text-[#7f7468]">
-                        No matched checklist items were returned for this anomaly.
+                        No matched checklist items were returned for this
+                        anomaly.
                       </div>
                     ) : (
                       anomaly.matched_check_items?.map((item) => (
@@ -211,7 +214,8 @@ export function AnomalyDetailsModal({
                           className="rounded-2xl border border-red-200 bg-red-50 px-4 py-4"
                         >
                           <p className="text-sm font-bold text-[#2d241c]">
-                            {item.label ?? `Checklist #${item.checklist_item_id}`}
+                            {item.label ??
+                              `Checklist #${item.checklist_item_id}`}
                           </p>
                           {item.comment && (
                             <p className="mt-2 text-sm leading-6 text-[#7b4b48]">
@@ -229,120 +233,138 @@ export function AnomalyDetailsModal({
                     Full Maintenance Checklist
                   </p>
                   <p className="mt-1 text-sm text-[#6f6254]">
-                    Scheduled on {formatDate(anomaly.maintenance_task?.scheduled_at)}
+                    Scheduled on{" "}
+                    {formatDate(anomaly.maintenance_task?.scheduled_at)}
                   </p>
 
                   <div className="mt-4 space-y-3">
-                    {(anomaly.maintenance_task?.check_items ?? []).map((item) => (
-                      <div
-                        key={item.checklist_item_id}
-                        className={`rounded-2xl border px-4 py-4 ${getChecklistItemClasses(item)}`}
-                      >
-                        <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                          <div>
-                            <p className="text-sm font-bold text-[#2d241c]">
-                              {item.label}
-                            </p>
-                            {item.comment && (
-                              <p className="mt-2 text-sm leading-6 text-[#6f6254]">
-                                {item.comment}
+                    {(anomaly.maintenance_task?.check_items ?? []).map(
+                      (item) => (
+                        <div
+                          key={item.checklist_item_id}
+                          className={`rounded-2xl border px-4 py-4 ${getChecklistItemClasses(item)}`}
+                        >
+                          <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                            <div>
+                              <p className="text-sm font-bold text-[#2d241c]">
+                                {item.label}
                               </p>
-                            )}
-                          </div>
+                              {item.comment && (
+                                <p className="mt-2 text-sm leading-6 text-[#6f6254]">
+                                  {item.comment}
+                                </p>
+                              )}
+                            </div>
 
-                          <span className="rounded-full border border-white/60 bg-white/70 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-[#6f6254]">
-                            {item.status ?? "not checked"}
-                          </span>
+                            <span className="rounded-full border border-white/60 bg-white/70 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-[#6f6254]">
+                              {item.status ?? "not checked"}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
                 </div>
               </section>
 
-              {anomaly.repair_request && (
-                <section className="rounded-[26px] border border-[#ddd5c8] bg-white px-5 py-5 shadow-[0_16px_40px_rgba(62,52,39,0.06)]">
-                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#8f8477]">
-                        Repair Request
-                      </p>
-                      <h3 className="mt-2 text-lg font-black text-[#2d241c]">
-                        {anomaly.repair_request.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-7 text-[#6f6254]">
-                        {anomaly.repair_request.description}
-                      </p>
-                    </div>
-
-                    <div className="rounded-2xl border border-[#ece6dc] bg-[#fcfaf7] px-4 py-4 text-sm text-[#6f6254]">
-                      <p className="font-bold text-[#2d241c]">
-                        Estimated cost: {Number(anomaly.repair_request.estimated_cost).toFixed(2)}
-                      </p>
-                      <p className="mt-1">
-                        Status: {anomaly.repair_request.status.replace("_", " ")}
-                      </p>
-                    </div>
-                  </div>
-
-                  {anomaly.repair_request.purchase_order && (
-                    <div className="mt-5 rounded-[24px] border border-[#dce5e2] bg-[#f8fbfb] px-5 py-5">
-                      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                        <div>
-                          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#8f8477]">
-                            Purchase Order
-                          </p>
-                          <p className="mt-2 text-sm font-black text-[#2d241c]">
-                            {anomaly.repair_request.purchase_order.original_file_name}
-                          </p>
-                          <p className="mt-2 text-sm text-[#6f6254]">
-                            Uploaded on{" "}
-                            {formatDate(anomaly.repair_request.purchase_order.created_at)}
-                          </p>
-                        </div>
-
-                        <div className="flex flex-col items-start gap-3 md:items-end">
-                          <span className="rounded-full border border-[#b9dfdc] bg-[#edf8f7] px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-primary">
-                            {anomaly.repair_request.purchase_order.status}
-                          </span>
-                          <a
-                            href={anomaly.repair_request.purchase_order.file_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-sm font-bold text-primary underline-offset-4 hover:underline"
-                          >
-                            Open purchase order
-                          </a>
-                        </div>
+              {repairRequests.map((repairRequest) => (
+                  <section
+                    key={repairRequest.id}
+                    className="rounded-[26px] border border-[#ddd5c8] bg-white px-5 py-5 shadow-[0_16px_40px_rgba(62,52,39,0.06)]"
+                  >
+                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                      <div>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#8f8477]">
+                          Repair Request
+                        </p>
+                        <h3 className="mt-2 text-lg font-black text-[#2d241c]">
+                          {repairRequest.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-7 text-[#6f6254]">
+                          {repairRequest.description}
+                        </p>
                       </div>
 
-                      {canReviewPurchaseOrder && (
-                        <div className="mt-5 grid gap-3 md:grid-cols-2">
-                          <Button
-                            onClick={onApprovePurchaseOrder}
-                            isLoading={isReviewingPurchaseOrder}
-                          >
-                            <span className="material-symbols-outlined text-[18px]">
-                              check_circle
-                            </span>
-                            Approve Purchase Order
-                          </Button>
-                          <Button
-                            variant="danger"
-                            onClick={onRejectPurchaseOrder}
-                            disabled={isReviewingPurchaseOrder}
-                          >
-                            <span className="material-symbols-outlined text-[18px]">
-                              cancel
-                            </span>
-                            Reject Purchase Order
-                          </Button>
-                        </div>
-                      )}
+                      <div className="rounded-2xl border border-[#ece6dc] bg-[#fcfaf7] px-4 py-4 text-sm text-[#6f6254]">
+                        <p className="font-bold text-[#2d241c]">
+                          Estimated cost:{" "}
+                          {Number(repairRequest.estimated_cost ?? 0).toFixed(2)}
+                        </p>
+                        <p className="mt-1">
+                          Status:{" "}
+                          {(repairRequest.status ?? "unknown").replace(
+                            "_",
+                            " ",
+                          )}
+                        </p>
+                      </div>
                     </div>
-                  )}
-                </section>
-              )}
+
+                    {repairRequest.purchase_order && (
+                      <div className="mt-5 rounded-3xl border border-[#dce5e2] bg-[#f8fbfb] px-5 py-5">
+                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                          <div>
+                            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#8f8477]">
+                              Purchase Order
+                            </p>
+                            <p className="mt-2 text-sm font-black text-[#2d241c]">
+                              {repairRequest.purchase_order.original_file_name}
+                            </p>
+                            <p className="mt-2 text-sm text-[#6f6254]">
+                              Uploaded on{" "}
+                              {formatDate(
+                                repairRequest.purchase_order.created_at,
+                              )}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-col items-start gap-3 md:items-end">
+                            <span className="rounded-full border border-[#b9dfdc] bg-[#edf8f7] px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-primary">
+                              {repairRequest.purchase_order.status}
+                            </span>
+                            <a
+                              href={repairRequest.purchase_order.file_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-sm font-bold text-primary underline-offset-4 hover:underline"
+                            >
+                              Open purchase order
+                            </a>
+                          </div>
+                        </div>
+
+                        {repairRequest.status === "in_progress" &&
+                          repairRequest.purchase_order.status === "uploaded" && (
+                          <div className="mt-5 grid gap-3 md:grid-cols-2">
+                            <Button
+                              onClick={() =>
+                                onApprovePurchaseOrder(repairRequest.id)
+                              }
+                              isLoading={isReviewingPurchaseOrder}
+                            >
+                              <span className="material-symbols-outlined text-[18px]">
+                                check_circle
+                              </span>
+                              Approve Purchase Order
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={() =>
+                                onRejectPurchaseOrder(repairRequest.id)
+                              }
+                              disabled={isReviewingPurchaseOrder}
+                            >
+                              <span className="material-symbols-outlined text-[18px]">
+                                cancel
+                              </span>
+                              Reject Purchase Order
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </section>
+                ))}
             </div>
           )}
         </div>
