@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class extends Migration 
 {
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
             $table->string('file_path');
             $table->string('original_file_name');
-            $table->enum('status' , ['uploaded', 'approved', 'rejected'])->default('uploaded'); 
+            $table->enum('status', ['uploaded', 'approved', 'rejected'])->default('uploaded');
             $table->timestamps();
         });
     }

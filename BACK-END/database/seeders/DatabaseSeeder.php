@@ -10,7 +10,7 @@ use App\Models\Machine;
 use App\Models\MaintenancePlan;
 use App\Models\MaintenanceTask;
 use App\Models\MaintenanceTaskCheck;
-use App\Models\RepairPurchase;
+use App\Models\RepairPurchaseOrder;
 use App\Models\RepairRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -122,7 +122,7 @@ class DatabaseSeeder extends Seeder
             }
 
             $repairRequests->each(function ($repairRequest) use ($users) {
-                RepairPurchase::factory(rand(0, 2))->create([
+                RepairPurchaseOrder::factory(rand(0, 2))->create([
                     'repair_request_id' => $repairRequest->id,
                     'uploaded_by' => $users->random()->id,
                 ]);
