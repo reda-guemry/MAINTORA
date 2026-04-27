@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
     'description',
     'estimated_cost' 
 ])]
+
 class RepairRequest extends Model
 {
     use HasFactory ;

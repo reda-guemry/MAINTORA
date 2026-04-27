@@ -31,11 +31,12 @@ class RepairRequestRepository
     {
         return RepairRequest::create([
             'machine_id' => $repairRequest->machine_id,
-            'reported_by' => $repairRequest->reported_by,
-            'maintenance_task_id' => $repairRequest->maintenance_task_id,
-            'title' => $repairRequest->title,
+            'requested_by' => auth('api')->id(),
+            'anomaly_id' => $repairRequest->anomaly_id,
+            'assigned_to' => $repairRequest->assigned_to,
+            'title' => $repairRequest->title . ' - Replacement',
             'description' => $repairRequest->description,
-            'severity' => $repairRequest->severity,
+            'estimated_cost' => $repairRequest->estimated_cost,
             'status' => 'open',
         ]);
     }

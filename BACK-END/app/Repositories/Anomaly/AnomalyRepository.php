@@ -25,9 +25,9 @@ class AnomalyRepository
         return Anomaly::with(
                 'machine.creator',
                 'reportedBy.roles',
-                'repairRequest.requestedBy.roles',
-                'repairRequest.assignedTo.roles',
-                'repairRequest.purchaseOrder.uploader.roles',
+                'repairRequest.requestedBy',
+                'repairRequest.assignedTo',
+                'repairRequest.purchaseOrder.uploader',
                 'maintenanceTask.machine',
                 'maintenanceTask.maintenancePlan.checklistTemplate',
             )
