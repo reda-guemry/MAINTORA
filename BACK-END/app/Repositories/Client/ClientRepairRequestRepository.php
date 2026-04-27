@@ -15,6 +15,7 @@ class ClientRepairRequestRepository
                 'anomaly.reportedBy.roles',
                 'requestedBy.roles',
                 'assignedTo.roles',
+                'purchaseOrder.uploader.roles',
             )
             ->when($filters['status'] ?? null, function ($query, $status) {
                 $query->where('status', $status);
@@ -32,6 +33,7 @@ class ClientRepairRequestRepository
                 'anomaly.reportedBy.roles',
                 'requestedBy.roles',
                 'assignedTo.roles',
+                'purchaseOrder.uploader.roles',
             )
             ->findOrFail($repairRequestId);
     }
