@@ -81,8 +81,8 @@ export function AnomaliesPage() {
     });
   }, [anomalies, search]);
 
-  const pendingCount = anomalies.filter(
-    (anomaly) => anomaly.status === "pending",
+  const openCount = anomalies.filter(
+    (anomaly) => anomaly.status === "open" || anomaly.status === "pending",
   ).length;
   const inProgressCount = anomalies.filter(
     (anomaly) => anomaly.status === "in_progress",
@@ -174,9 +174,9 @@ export function AnomaliesPage() {
 
             <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
               <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
-                Pending now
+                Open now
               </p>
-              <p className="mt-3 text-3xl font-black text-[#2d241c]">{pendingCount}</p>
+              <p className="mt-3 text-3xl font-black text-[#2d241c]">{openCount}</p>
             </div>
 
             <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
@@ -218,6 +218,7 @@ export function AnomaliesPage() {
             className="h-12 rounded-lg border border-[#ddd5c8] bg-[#fcfaf7] px-4 text-sm text-[#2d241c] outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
           >
             <option value="">All statuses</option>
+            <option value="open">Open</option>
             <option value="pending">Pending</option>
             <option value="in_progress">In progress</option>
             <option value="resolved">Resolved</option>
