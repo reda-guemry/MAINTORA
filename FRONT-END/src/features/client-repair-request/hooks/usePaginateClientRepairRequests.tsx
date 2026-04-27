@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useApi } from "@/shared/hooks/useApi";
+import type { ClientRepairRequest } from "../types/repairRequest";
 import type { PaginatedClientRepairRequestsResponse } from "../types/repairRequestResponses";
 
 export function usePaginateClientRepairRequests(statusFilter: string) {
-  const [paginate, setPaginate] =
-    useState<PaginatedClientRepairRequestsResponse["data"] | null>(null);
+  const [paginate, setPaginate] = useState<
+    PaginatedClientRepairRequestsResponse["data"] | null
+  >(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -14,43 +16,37 @@ export function usePaginateClientRepairRequests(statusFilter: string) {
     setCurrentPage(1);
   }, [statusFilter]);
 
-  useEffect(() => {
-    async function fetchRepairRequests() {
-      try {
-        setIsLoading(true);
-        setError(null);
+  async function fetchRepairRequests(showLoading = true) {
+    try {
+      if (showLoading) setIsLoading(true);
+      setError(null);
 
-        const params = new URLSearchParams({
-          page: String(currentPage),
-          per_page: "8",
-        });
+      const params = new URLSearchParams({
+        page: String(currentPage),
+        per_page: "8",
+      });
 
-        if (statusFilter) {
-          params.set("status", statusFilter);
-        }
-
-        const response = await callApi<PaginatedClientRepairRequestsResponse>(
-          `client/repair-requests?${params.toString()}`,
-          {
-            method: "GET",
-          },
-        );
-
-        console.log("Fetched repair requests:", response);
-
-        setPaginate(response.data);
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : "Failed to load repair requests";
-        setError(message);
-      } finally {
-        setIsLoading(false);
+      if (statusFilter) {
+        params.set("status", statusFilter);
       }
-    }
 
-    fetchRepairRequests();
+      const response = await callApi<PaginatedClientRepairRequestsResponse>(
+        `client/repair-requests?${params.toString()}`,
+        { method: "GET" },
+      );
+
+      setPaginate(response.data);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Failed to load repair requests";
+      setError(message);
+    } finally {
+      if (showLoading) setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchRepairRequests(true);
   }, [currentPage, statusFilter]);
 
   function setPage(page: number) {
@@ -63,6 +59,25 @@ export function usePaginateClientRepairRequests(statusFilter: string) {
     setCurrentPage(boundedPage);
   }
 
+  function updateRepairRequestInList(
+    updatedRepairRequest: ClientRepairRequest,
+  ) {
+    setPaginate((currentPaginate) => {
+      if (!currentPaginate) {
+        return currentPaginate;
+      }
+
+      return {
+        ...currentPaginate,
+        data: currentPaginate.data.map((repairRequest) =>
+          repairRequest.id === updatedRepairRequest.id
+            ? updatedRepairRequest
+            : repairRequest,
+        ),
+      };
+    });
+  }
+
   return {
     repairRequests: paginate?.data ?? [],
     paginate,
@@ -70,5 +85,7 @@ export function usePaginateClientRepairRequests(statusFilter: string) {
     setPage,
     isLoading,
     error,
+    updateRepairRequestInList,
+    fetchRepairRequests , 
   };
 }
