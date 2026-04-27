@@ -7,6 +7,18 @@ export type ClientRepairRequestStatus =
   | "completed"
   | "rejected";
 
+export type RepairPurchaseOrderStatus = "uploaded" | "approved" | "rejected";
+
+export type RepairPurchaseOrder = {
+  id: number;
+  file_path: string;
+  file_url: string;
+  original_file_name: string;
+  status: RepairPurchaseOrderStatus;
+  created_at: string;
+  uploaded_by?: User | null;
+};
+
 export type ClientRepairRequestAnomaly = {
   id: number;
   title: string;
@@ -28,4 +40,5 @@ export type ClientRepairRequest = {
   anomaly?: ClientRepairRequestAnomaly | null;
   requested_by?: User | null;
   assigned_to?: User | null;
+  purchase_order?: RepairPurchaseOrder | null;
 };
