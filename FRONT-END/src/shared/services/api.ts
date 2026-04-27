@@ -4,12 +4,16 @@ import { ApiError, type ApiErrorResponse , type ApiRequestOptions } from '../typ
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
+function isFormData(value: unknown): value is FormData {
+    return typeof FormData !== "undefined" && value instanceof FormData;
+}
+
 function buildHeaders(
     headers: Record<string, string> = {},
-    hasBody: boolean = false
+    body?: unknown
 ): Record<string, string> {
     return {
-        ...(hasBody ? { "Content-Type": "application/json" } : {}),
+        ...(!body || isFormData(body) ? {} : { "Content-Type": "application/json" }),
         ...headers,
         "Accept": "application/json",
     };
@@ -43,8 +47,8 @@ export async function api<T>(
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method , 
         credentials : "include" , 
-        headers : buildHeaders(headers , !!body, ) ,
-        body : body ? JSON.stringify(body) : undefined ,
+        headers : buildHeaders(headers , body) ,
+        body : !body? undefined : isFormData(body) ? body : JSON.stringify(body) ,
         signal , 
     } )
 
@@ -63,5 +67,4 @@ export async function api<T>(
     return responseData as T;
     
 }
-
 
