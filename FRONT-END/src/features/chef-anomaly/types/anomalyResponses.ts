@@ -32,6 +32,12 @@ export type CreateRepairRequestResponse = {
   data: RepairRequest;
 };
 
+export type ReviewPurchaseOrderResponse = {
+  success: boolean;
+  message: string;
+  data: RepairRequest;
+};
+
 export type CreateRepairRequestMutation = (
   anomalyId: number,
   payload: CreateRepairRequestPayload,
