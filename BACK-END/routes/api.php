@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Anomaly\AnomalyController;
+use App\Http\Controllers\Anomaly\RepairPurchaseOrderController;
 use App\Http\Controllers\Anomaly\RepairRequestController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\CheckList\ChecklistItemsController;
 use App\Http\Controllers\CheckList\ChecklistTemplateController;
+use App\Http\Controllers\Client\ClientRepairPurchaseOrderController;
 use App\Http\Controllers\Client\ClientRepairRequestController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Rounde\MaintenancePlanController;
@@ -52,15 +54,15 @@ Route::middleware(['auth:api'])->group(function () {
         /*
          * Manage users Routes
          */
+        Route::get('machines/all', [MachineController::class, 'getMine'])->middleware('can:manage machines');
         Route::apiResource('machines', MachineController::class)->middleware('can:manage machines');
-        
 
         /*
          *  Anomalies and repair requests routes
          */
-        Route::get('machines/all', [MachineController::class, 'getMine'])->middleware('can:manage machines');
         Route::get('repair-requests', [ClientRepairRequestController::class, 'index'])->middleware('can:manage machines');
         Route::get('repair-requests/{id}', [ClientRepairRequestController::class, 'show'])->middleware('can:manage machines');
+        Route::post('repair-requests/{id}/purchase-orders', [RepairPurchaseOrderController::class, 'store'])->middleware('can:manage machines');
 
     });
 
@@ -99,6 +101,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('anomalies', [AnomalyController::class, 'index'])->middleware('can:manage technicians');
         Route::get('anomalies/{id}', [AnomalyController::class, 'show'])->middleware('can:manage technicians');
         Route::post('anomalies/{id}/repair-requests', [RepairRequestController::class, 'store'])->middleware('can:manage technicians');
+        Route::patch('repair-requests/{id}/purchase-order/review', [RepairPurchaseOrderController::class, 'review'])->middleware('can:manage technicians');
 
 
 
