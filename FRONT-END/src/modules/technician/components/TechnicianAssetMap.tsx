@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { TechnicianAssetMapProps } from "@/features/technician-map";
+import { useMap } from "@/shared/components/map/usaMap";
 import { markerColors } from "../utils/markerColors";
 
 const routeSourceId = "technician-route-source";
@@ -14,60 +15,13 @@ export function TechnicianAssetMap({
   onMapBackgroundClick,
   routeOrigin = null,
 }: TechnicianAssetMapProps) {
-  const mapContainer = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
+  const { mapContainer, mapRef } = useMap();
   const markerRefs = useRef<maplibregl.Marker[]>([]);
 
   useEffect(() => {
-    if (!mapContainer.current || mapRef.current) {
-      return;
-    }
-
-    if (maplibregl.getRTLTextPluginStatus() === "unavailable") {
-      try {
-        maplibregl.setRTLTextPlugin(
-          "https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.3.0/dist/mapbox-gl-rtl-text.js",
-          true,
-        );
-      } catch (error) {
-        console.error("RTL Plugin error:", error);
-      }
-    }
-
-    const cartoVoyagerStyle: maplibregl.StyleSpecification = {
-      version: 8,
-      sources: {
-        "carto-voyager": {
-          type: "raster",
-          tiles: [
-            "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-          ],
-          tileSize: 256,
-          attribution: "&copy; OpenStreetMap &copy; CARTO",
-        },
-      },
-      layers: [
-        {
-          id: "carto-layer",
-          type: "raster",
-          source: "carto-voyager",
-        },
-      ],
-    };
-
-    mapRef.current = new maplibregl.Map({
-      container: mapContainer.current,
-      style: cartoVoyagerStyle,
-      center: [-7.62, 33.59],
-      zoom: 12,
-      attributionControl: false,
-    });
-
     return () => {
       markerRefs.current.forEach((marker) => marker.remove());
       markerRefs.current = [];
-      mapRef.current?.remove();
-      mapRef.current = null;
     };
   }, []);
 
@@ -87,7 +41,7 @@ export function TechnicianAssetMap({
     return () => {
       map.off("click", handleMapClick);
     };
-  }, [onMapBackgroundClick]);
+  }, [mapRef, onMapBackgroundClick]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -97,7 +51,6 @@ export function TechnicianAssetMap({
     }
 
     markerRefs.current.forEach((marker) => marker.remove());
-
     markerRefs.current = [];
 
     machines.forEach((machine) => {
@@ -111,10 +64,10 @@ export function TechnicianAssetMap({
         "group block cursor-pointer border-none bg-transparent p-0 outline-none";
       markerWrapper.style.zIndex = isSelected ? "40" : "1";
 
-      markerWrapper.innerHTML = `<div class="relative flex flex-col items-center pb-1.5 transition-all 
+      markerWrapper.innerHTML = `<div class="relative flex flex-col items-center pb-1.5 transition-all
             duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-bottom
             ${isSelected ? "scale-125" : "scale-100"} " >
-          
+
           <div class="absolute bottom-full mb-2 whitespace-nowrap rounded-xl border border-white/80 bg-white/95 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_8px_16px_rgba(62,52,39,0.08)] backdrop-blur-md transition-all duration-300 ${
             isSelected
               ? "opacity-100 translate-y-0"
@@ -123,17 +76,17 @@ export function TechnicianAssetMap({
             ${machine.code}
           </div>
 
-          <div class="relative flex h-10 w-10 items-center justify-center rounded-full border-2 bg-white shadow-md transition-colors duration-300" 
+          <div class="relative flex h-10 w-10 items-center justify-center rounded-full border-2 bg-white shadow-md transition-colors duration-300"
                style="border-color: ${palette.accent}; background-color: ${isSelected ? palette.bg : "white"}; box-shadow: ${isSelected ? `0 0 24px ${palette.glow}, 0 4px 12px rgba(0,0,0,0.1)` : "0 4px 10px rgba(0,0,0,0.08)"};">
             <span class="material-symbols-outlined text-[20px]" style="color: ${palette.accent};">
               memory
             </span>
-            
+
             <span class="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-white" style="background-color: ${palette.accent};"></span>
           </div>
 
           <div class="h-2 w-0.5 mt-0.5 rounded-full opacity-80" style="background-color: ${palette.accent};"></div>
-          
+
           <div class="absolute bottom-0 h-1.5 w-5 rounded-[100%] bg-[#2d241c]/30 blur-[2.5px] transition-all duration-300" style="transform: ${isSelected ? "scale(1.2)" : "scale(1)"};"></div>
         </div>
       `;
@@ -195,7 +148,7 @@ export function TechnicianAssetMap({
       maxZoom: 16,
       duration: 1000,
     });
-  }, [machines, onMarkerSelect, selectedMachineId]);
+  }, [machines, mapRef, onMarkerSelect, selectedMachineId]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -216,21 +169,21 @@ export function TechnicianAssetMap({
       return;
     }
 
-    const routeFeature = {
-      type: "Feature" as const,
-      geometry: {
-        type: "LineString" as const,
-        coordinates: [
-          [routeOrigin.longitude, routeOrigin.latitude],
-          [selectedMachine.longitude, selectedMachine.latitude],
-        ],
-      },
-      properties: {},
-    };
-
     const routeCollection = {
       type: "FeatureCollection" as const,
-      features: [routeFeature],
+      features: [
+        {
+          type: "Feature" as const,
+          geometry: {
+            type: "LineString" as const,
+            coordinates: [
+              [routeOrigin.longitude, routeOrigin.latitude],
+              [selectedMachine.longitude, selectedMachine.latitude],
+            ],
+          },
+          properties: {},
+        },
+      ],
     };
 
     const upsertRoute = () => {
@@ -281,7 +234,7 @@ export function TechnicianAssetMap({
         map.removeSource(routeSourceId);
       }
     };
-  }, [machines, routeOrigin, selectedMachineId]);
+  }, [machines, mapRef, routeOrigin, selectedMachineId]);
 
   return <div ref={mapContainer} className="h-full w-full outline-none" />;
 }

@@ -1,61 +1,23 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
+import { useMap } from "@/shared/components/map/usaMap";
 
 type MapViewProps = {
   onMapClick?: (lat: number, lng: number) => string | Promise<string>;
 };
 
 export function MapView({ onMapClick }: MapViewProps) {
-  
-  const mapContainer = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
+  const { mapContainer, mapRef } = useMap();
 
   useEffect(() => {
-    if (!mapContainer.current || mapRef.current) return;
+    const map = mapRef.current;
 
-    if (maplibregl.getRTLTextPluginStatus() === "unavailable") {
-      try {
-        maplibregl.setRTLTextPlugin(
-          "https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.3.0/dist/mapbox-gl-rtl-text.js",
-          true,
-        );
-      } catch (e) {
-        console.error("RTL Plugin error:", e);
-      }
+    if (!map) {
+      return;
     }
 
-    const cartoStyle: any = {
-      version: 8,
-      sources: {
-        "carto-tiles": {
-          type: "raster",
-          tiles: [
-            "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
-          ],
-          tileSize: 256,
-          attribution: "&copy; OpenStreetMap",
-        },
-      },
-      layers: [
-        {
-          id: "carto-layer",
-          type: "raster",
-          source: "carto-tiles",
-          minzoom: 0,
-          maxzoom: 20,
-        },
-      ],
-    };
-
-    mapRef.current = new maplibregl.Map({
-      container: mapContainer.current,
-      style: cartoStyle,
-      center: [-7.5898, 33.5731],
-      zoom: 12,
-    });
-
-    new maplibregl.Marker().setLngLat([-6.84, 34.02]).addTo(mapRef.current);
+    new maplibregl.Marker().setLngLat([-6.84, 34.02]).addTo(map);
 
     const handleClick = async (e: maplibregl.MapMouseEvent) => {
       const lng = e.lngLat.lng;
@@ -67,30 +29,23 @@ export function MapView({ onMapClick }: MapViewProps) {
         .setHTML(
           `Selected Location ${city || "Unknown"}:<br/>Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`,
         )
-        .addTo(mapRef.current!);
-
+        .addTo(map);
     };
 
-    mapRef.current.on("click", handleClick);
+    map.on("click", handleClick);
 
-    mapRef.current.on("load", () => {
-      mapRef.current?.resize();
+    map.on("load", () => {
+      map.resize();
     });
 
-    mapRef.current.addControl(new maplibregl.NavigationControl(), "top-right");
-
     return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-      }
+      map.off("click", handleClick);
     };
-  }, []);
+  }, [mapRef, onMapClick]);
 
   return (
-    
-      <div className="w-full h-full rounded-xl overflow-hidden border bg-gray-100 relative shadow-sm">
-        <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
-      </div>
+    <div className="relative h-full w-full overflow-hidden rounded-xl border bg-gray-100 shadow-sm">
+      <div ref={mapContainer} className="absolute inset-0 h-full w-full" />
+    </div>
   );
 }
