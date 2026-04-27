@@ -123,15 +123,15 @@ export function AnomaliesPage() {
     await refreshAnomalies();
   }
 
-  async function handleReviewPurchaseOrder(decision: "approve" | "reject") {
-    if (!selectedAnomaly?.repair_request) {
+  async function handleReviewPurchaseOrder(
+    repairRequestId: number,
+    decision: "approve" | "reject",
+  ) {
+    if (!repairRequestId) {
       return;
     }
 
-    const response = await reviewPurchaseOrderCall(
-      selectedAnomaly.repair_request.id,
-      decision,
-    );
+    const response = await reviewPurchaseOrderCall(repairRequestId, decision);
 
     if (!response) {
       return;
@@ -379,8 +379,12 @@ export function AnomaliesPage() {
         isReviewingPurchaseOrder={isReviewingPurchaseOrder}
         onClose={handleCloseDetails}
         onOpenRepairRequest={() => setIsRepairRequestModalOpen(true)}
-        onApprovePurchaseOrder={() => handleReviewPurchaseOrder("approve")}
-        onRejectPurchaseOrder={() => handleReviewPurchaseOrder("reject")}
+        onApprovePurchaseOrder={(repairRequestId) =>
+          handleReviewPurchaseOrder(repairRequestId, "approve")
+        }
+        onRejectPurchaseOrder={(repairRequestId) =>
+          handleReviewPurchaseOrder(repairRequestId, "reject")
+        }
       />
 
       <CreateRepairRequestModal

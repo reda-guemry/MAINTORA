@@ -77,7 +77,7 @@ export type ChefAnomaly = {
   machine: Machine;
   reported_by: User;
   maintenance_task?: AnomalyMaintenanceTask | null;
-  repair_request?: RepairRequest | null;
+  repair_request?: RepairRequest[] | null;
   matched_check_items?: MatchedCheckItem[];
 };
 
