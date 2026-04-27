@@ -37,7 +37,7 @@ class Anomaly extends Model
 
     public function repairRequest()
     {
-        return $this->hasOne(RepairRequest::class) ;
+        return $this->hasMany(RepairRequest::class) ;
     }
 
 }
