@@ -47,5 +47,10 @@ class RepairRequest extends Model
         return $this->belongsTo(User::class, 'assigned_to') ;
     }
 
+    public function purchaseOrder()
+    {
+        return $this->hasOne(RepairPurchaseOrder::class) ;
+    }
+
 
 }
