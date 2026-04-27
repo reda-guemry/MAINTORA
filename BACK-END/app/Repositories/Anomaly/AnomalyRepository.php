@@ -27,6 +27,7 @@ class AnomalyRepository
                 'reportedBy.roles',
                 'repairRequest.requestedBy.roles',
                 'repairRequest.assignedTo.roles',
+                'repairRequest.purchaseOrder.uploader.roles',
                 'maintenanceTask.machine',
                 'maintenanceTask.maintenancePlan.checklistTemplate',
             )
@@ -53,6 +54,7 @@ class AnomalyRepository
                 'reportedBy.roles',
                 'repairRequest.requestedBy.roles',
                 'repairRequest.assignedTo.roles',
+                'repairRequest.purchaseOrder.uploader.roles',
                 'maintenanceTask.machine',
                 'maintenanceTask.assignedTo.roles',
                 'maintenanceTask.maintenancePlan.checklistTemplate.checklistItems',

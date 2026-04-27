@@ -7,13 +7,13 @@ use App\Models\RepairRequest;
 
 class RepairRequestRepository
 {
-    public function createForAnomaly(Anomaly $anomaly, array $data , int $clientId )
+    public function createForAnomaly(Anomaly $anomaly, array $data, int $clientId)
     {
         $repairRequest = RepairRequest::create([
             'machine_id' => $anomaly->machine_id,
             'requested_by' => auth('api')->id(),
             'anomaly_id' => $anomaly->id,
-            'assigned_to' => $clientId ,
+            'assigned_to' => $clientId,
             'title' => $data['title'],
             'description' => $data['description'],
             'estimated_cost' => $data['estimated_cost'],
@@ -27,4 +27,17 @@ class RepairRequestRepository
         ]);
     }
 
+    public function createReplacementRepairRequest(RepairRequest $repairRequest)
+    {
+        return RepairRequest::create([
+            'machine_id' => $repairRequest->machine_id,
+            'reported_by' => $repairRequest->reported_by,
+            'maintenance_task_id' => $repairRequest->maintenance_task_id,
+            'title' => $repairRequest->title,
+            'description' => $repairRequest->description,
+            'severity' => $repairRequest->severity,
+            'status' => 'open',
+        ]);
     }
+
+}
