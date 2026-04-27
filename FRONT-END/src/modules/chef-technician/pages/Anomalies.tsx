@@ -8,6 +8,7 @@ import {
   useChefAnomalies,
   useChefAnomalyDetails,
   useCreateRepairRequest,
+  useReviewRepairPurchaseOrder,
 } from "@/features/chef-anomaly";
 
 function formatDate(value: string) {
@@ -54,6 +55,11 @@ export function AnomaliesPage() {
     isLoading: isCreatingRepairRequest,
     error: createRepairRequestError,
   } = useCreateRepairRequest();
+  const {
+    reviewPurchaseOrderCall,
+    isLoading: isReviewingPurchaseOrder,
+    error: reviewPurchaseOrderError,
+  } = useReviewRepairPurchaseOrder();
 
   const filteredAnomalies = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -107,6 +113,29 @@ export function AnomaliesPage() {
     }
 
     setIsRepairRequestModalOpen(false);
+
+    const updatedAnomaly = await refreshAnomaly();
+
+    if (updatedAnomaly) {
+      updateAnomalyInList(updatedAnomaly);
+    }
+
+    await refreshAnomalies();
+  }
+
+  async function handleReviewPurchaseOrder(decision: "approve" | "reject") {
+    if (!selectedAnomaly?.repair_request) {
+      return;
+    }
+
+    const response = await reviewPurchaseOrderCall(
+      selectedAnomaly.repair_request.id,
+      decision,
+    );
+
+    if (!response) {
+      return;
+    }
 
     const updatedAnomaly = await refreshAnomaly();
 
@@ -346,8 +375,12 @@ export function AnomaliesPage() {
         isOpen={selectedAnomalyId !== null}
         isLoading={isLoadingSelectedAnomaly}
         error={selectedAnomalyError}
+        reviewError={reviewPurchaseOrderError}
+        isReviewingPurchaseOrder={isReviewingPurchaseOrder}
         onClose={handleCloseDetails}
         onOpenRepairRequest={() => setIsRepairRequestModalOpen(true)}
+        onApprovePurchaseOrder={() => handleReviewPurchaseOrder("approve")}
+        onRejectPurchaseOrder={() => handleReviewPurchaseOrder("reject")}
       />
 
       <CreateRepairRequestModal
