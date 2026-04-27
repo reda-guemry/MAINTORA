@@ -32,8 +32,12 @@ type AnomalyDetailsModalProps = {
   isOpen: boolean;
   isLoading: boolean;
   error: string | null;
+  reviewError: string | null;
+  isReviewingPurchaseOrder: boolean;
   onClose: () => void;
   onOpenRepairRequest: () => void;
+  onApprovePurchaseOrder: () => void;
+  onRejectPurchaseOrder: () => void;
 };
 
 export function AnomalyDetailsModal({
@@ -41,8 +45,12 @@ export function AnomalyDetailsModal({
   isOpen,
   isLoading,
   error,
+  reviewError,
+  isReviewingPurchaseOrder,
   onClose,
   onOpenRepairRequest,
+  onApprovePurchaseOrder,
+  onRejectPurchaseOrder,
 }: AnomalyDetailsModalProps) {
   if (!isOpen) {
     return null;
@@ -50,6 +58,9 @@ export function AnomalyDetailsModal({
 
   const canCreateRepairRequest =
     anomaly?.status === "pending" && !anomaly.repair_request;
+  const canReviewPurchaseOrder =
+    anomaly?.repair_request?.status === "in_progress" &&
+    anomaly.repair_request.purchase_order?.status === "uploaded";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2d2d2d]/45 p-4">
@@ -86,6 +97,12 @@ export function AnomalyDetailsModal({
           {!isLoading && error && (
             <Alert variant="error" title="Unable to load anomaly">
               {error}
+            </Alert>
+          )}
+
+          {!isLoading && !error && reviewError && (
+            <Alert variant="error" title="Purchase order review failed">
+              {reviewError}
             </Alert>
           )}
 
@@ -267,6 +284,63 @@ export function AnomalyDetailsModal({
                       </p>
                     </div>
                   </div>
+
+                  {anomaly.repair_request.purchase_order && (
+                    <div className="mt-5 rounded-[24px] border border-[#dce5e2] bg-[#f8fbfb] px-5 py-5">
+                      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                        <div>
+                          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#8f8477]">
+                            Purchase Order
+                          </p>
+                          <p className="mt-2 text-sm font-black text-[#2d241c]">
+                            {anomaly.repair_request.purchase_order.original_file_name}
+                          </p>
+                          <p className="mt-2 text-sm text-[#6f6254]">
+                            Uploaded on{" "}
+                            {formatDate(anomaly.repair_request.purchase_order.created_at)}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-col items-start gap-3 md:items-end">
+                          <span className="rounded-full border border-[#b9dfdc] bg-[#edf8f7] px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-primary">
+                            {anomaly.repair_request.purchase_order.status}
+                          </span>
+                          <a
+                            href={anomaly.repair_request.purchase_order.file_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-sm font-bold text-primary underline-offset-4 hover:underline"
+                          >
+                            Open purchase order
+                          </a>
+                        </div>
+                      </div>
+
+                      {canReviewPurchaseOrder && (
+                        <div className="mt-5 grid gap-3 md:grid-cols-2">
+                          <Button
+                            onClick={onApprovePurchaseOrder}
+                            isLoading={isReviewingPurchaseOrder}
+                          >
+                            <span className="material-symbols-outlined text-[18px]">
+                              check_circle
+                            </span>
+                            Approve Purchase Order
+                          </Button>
+                          <Button
+                            variant="danger"
+                            onClick={onRejectPurchaseOrder}
+                            disabled={isReviewingPurchaseOrder}
+                          >
+                            <span className="material-symbols-outlined text-[18px]">
+                              cancel
+                            </span>
+                            Reject Purchase Order
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </section>
               )}
             </div>
