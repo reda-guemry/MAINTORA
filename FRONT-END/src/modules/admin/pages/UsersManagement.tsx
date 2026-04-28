@@ -36,7 +36,6 @@ export default function UsersManagement() {
   const { createUserCall } = useCreateUser();
 
   const users = paginate?.data ?? [];
-  // console.log(paginate);
 
   function handleOpenEdit(user: User) {
     setEditUser(user);
