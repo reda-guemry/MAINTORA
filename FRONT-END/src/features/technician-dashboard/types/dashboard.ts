@@ -1,4 +1,6 @@
 
+import type { ApiResponse } from "@/shared/types/api.types";
+
 export type UpcomingRound = {
   id: number;
   machine_id: number;
@@ -14,8 +16,4 @@ export type TechnicianStatistics = {
   five_next_rounde: UpcomingRound[];
 };
 
-export type TechnicianStatisticsResponse = {
-  success: boolean;
-  message: string;
-  data: TechnicianStatistics;
-};
+export type TechnicianStatisticsResponse = ApiResponse<TechnicianStatistics>;

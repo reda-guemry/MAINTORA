@@ -1,16 +1,12 @@
 import type { User } from "@/features/auth";
 import type { MaintenancePlan } from "@/features/maintenance-plan";
-
-
-
+import type { ApiResponse, PaginatedResponse } from "@/shared/types/api.types";
 
 export type MachineStatus = "active" | "anomalous" | "maintenance";
 
-export type MachinesResponse = {
-    message : string ;
-    success : boolean ;
-    data : Machine[] ; 
-}
+export type MachinesResponse = ApiResponse<Machine[]>;
+
+export type PaginateMachinesResponse = ApiResponse<PaginatedResponse<Machine>>;
 
 export type Machine = {
     id : number ;

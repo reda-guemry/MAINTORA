@@ -1,5 +1,5 @@
 
-
+import type { ApiResponse } from "@/shared/types/api.types";
 
 export type TechnicianMapMachineStatus = "active" | "anomalous" | "maintenance";
 
@@ -13,12 +13,7 @@ export type TechnicianMapMachine = {
   status: TechnicianMapMachineStatus;
 };
 
-export type TechnicianMachinesResponse = {
-  success: boolean;
-  message: string;
-  data: TechnicianMapMachine[];
-};
-
+export type TechnicianMachinesResponse = ApiResponse<TechnicianMapMachine[]>;
 
 export type CoordinatePoint = {
   latitude: number;
