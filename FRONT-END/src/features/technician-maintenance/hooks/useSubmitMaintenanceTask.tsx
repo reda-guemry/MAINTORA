@@ -18,8 +18,6 @@ export function useSubmitMaintenanceTask() {
       setIsSubmitting(true);
       setError(null);
 
-      console.log("Submitting maintenance task with payload:", payload);
-
       return await callApi<SubmitMaintenanceResponse>(
         `technician/tasks/${taskId}`,
         {
