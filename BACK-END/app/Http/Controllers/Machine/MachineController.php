@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Machine;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\StoreMachineRequest;
 use App\Http\Requests\UpdateMachineRequest;
 use App\Http\Resources\MachineResource;
-use App\Http\Helpers\ApiResponse;
 use App\Services\Machine\MachineService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
