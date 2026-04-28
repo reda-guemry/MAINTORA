@@ -1,7 +1,5 @@
 
 function DashboardPage() {
-  // console.log("Rendering DashboardPage component");
-
   return (
     <div className="max-w-350 mx-auto">
       {/* Page Title Row */}
