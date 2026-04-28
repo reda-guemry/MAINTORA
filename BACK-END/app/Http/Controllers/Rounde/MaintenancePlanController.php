@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMaintenancePlanRequest;
 use App\Http\Requests\UpdateMaintenancePlanRequest;
 use App\Http\Resources\MaintenancePlanResource;
+use App\Http\Helpers\ApiResponse;
 use App\Services\Rounde\MaintenancePlanService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -24,17 +25,9 @@ class MaintenancePlanController extends Controller
         try {
             $maintenancePlan = $this->maintenancePlanService->create($request->validated());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Maintenance plan created successfully',
-                'data' => MaintenancePlanResource::make($maintenancePlan),
-            ], 201);
+            return ApiResponse::success(MaintenancePlanResource::make($maintenancePlan), 'Maintenance plan created successfully', 201);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while creating maintenance plan.',
-                'error' => $e->getMessage()
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error($e->getMessage(), 400);
         }
     }
 
@@ -43,22 +36,11 @@ class MaintenancePlanController extends Controller
         try {
             $maintenancePlan = $this->maintenancePlanService->update($id, $request->validated());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Maintenance plan updated successfully',
-                'data' => MaintenancePlanResource::make($maintenancePlan),
-            ]);
+            return ApiResponse::success(MaintenancePlanResource::make($maintenancePlan), 'Maintenance plan updated successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Maintenance plan not found.',
-            ], 404);
+            return ApiResponse::error('Maintenance plan not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while updating maintenance plan.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error($e->getMessage(), 400);
         }
     }
 
@@ -67,15 +49,9 @@ class MaintenancePlanController extends Controller
         try {
             $this->maintenancePlanService->delete($id);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Maintenance plan deleted successfully',
-            ]);
+            return ApiResponse::success(null, 'Maintenance plan deleted successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Maintenance plan not found.',
-            ], 404);
+            return ApiResponse::error('Maintenance plan not found', 404);
         }
     }
 

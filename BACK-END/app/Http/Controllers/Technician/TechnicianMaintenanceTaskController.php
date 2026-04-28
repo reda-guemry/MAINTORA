@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Technician;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateTechnicianMaintenanceTaskRequest;
 use App\Http\Resources\MaintenanceTaskResource;
+use App\Http\Helpers\ApiResponse;
 use App\Services\Rounde\MaintenanceTaskService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -27,11 +28,7 @@ class TechnicianMaintenanceTaskController extends Controller
             return new MaintenanceTaskResource($maintenanceTask);
         });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Assigned maintenance tasks retrieved successfully',
-            'data' => $data,
-        ]);
+        return ApiResponse::success($data, 'Assigned maintenance tasks retrieved successfully');
     }
 
     public function show(int $id)
@@ -39,22 +36,11 @@ class TechnicianMaintenanceTaskController extends Controller
         try {
             $task = $this->maintenanceTaskService->findAssignedTask($id);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Maintenance task retrieved successfully',
-                'data' => new MaintenanceTaskResource($task),
-            ]);
+            return ApiResponse::success(new MaintenanceTaskResource($task), 'Maintenance task retrieved successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Maintenance task not found.',
-            ], 404);
+            return ApiResponse::error('Maintenance task not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while retrieving maintenance task.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while retrieving maintenance task', 500);
         }
     }
 
@@ -66,22 +52,11 @@ class TechnicianMaintenanceTaskController extends Controller
                 $request->validated(),
             );
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Maintenance task updated successfully',
-                'data' => new MaintenanceTaskResource($task),
-            ]);
+            return ApiResponse::success(new MaintenanceTaskResource($task), 'Maintenance task updated successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Maintenance task not found.',
-            ], 404);
+            return ApiResponse::error('Maintenance task not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while updating maintenance task.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while updating maintenance task', 500);
         }
     }
 }
