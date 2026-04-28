@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Technician;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Http\Helpers\ApiResponse;
 use App\Services\Technician\TechnicianService;
-use App\Services\User\UserService;
 use Illuminate\Http\Request;
 
 class TechnicianController extends Controller
@@ -19,11 +19,7 @@ class TechnicianController extends Controller
     public function getAll()
     {
         $technicians = $this->technicianService->gettechnicians() ;
-        return response()->json([
-            'success' => true,
-            'message' => 'Technicians retrieved successfully',
-            'data' => UserResource::collection($technicians),
-        ]);
+        return ApiResponse::success(UserResource::collection($technicians), 'Technicians retrieved successfully');
     }
 
 
@@ -31,11 +27,7 @@ class TechnicianController extends Controller
     {
         $statistics = $this->technicianService->statistics();
         
-        return response()->json([
-            'success' => true,
-            'message' => 'Technician statistics retrieved successfully',
-            'data' => $statistics,
-        ]);
+        return ApiResponse::success($statistics, 'Technician statistics retrieved successfully');
     }
 
 
