@@ -26,8 +26,7 @@ export function PickLocationStep({
     try {
       const { city } = await reverseGeocode(lat, lng);
 
-      const resolvedLocation = city; // resolve location name from lat, lng using reverse geocoding API
-      // console.log(resolvedLocation);
+      const resolvedLocation = city;
 
       setSelectedLocation({
         location: resolvedLocation,

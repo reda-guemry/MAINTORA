@@ -15,6 +15,5 @@ export function GuestRoute() {
     return <Navigate to={getDefaultRouteByRole(roleNames)} replace />;
   }
 
-  console.log("GuestRoute authStatus:", authStatus);
   return <Outlet />;
 }

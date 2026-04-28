@@ -9,8 +9,6 @@ export function MachinesTable({
   onDelete,
   children,
 }: MachinesTableProps) {
-
-  console.log({ machines});
   return (
     <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
       <div className="overflow-x-auto">

@@ -6,11 +6,6 @@ import type { User } from "../types/auth.type";
 // import { useAuth } from "@/context/useAuth";
 
 export function LoginPage() {
-
-  // const { user } = useAuth(); 
-
-  // console.log("Current user in LoginPage:", user); 
-
   const navigate = useNavigate();
 
   function handleLoginSuccess(roles: NonNullable<User["roles"]>) {
