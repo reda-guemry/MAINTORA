@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\ApiResponse;
 use App\Http\Resources\RepairRequestResource;
 use App\Services\Client\ClientRepairRequestService;
 use Exception;
@@ -26,34 +27,18 @@ class ClientRepairRequestController extends Controller
             return new RepairRequestResource($repairRequest);
         });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Repair requests retrieved successfully',
-            'data' => $data,
-        ]);
+        return ApiResponse::success($data, 'Repair requests retrieved successfully');
     }
 
     public function show(int $id)
     {
         try {
             $repairRequest = $this->clientRepairRequestService->findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Repair request retrieved successfully',
-                'data' => new RepairRequestResource($repairRequest),
-            ]);
+            return ApiResponse::success(new RepairRequestResource($repairRequest), 'Repair request retrieved successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Repair request not found.',
-            ], 404);
+            return ApiResponse::error('Repair request not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while retrieving repair request.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while retrieving repair request', $e->getCode() ?: 500);
         }
     }
 

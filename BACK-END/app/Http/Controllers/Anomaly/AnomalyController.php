@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Anomaly;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\StoreAnomalyRequest;
 use App\Http\Requests\StoreRepairRequestRequest;
 use App\Http\Resources\AnomalyResource;
@@ -32,54 +33,36 @@ class AnomalyController extends Controller
             return new AnomalyResource($anomaly);
         });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Anomalies retrieved successfully',
-            'data' => $data,
-        ]);
+        return ApiResponse::success($data, 'Anomalies retrieved successfully');
     }
 
     public function show(int $id)
     {
         try {
             $anomaly = $this->anomalyService->findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Anomaly retrieved successfully',
-                'data' => new AnomalyResource($anomaly),
-            ]);
+            
+            // Authorization check - verify machine belongs to current user or is admin
+            $user = auth('api')->user();
+            if (!$user->hasRole('admin') && $anomaly->machine->created_by !== $user->id) {
+                return ApiResponse::error('Unauthorized', 403);
+            }
+            
+            return ApiResponse::success(new AnomalyResource($anomaly), 'Anomaly retrieved successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Anomaly not found.',
-            ], 404);
+            return ApiResponse::error('Anomaly not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while retrieving anomaly.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while retrieving anomaly', $e->getCode() ?: 500);
         }
     }
 
 
-    public function store(StoreAnomalyRequest $request , int $taskId)
+    public function store(StoreAnomalyRequest $request, int $taskId)
     {
         try {
             $anomaly = $this->anomalyService->createForTask($taskId, $request->validated());
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Anomaly created successfully',
-                'data' => new AnomalyResource($anomaly),
-            ], 201);
+            return ApiResponse::success(new AnomalyResource($anomaly), 'Anomaly created successfully', 201);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while creating anomaly.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while creating anomaly', $e->getCode() ?: 500);
         }
     }
     

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Anomaly;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\ReviewRepairPurchaseOrderRequest;
 use App\Http\Requests\StoreRepairPurchaseOrderRequest;
 use App\Http\Resources\RepairRequestResource;
@@ -23,23 +24,11 @@ class RepairPurchaseOrderController extends Controller
                 $id,
                 $request->validated()['decision'],
             );
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Purchase order reviewed successfully',
-                'data' => new RepairRequestResource($repairRequest),
-            ]);
+            return ApiResponse::success(new RepairRequestResource($repairRequest), 'Purchase order reviewed successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Repair request not found.',
-            ], 404);
+            return ApiResponse::error('Repair request not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while reviewing purchase order.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while reviewing purchase order', $e->getCode() ?: 500);
         }
     }
 
@@ -50,23 +39,11 @@ class RepairPurchaseOrderController extends Controller
                 $id,
                 $request->file('purchase_order'),
             );
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Purchase order uploaded successfully',
-                'data' => new RepairRequestResource($repairRequest),
-            ], 201);
+            return ApiResponse::success(new RepairRequestResource($repairRequest), 'Purchase order uploaded successfully', 201);
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Repair request not found.',
-            ], 404);
+            return ApiResponse::error('Repair request not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while uploading purchase order.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while uploading purchase order', $e->getCode() ?: 500);
         }
     }
 
