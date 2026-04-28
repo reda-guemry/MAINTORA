@@ -19,8 +19,6 @@ export function LoginForm({ onSuccess }: onSuccess) {
 
   const onSubmit = async (data: LoginRequest) => {
     const result = await loginUser(data);
-
-    console.log(result);
     onSuccess(result.data.user.roles ?? []);
   };
 
