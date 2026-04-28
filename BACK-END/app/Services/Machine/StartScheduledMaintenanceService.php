@@ -3,14 +3,14 @@
 namespace App\Services\Machine;
 
 use App\Models\Machine;
-use App\Repositories\Machine\MachineRepositoty;
+use App\Repositories\Machine\MachineRepository;
 
 class StartScheduledMaintenanceService
 {
 
 
     public function __construct(
-        private MachineRepositoty $machineRepository,
+        private MachineRepository $machineRepository,
     ) {
     }
 
