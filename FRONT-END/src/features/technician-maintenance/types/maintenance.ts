@@ -1,4 +1,5 @@
 import type { TechnicianMapMachine } from "@/features/technician-map";
+import type { ApiResponse, PaginatedResponse } from "@/shared/types/api.types";
 
 export type TechnicianTaskStatus = "pending" | "in_progress" | "completed";
 export type TechnicianCheckStatus = "ok" | "not_ok" | "anomaly";
@@ -11,6 +12,8 @@ export type TechnicianTaskSummary = {
   machine: TechnicianMapMachine;
 };
 
+ 
+ 
 export type TechnicianChecklistItem = {
   id: number | null;
   checklist_item_id: number;
@@ -29,19 +32,9 @@ export type TechnicianTaskDetails = {
   check_items: TechnicianChecklistItem[];
 };
 
-export type TechnicianTasksResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    data: TechnicianTaskSummary[];
-  };
-};
+export type TechnicianTasksResponse = ApiResponse<PaginatedResponse<TechnicianTaskSummary>>;
 
-export type TechnicianTaskDetailsResponse = {
-  success: boolean;
-  message: string;
-  data: TechnicianTaskDetails;
-};
+export type TechnicianTaskDetailsResponse = ApiResponse<TechnicianTaskDetails>;
 
 export type SubmitMaintenanceCheck = {
   checklist_item_id: number;
@@ -58,11 +51,7 @@ export type SubmitMaintenancePayload = {
   checks: SubmitMaintenanceCheck[];
 };
 
-export type SubmitMaintenanceResponse = {
-  success: boolean;
-  message: string;
-  data: TechnicianTaskDetails;
-};
+export type SubmitMaintenanceResponse = ApiResponse<TechnicianTaskDetails>;
 
 export type MaintenanceCheckDraft = {
   status: TechnicianCheckStatus | null;
