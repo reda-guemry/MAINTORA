@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Helpers\ApiResponse;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\AuthTokenService;
 use Exception;
@@ -22,7 +23,6 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-
         try {
             $response = $this->authService->login($request->validated());
 
@@ -32,47 +32,32 @@ class AuthController extends Controller
             unset($response['refresh_token']);
             unset($response['expires_in']);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Login successful',
-                'data' => $response,
-            ])->cookie(
-                    'refresh_token', // name
-                    $refresh_token, // value
-                    10080, // expiration in minutes  // 7 days
-                    '/api/refresh', // path
-                    null, // domain
-                    false, // secure
-                    true, // httpOnly
-                    false, // raw
-                    'Strict' // sameSite
+            return ApiResponse::success($response, 'Login successful', 200)->cookie(
+                    'refresh_token',
+                    $refresh_token,
+                    10080,
+                    '/api/refresh',
+                    null,
+                    false,
+                    true,
+                    false,
+                    'Strict'
                 );
 
-
         } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Login failed',
-                'message' => $e->getMessage()
-            ], $e->getCode() ?: 401);
+            return ApiResponse::error('Invalid credentials', 401);
         }
-
     }
 
 
     public function refresh(Request $request)
     {
         if (!$request->hasCookie('refresh_token')) {
-            return response()->json([
-                'error' => 'Refresh token not found'
-            ], 401);
+            return ApiResponse::error('Refresh token not found', 401);
         }
 
         try {
             $response = $this->authService->refresh($request->cookie('refresh_token'));
-
-            // return response()->json([
-            //     'data' => $response,
-            // ]);
             
             $refresh_token = $response['refresh_token'];
             $expires_in = $response['expires_in'];
@@ -80,36 +65,23 @@ class AuthController extends Controller
             unset($response['refresh_token']);
             unset($response['expires_in']);
 
-            
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Token refreshed successfully',
-                'data' => $response,
-            ])->cookie(
-                    'refresh_token', // name
-                    $refresh_token, // value
-                    10080 , // expiration in minutes 
-                    '/api/refresh', // path
-                    null, // domain
-                    false, // secure
-                    true, // httpOnly
-                    false, // raw
-                    'Strict' // sameSite
+            return ApiResponse::success($response, 'Token refreshed successfully', 200)->cookie(
+                    'refresh_token',
+                    $refresh_token,
+                    10080,
+                    '/api/refresh',
+                    null,
+                    false,
+                    true,
+                    false,
+                    'Strict'
                 );
 
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'error' => 'Invalid refresh token ',
-                'message' => $e->getMessage()
-            ], 401);
+            return ApiResponse::error('Invalid refresh token', 401);
         } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Token refresh failed',
-                'message' => $e->getMessage()
-            ], $e->getCode() ?: 401);
+            return ApiResponse::error('Token refresh failed', 401);
         }
-
     }
 
     public function logout(Request $request)
@@ -117,31 +89,22 @@ class AuthController extends Controller
         try {
             $this->authTokenService->revokeToken($request->cookie('refresh_token'));
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Logout successful',
-            ])->cookie(
-                    'refresh_token', // name
-                    '', // value
-                    -1, // expiration in minutes (delete cookie)
-                    '/api/refresh', // path
-                    null, // domain
-                    false, // secure
-                    true, // httpOnly
-                    false, // raw
-                    'Strict' // sameSite
+            return ApiResponse::success(null, 'Logout successful', 200)->cookie(
+                    'refresh_token',
+                    '',
+                    -1,
+                    '/api/refresh',
+                    null,
+                    false,
+                    true,
+                    false,
+                    'Strict'
                 );
 
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'error' => 'Invalid refresh token',
-                'message' => $e->getMessage()
-            ], 401);
+            return ApiResponse::error('Invalid refresh token', 401);
         } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Logout failed',
-                'message' => $e->getMessage()
-            ], $e->getCode() ?: 401);
+            return ApiResponse::error('Logout failed', 500);
         }
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMachineRequest;
 use App\Http\Requests\UpdateMachineRequest;
 use App\Http\Resources\MachineResource;
+use App\Http\Helpers\ApiResponse;
 use App\Services\Machine\MachineService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -25,28 +26,16 @@ class MachineController extends Controller
             return new MachineResource($machine);
         });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Machines retrieved successfully',
-            'data' => $data,
-        ]);
+        return ApiResponse::success($data, 'Machines retrieved successfully');
     }
 
     public function store(StoreMachineRequest $request)
     {
         try{
             $machine = $this -> machineService -> create($request->validated());
-            return response()->json([
-                'success' => true,
-                'message' => 'Machine created successfully',
-                'data' => MachineResource::make($machine),
-            ], 201);
+            return ApiResponse::success(MachineResource::make($machine), 'Machine created successfully', 201);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while creating machine.',
-                'error' => $e->getMessage()
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while creating machine', 500);
         }
     }
 
@@ -54,58 +43,52 @@ class MachineController extends Controller
     {
         try{
             $machine = $this -> machineService -> findOrFail($id);
-            return response()->json([
-                'success' => true,
-                'message' => 'Machine retrieved successfully',
-                'data' => MachineResource::make($machine),
-            ]);
+            return ApiResponse::success(MachineResource::make($machine), 'Machine retrieved successfully');
         }catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Machine not found.',
-            ], 404);
+            return ApiResponse::error('Machine not found', 404);
         }catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while retrieving machine.',
-                'error' => $e->getMessage()
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while retrieving machine', 500);
         }
     }
     
     public function update(UpdateMachineRequest $request, int $id)
     {
         try{
+            $machine = $this -> machineService -> findOrFail($id);
+
+            // Authorization check - verify machine belongs to authenticated user
+            if ((int) $machine->created_by !== (int) auth('api')->id()) {
+                return ApiResponse::error('Unauthorized', 403);
+            }
+
             $machine = $this -> machineService -> update($id , $request->validated());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Machine updated successfully',
-                'data' => MachineResource::make($machine),
-            ]);
+            return ApiResponse::success(MachineResource::make($machine), 'Machine updated successfully');
 
         }catch( ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Machine not found.',
-            ], 404);
+            return ApiResponse::error('Machine not found', 404);
+        }catch (Exception $e) {
+            return ApiResponse::error('Error occurred while updating machine', 500);
         }
     }
 
     public function destroy(int $id)
     {
         try{
+            $machine = $this -> machineService -> findOrFail($id);
+
+            // Authorization check - verify machine belongs to authenticated user
+            if ((int) $machine->created_by !== (int) auth('api')->id()) {
+                return ApiResponse::error('Unauthorized', 403);
+            }
+
             $this -> machineService -> delete($id);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Machine deleted successfully',
-            ]);
+            return ApiResponse::success(null, 'Machine deleted successfully');
         }catch( ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Machine not found.',
-            ], 404);
+            return ApiResponse::error('Machine not found', 404);
+        }catch (Exception $e) {
+            return ApiResponse::error('Error occurred while deleting machine', 500);
         }
     }
 
@@ -114,17 +97,9 @@ class MachineController extends Controller
     {
         try{
             $machines = $this -> machineService -> getAll();
-            return response()->json([
-                'success' => true,
-                'message' => 'Machines retrieved successfully',
-                'data' => MachineResource::collection($machines),
-            ]);
+            return ApiResponse::success(MachineResource::collection($machines), 'Machines retrieved successfully');
         }catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while retrieving machines.',
-                'error' => $e->getMessage()
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while retrieving machines', 500);
         }
     }
 
@@ -133,17 +108,9 @@ class MachineController extends Controller
         try{
             $machines = $this->machineService->getMine();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Client machines retrieved successfully',
-                'data' => MachineResource::collection($machines),
-            ]);
+            return ApiResponse::success(MachineResource::collection($machines), 'Client machines retrieved successfully');
         }catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while retrieving client machines.',
-                'error' => $e->getMessage()
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while retrieving client machines', 500);
         }
     }
 
