@@ -122,7 +122,7 @@ export default function MachinesManagement() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h1 className="mb-4 text-[44px] font-[900] leading-[0.9] tracking-tighter text-[#1A1A1A] md:text-[54px]">
+            <h1 className="mb-4 text-[44px] font-black  leading-[0.9] tracking-tighter text-[#1A1A1A] md:text-[54px]">
               My Asset <br /> Fleet
             </h1>
             <div className="inline-flex items-center rounded bg-[#DDEEEB] px-3 py-1">
