@@ -66,7 +66,6 @@ export function ChecklistTemplatesPage() {
   }
 
   async function handleEditSubmit(payload: ChecklistTemplatePayload) {
-    // console.log(payload);
     if (!editTemplate) return;
 
     setIsSaving(true);
@@ -76,8 +75,6 @@ export function ChecklistTemplatesPage() {
         editTemplate.id,
         payload,
       );
-
-      console.log(response);
 
       if (response?.data) {
         updateTemplateInList(response.data);

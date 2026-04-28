@@ -1,4 +1,4 @@
-import { useTechnicianStatistics } from "@/features/technician-dashboard/hooks/useStatististics";
+import { useTechnicianStatistics } from "@/features/technician-dashboard/hooks/useStatistics";
 import { Alert } from "@/shared/components/feedback";
 import { Spinner } from "@/shared/components/ui";
 
