@@ -3,32 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Alert } from "@/shared/components/feedback";
 import { Button, Spinner } from "@/shared/components/ui";
 import { cn } from "@/shared/utils";
+import { getMachineStatusClasses, getClientMachineStatusLabel } from "@/shared/utils/machineStatusHelpers";
 import { useClientMachines } from "@/features/machines";
 import { ClientAssetMap } from "../components/ClientAssetMap";
-
-function getStatusClasses(status: "active" | "anomalous" | "maintenance") {
-  if (status === "anomalous") {
-    return "border-[#f7c79f] bg-[#fff2e8] text-[#d8711f]";
-  }
-
-  if (status === "maintenance") {
-    return "border-[#b9dfdc] bg-[#edf8f7] text-[#398e8e]";
-  }
-
-  return "border-[#b9dfdc] bg-[#edf8f7] text-[#398e8e]";
-}
-
-function getStatusLabel(status: "active" | "anomalous" | "maintenance") {
-  if (status === "anomalous") {
-    return "Anomaly reported";
-  }
-
-  if (status === "maintenance") {
-    return "Maintenance in progress";
-  }
-
-  return "Operational";
-}
 
 export default function ClientMapPage() {
   const navigate = useNavigate();
@@ -145,7 +122,7 @@ export default function ClientMapPage() {
                   <span
                     className={cn(
                       "rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest",
-                      getStatusClasses(selectedMachine.status),
+                      getMachineStatusClasses(selectedMachine.status),
                     )}
                   >
                     {selectedMachine.status}
@@ -187,7 +164,7 @@ export default function ClientMapPage() {
                         Status
                       </p>
                       <p className="text-[13px] font-bold text-[#2d241c]">
-                        {getStatusLabel(selectedMachine.status)}
+                        {getClientMachineStatusLabel(selectedMachine.status)}
                       </p>
                     </div>
                   </div>

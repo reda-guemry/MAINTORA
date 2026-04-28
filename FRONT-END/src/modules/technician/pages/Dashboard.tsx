@@ -1,30 +1,7 @@
 import { useTechnicianStatistics } from "@/features/technician-dashboard/hooks/useStatistics";
 import { Alert } from "@/shared/components/feedback";
 import { Spinner } from "@/shared/components/ui";
-
-function formatDate(value: string | null) {
-  if (!value) return "Unscheduled";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  }).format(date);
-}
-
-function formatDateTime(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
-}
+import { formatDate, formatDateTime } from "@/shared/utils/formatters";
 
 function DashboardPage() {
   const { statistics, isLoading, error } = useTechnicianStatistics();
