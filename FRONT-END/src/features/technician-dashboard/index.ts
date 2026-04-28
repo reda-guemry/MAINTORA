@@ -1,3 +1,3 @@
 
 export * from './types/dashboard'
-export * from './hooks/useStatististics'
+export * from './hooks/useStatistics'

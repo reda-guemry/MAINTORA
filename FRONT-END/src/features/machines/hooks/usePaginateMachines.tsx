@@ -25,7 +25,6 @@ export function usePaginateMachines() {
           }
         );
 
-        // console.log({ RESPONSE: response });
         setPaginate(response.data);
       } catch (err) {
         const message =
