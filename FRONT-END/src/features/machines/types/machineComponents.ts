@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { ApiResponse, PaginatedResponse } from "@/shared/types/api.types";
 
 export type MachineStatus = "active" | "anomalous" | "maintenance" ;
 
@@ -64,26 +65,8 @@ export type MachinesPaginationProps = {
   onNext: () => void;
 };
 
-export type PaginateMachineResponse = {
-  data: {
-    data: Machine[];
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-    from: number | null;
-    to: number | null;
-    next_page_url: string | null;
-    prev_page_url: string | null;
-  };
-  success: boolean;
-  message: string;
-};
+export type PaginateMachineResponse = ApiResponse<PaginatedResponse<Machine>>;
 
 export type PaginateMachineData = PaginateMachineResponse["data"];
 
-export type MachineListResponse = {
-  success: boolean;
-  message: string;
-  data: Machine[];
-};
+export type MachineListResponse = ApiResponse<Machine[]>;
