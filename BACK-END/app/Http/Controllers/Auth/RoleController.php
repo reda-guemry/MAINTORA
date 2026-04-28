@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Resources\RoleRessource;
+use App\Http\Resources\RoleResource;
 use Spatie\Permission\Models\Role;
 
 class RoleController
@@ -20,7 +20,7 @@ class RoleController
         return response()->json([
             'success' => true,
             'message' => 'Roles retrieved successfully',
-            'data' => RoleRessource::collection($roles),
+            'data' => RoleResource::collection($roles),
         ]);
     }
 }
