@@ -16,22 +16,11 @@ import {
 } from "@/features/maintenance-plan";
 import { AssetMap } from "../components/AssetMap";
 import { cn } from "@/shared/utils";
+import { getMachineBadgeClasses } from "@/shared/utils/machineStatusHelpers";
 import type { Machine } from "@/features/roundes";
 
 function getInitials(technician: Technician) {
   return `${technician.first_name[0] ?? ""}${technician.last_name[0] ?? ""}`.toUpperCase();
-}
-
-function getMachineBadgeClasses(status: Machine["status"]) {
-  if (status === "anomalous") {
-    return "border border-red-200 bg-red-50 text-red-600";
-  }
-
-  if (status === "maintenance") {
-    return "border border-amber-200 bg-amber-50 text-amber-700";
-  }
-
-  return "border border-emerald-200 bg-emerald-50 text-emerald-700";
 }
 
 export function Rounde() {
