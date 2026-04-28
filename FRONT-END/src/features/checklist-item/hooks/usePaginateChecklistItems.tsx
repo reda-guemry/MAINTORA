@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useApi } from "@/shared/hooks/useApi";
 import type {
   PaginateChecklistItemResponse,
