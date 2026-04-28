@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { ApiResponse } from "@/shared/types/api.types";
 
 
 type role = {
@@ -21,23 +22,15 @@ export interface LoginRequest {
     password: string;
 }
 
-export type LoginResponse = {
-    success: boolean;
-    message: string;
-    data: {
-        user: User;
-        token: string;
-    }
-}
+export type LoginResponse = ApiResponse<{
+    user: User;
+    token: string;
+}>;
 
-export type RefreshTokenResponse = {
-    success: boolean;
-    message: string;
-    data: {
-        user: User;
-        access_token: string;
-    }
-}
+export type RefreshTokenResponse = ApiResponse<{
+    user: User;
+    access_token: string;
+}>;
 
 
 export type onSuccess = {
@@ -51,6 +44,8 @@ export type AuthState = {
     isAuthenticated: boolean;
     authStatus: AuthStatus;
 }
+
+
 
 
 

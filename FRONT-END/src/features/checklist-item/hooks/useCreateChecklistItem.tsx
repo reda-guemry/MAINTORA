@@ -1,9 +1,9 @@
 import { useApi } from "@/shared/hooks/useApi";
 import { useState } from "react";
 import type {
-  ChecklistItem,
   ChecklistItemPayload,
 } from "../types/checklistItemComponents";
+import type { CreateChecklistItemResponse } from "../types/checklistItemResponses";
 
 export function useCreateChecklistItem() {
   const { callApi } = useApi();
@@ -11,7 +11,7 @@ export function useCreateChecklistItem() {
 
   async function createChecklistItemCall(data: ChecklistItemPayload) {
     try {
-      const response = await callApi<{ data: ChecklistItem }>(
+      const response = await callApi<CreateChecklistItemResponse>(
         "chef-technician/checklist/items",
         {
           method: "POST",
