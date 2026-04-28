@@ -1,19 +1,9 @@
 import type { ChecklistTemplate } from "@/features/checklist-template";
 import type { MaintenancePlan } from "./maintenancePlan";
+import type { ApiResponse } from "@/shared/types/api.types";
 
-export type MaintenancePlanMutationResponse = {
-  success: boolean;
-  message: string;
-  data: MaintenancePlan;
-};
+export type MaintenancePlanMutationResponse = ApiResponse<MaintenancePlan>;
 
-export type MaintenancePlanDeleteResponse = {
-  success: boolean;
-  message: string;
-};
+export type MaintenancePlanDeleteResponse = ApiResponse<void>;
 
-export type ChecklistTemplateOptionsResponse = {
-  success: boolean;
-  message: string;
-  data:  ChecklistTemplate[];
-};
+export type ChecklistTemplateOptionsResponse = ApiResponse<ChecklistTemplate[]>;
