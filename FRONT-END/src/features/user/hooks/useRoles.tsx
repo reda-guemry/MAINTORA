@@ -14,7 +14,6 @@ export function useUserRoles() {
     async function loadRoles() {
       try {
         const response = await callApi<{ data: RoleOption[] }>("admin/roles");
-        // console.log(response);
         setRoles(response.data);
       } catch (err) {
         setError("Failed to load roles");

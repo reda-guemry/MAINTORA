@@ -1,8 +1,5 @@
 
 function Dashboard() {
-
-  console.log("Rendering Dashboard...");
-  
   return (
     <div className="space-y-6">
       
