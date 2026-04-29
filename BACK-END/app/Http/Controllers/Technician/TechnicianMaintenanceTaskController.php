@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Technician;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TechnicianMaintenanceTaskIndexRequest;
 use App\Http\Requests\UpdateTechnicianMaintenanceTaskRequest;
 use App\Http\Resources\MaintenanceTaskResource;
 use App\Http\Helpers\ApiResponse;
 use App\Services\Rounde\MaintenanceTaskService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 
 class TechnicianMaintenanceTaskController extends Controller
 {
@@ -17,10 +17,10 @@ class TechnicianMaintenanceTaskController extends Controller
         private MaintenanceTaskService $maintenanceTaskService,
     ) {}
 
-    public function index(Request $request)
+    public function index(TechnicianMaintenanceTaskIndexRequest $request)
     {
         $data = $this->maintenanceTaskService->getPaginate(
-            $request->only(['status', 'scheduled_date', 'search']),
+            $request->only(['status', 'scheduled_date', 'week_start', 'search']),
             $request->query('per_page', 10),
         );
                                     
