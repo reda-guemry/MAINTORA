@@ -16,13 +16,13 @@ import { useAuth } from "@/context/useAuth";
       setIsLoading(true);
 
       const response = await login(credentials);
-
+      
+      console.log("Login response:", response);
       const token = response.data.token;
       const user = response.data.user;
 
       setAuth(user, token);
 
-    //   console.log("Logged in user:", user);
       return response;
     } catch (err) {
 
