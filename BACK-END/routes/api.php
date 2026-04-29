@@ -8,7 +8,6 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\CheckList\ChecklistItemsController;
 use App\Http\Controllers\CheckList\ChecklistTemplateController;
-use App\Http\Controllers\Client\ClientRepairPurchaseOrderController;
 use App\Http\Controllers\Client\ClientRepairRequestController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Rounde\MaintenancePlanController;

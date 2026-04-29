@@ -45,7 +45,7 @@ class AuthController extends Controller
                 );
 
         } catch (Exception $e) {
-            return ApiResponse::error('Invalid credentials', 401);
+            return ApiResponse::error($e->getMessage() , 401);
         }
     }
 
