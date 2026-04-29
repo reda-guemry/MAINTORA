@@ -3,6 +3,7 @@ import DashboardPage from "./pages/Dashboard";
 import MapPage from "./pages/Map";
 import SubmitMaintenancePage from "./pages/SubmitMaintenance";
 import MaintenanceAnomalyPage from "./pages/MaintenanceAnomaly";
+import CalendarPage from "./pages/Calendar";
 
 
 export const technicianRoutes = [
@@ -16,6 +17,10 @@ export const technicianRoutes = [
       {
         path: "map",
         element: <MapPage />,
+      },
+      {
+        path: "calendar",
+        element: <CalendarPage />,
       },
       {
         path: "maintenance/:taskId",

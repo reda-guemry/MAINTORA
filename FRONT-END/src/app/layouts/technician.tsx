@@ -18,6 +18,11 @@ function TechnicianAppLayout() {
       label: "Map",
       end: false,
     },
+    {
+      to: "/technician/calendar",
+      label: "Calendar",
+      end: false,
+    },
   ];
 
 

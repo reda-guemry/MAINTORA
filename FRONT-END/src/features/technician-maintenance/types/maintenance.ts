@@ -9,7 +9,16 @@ export type TechnicianTaskSummary = {
   id: number;
   scheduled_at: string;
   status: TechnicianTaskStatus;
+  completed_at?: string | null;
+  anomalies_count?: number;
   machine: TechnicianMapMachine;
+  maintenance_plan?: {
+    id: number;
+    repeat_every: number;
+    repeat_unit: string;
+    start_date: string;
+    status: string;
+  };
 };
 
  
@@ -62,6 +71,5 @@ export type MaintenanceCheckDraft = {
 };
 
 export type MaintenanceDraft = Record<number, MaintenanceCheckDraft>;
-
 
 
