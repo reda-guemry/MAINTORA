@@ -9,18 +9,12 @@ import {
   usePaginateMachines,
   type Machine,
   type MachinePayload,
-  type MachineStatus,
 } from "@/features/machines";
 import { Button, Input } from "@/shared/components/ui";
 import { AddMachineFlow } from "../components/AddMachineFlow";
+import { useFiltering, useModalState } from "@/shared";
 
 export default function MachinesManagement() {
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<MachineStatus | "all">(
-    "all"
-  );
-  const [editMachine, setEditMachine] = useState<Machine | null>(null);
-  const [deleteMachine, setDeleteMachine] = useState<Machine | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSavingMachine, setIsSavingMachine] = useState(false);
 
@@ -36,57 +30,34 @@ export default function MachinesManagement() {
     updateMachineInList,
     removeMachineFromList,
   } = usePaginateMachines();
-  
 
   const machines = paginate?.data ?? [];
-  const filteredMachines = machines.filter((machine) => {
-    const normalizedSearch = search.trim().toLowerCase();
-    const matchesSearch =
-      normalizedSearch.length === 0 ||
-      machine.name.toLowerCase().includes(normalizedSearch) ||
-      machine.code.toLowerCase().includes(normalizedSearch) ||
-      machine.location.toLowerCase().includes(normalizedSearch);
-    const matchesStatus =
-      statusFilter === "all" || machine.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
-  });
+  // Filtering hook
+  const { filtered: filteredMachines, search, setSearch, filters, setFilter } = useFiltering(
+    machines,
+    (machine, searchTerm) =>
+      machine.name.toLowerCase().includes(searchTerm) ||
+      machine.code.toLowerCase().includes(searchTerm) ||
+      machine.location.toLowerCase().includes(searchTerm),
+    { status: "all" },
+  );
 
-  function handleOpenAdd() {
-    setIsAddModalOpen(true);
-  }
-
-  function handleCloseAdd() {
-    setIsAddModalOpen(false);
-  }
-
-  function handleOpenEdit(machine: Machine) {
-    setEditMachine(machine);
-  }
-
-  function handleCloseEdit() {
-    setEditMachine(null);
-  }
-
-  function handleOpenDelete(machine: Machine) {
-    setDeleteMachine(machine);
-  }
-
-  function handleCloseDelete() {
-    setDeleteMachine(null);
-  }
+  // Modal state hooks
+  const editModal = useModalState<Machine>(null);
+  const deleteModal = useModalState<Machine>(null);
 
   async function handleEditSubmit(payload: MachinePayload) {
-    if (!editMachine) return;
+    if (!editModal.item) return;
 
     setIsSavingMachine(true);
 
     try {
-      const response = await editMachineCall(editMachine.id, payload);
+      const response = await editMachineCall(editModal.item.id, payload);
 
       if (response?.data) {
         updateMachineInList(response.data);
-        handleCloseEdit();
+        editModal.close();
       }
     } finally {
       setIsSavingMachine(false);
@@ -94,16 +65,16 @@ export default function MachinesManagement() {
   }
 
   async function handleDeleteConfirm() {
-    if (!deleteMachine) return;
+    if (!deleteModal.item) return;
 
     setIsSavingMachine(true);
 
     try {
-      const response = await deleteMachineCall(deleteMachine.id);
+      const response = await deleteMachineCall(deleteModal.item.id);
 
       if (response !== undefined) {
-        removeMachineFromList(deleteMachine.id);
-        handleCloseDelete();
+        removeMachineFromList(deleteModal.item.id);
+        deleteModal.close();
       }
     } finally {
       setIsSavingMachine(false);
@@ -150,9 +121,9 @@ export default function MachinesManagement() {
               </div>
 
               <select
-                value={statusFilter}
+                value={filters.status}
                 onChange={(event) =>
-                  setStatusFilter(event.target.value as MachineStatus | "all")
+                  setFilter("status", event.target.value)
                 }
                 className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
               >
@@ -165,7 +136,7 @@ export default function MachinesManagement() {
 
             <Button
               type="button"
-              onClick={handleOpenAdd}
+              onClick={() => setIsAddModalOpen(true)}
               className="px-8"
             >
               <span className="material-symbols-outlined text-[18px]">add</span>
@@ -178,8 +149,8 @@ export default function MachinesManagement() {
           machines={filteredMachines}
           isLoading={isLoading}
           error={error}
-          onEdit={handleOpenEdit}
-          onDelete={handleOpenDelete}
+          onEdit={editModal.open}
+          onDelete={deleteModal.open}
         >
           <MachinesPagination
             from={paginate?.from ?? 0}
@@ -194,21 +165,21 @@ export default function MachinesManagement() {
 
       <AddMachineFlow
         isOpen={isAddModalOpen}
-        onClose={handleCloseAdd}
+        onClose={() => setIsAddModalOpen(false)}
         onCreated={addMachineToList}
         isLoading={isSavingMachine}
       />
 
       <EditMachineModal
-        machine={editMachine}
-        onClose={handleCloseEdit}
+        machine={editModal.item}
+        onClose={editModal.close}
         onSubmit={handleEditSubmit}
         isLoading={isSavingMachine}
       />
 
       <DeleteMachineDialog
-        machine={deleteMachine}
-        onClose={handleCloseDelete}
+        machine={deleteModal.item}
+        onClose={deleteModal.close}
         onConfirm={handleDeleteConfirm}
       />
     </div>
