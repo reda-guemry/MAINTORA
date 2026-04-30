@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   DeleteMachineDialog,
   EditMachineModal,
@@ -15,6 +16,7 @@ import { AddMachineFlow } from "../components/AddMachineFlow";
 import { useFiltering, useModalState } from "@/shared";
 
 export default function MachinesManagement() {
+  const navigate = useNavigate();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSavingMachine, setIsSavingMachine] = useState(false);
 
@@ -151,6 +153,7 @@ export default function MachinesManagement() {
           error={error}
           onEdit={editModal.open}
           onDelete={deleteModal.open}
+          onHistory={(machine) => navigate(`/client/machines/${machine.id}/history`)}
         >
           <MachinesPagination
             from={paginate?.from ?? 0}

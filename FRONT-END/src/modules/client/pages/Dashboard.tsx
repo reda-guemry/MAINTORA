@@ -4,7 +4,7 @@ import { formatDateTime } from "@/shared/utils/formatters";
 import {
   useClientDashboard,
 } from "@/features/client-dashboard";
-import { formatCost, formatStatus, getHealthLabel, getHealthScore, getSeverityClasses } from "@/features/client-dashboard/util/dashboardHelper";
+import { formatCost, formatStatus, getHealthLabel, getHealthScore, getSeverityClasses } from "@/features/client-dashboard/utils/dashboardHelper";
 import { getAnomalyStatusClasses, getRepairStatusClasses } from "@/shared/utils/statusHelpers";
 
 
