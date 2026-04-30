@@ -33,6 +33,11 @@ class Machine extends Model
         return $this->hasMany(MaintenancePlan::class);
     }
 
+    public function anomalies()
+    {
+        return $this->hasMany(Anomaly::class);
+    }
+
     
 
     public function haveActiveMaintenancePlan()

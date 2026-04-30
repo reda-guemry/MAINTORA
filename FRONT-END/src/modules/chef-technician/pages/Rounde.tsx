@@ -15,7 +15,7 @@ import {
   type MaintenancePlan,
   type UpdateMaintenancePlanPayload,
 } from "@/features/maintenance-plan";
-import { AssetMap } from "../components/AssetMap";
+import { MachinesAssetMap } from "@/features/machines-map";
 import { cn } from "@/shared/utils";
 import { getMachineBadgeClasses } from "@/shared/utils/machineStatusHelpers";
 import type { Machine } from "@/features/roundes";
@@ -174,9 +174,9 @@ export function Rounde() {
   return (
     <div className="relative h-[calc(100vh-8rem)] w-full overflow-hidden rounded-[32px] bg-[#ebe4d8] shadow-[0_20px_60px_rgba(62,52,39,0.15)]">
       <div className="absolute inset-0 z-0">
-        <AssetMap
+        <MachinesAssetMap
           machines={machines}
-          selectedMarkerId={selectedMachineId}
+          selectedMachineId={selectedMachineId}
           onMarkerSelect={handleMarkerSelect}
           onMapBackgroundClick={handleClearSelection}
         />

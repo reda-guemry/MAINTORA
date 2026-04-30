@@ -1,47 +1,28 @@
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import type { Machine } from "@/features/roundes";
 import { useMap } from "@/shared/components/map/usaMap";
+import type {
+  MachinesAssetMapProps,
+  MachinesMapMachine,
+} from "../types/machinesMap";
+import { machineMarkerColors } from "../utils/markerColors";
 
-interface MapProps {
-  machines: Machine[];
-  selectedMarkerId?: number | null;
-  onMarkerSelect?: (marker: Machine) => void;
-  onMapBackgroundClick?: () => void;
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
-const markerColors: Record<
-  Machine["status"],
-  {
-    accent: string;
-    glow: string;
-    bg: string;
-  }
-> = {
-  active: {
-    accent: "#3b8f88",
-    glow: "rgba(59, 143, 136, 0.35)",
-    bg: "#f0f7f6",
-  },
-  anomalous: {
-    accent: "#d9534f",
-    glow: "rgba(217, 83, 79, 0.35)",
-    bg: "#fdf3f2",
-  },
-  maintenance: {
-    accent: "#d58a1d",
-    glow: "rgba(213, 138, 29, 0.35)",
-    bg: "#fcf6ec",
-  },
-};
-
-export function AssetMap({
+export function MachinesAssetMap<TMachine extends MachinesMapMachine>({
   machines = [],
-  selectedMarkerId = null,
+  selectedMachineId = null,
   onMarkerSelect,
   onMapBackgroundClick,
-}: MapProps) {
+}: MachinesAssetMapProps<TMachine>) {
   const { mapContainer, mapRef } = useMap();
   const markerRefs = useRef<maplibregl.Marker[]>([]);
 
@@ -81,8 +62,9 @@ export function AssetMap({
     markerRefs.current = [];
 
     machines.forEach((machine) => {
-      const palette = markerColors[machine.status];
-      const isSelected = machine.id === selectedMarkerId;
+      const palette = machineMarkerColors[machine.status];
+      const isSelected = machine.id === selectedMachineId;
+      const escapedMachineCode = escapeHtml(machine.code);
 
       const markerWrapper = document.createElement("button");
       markerWrapper.type = "button";
@@ -100,7 +82,7 @@ export function AssetMap({
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0"
           }" style="color: ${isSelected ? palette.accent : "#2d241c"};">
-            ${machine.code}
+            ${escapedMachineCode}
           </div>
 
           <div class="relative flex h-10 w-10 items-center justify-center rounded-full border-2 bg-white shadow-md transition-colors duration-300"
@@ -143,9 +125,9 @@ export function AssetMap({
       return;
     }
 
-    if (selectedMarkerId !== null) {
+    if (selectedMachineId !== null) {
       const selectedMarker = machines.find(
-        (machine) => machine.id === selectedMarkerId,
+        (machine) => machine.id === selectedMachineId,
       );
 
       if (selectedMarker) {
@@ -174,7 +156,7 @@ export function AssetMap({
       maxZoom: 15,
       duration: 1000,
     });
-  }, [machines, mapRef, onMarkerSelect, selectedMarkerId]);
+  }, [machines, mapRef, onMarkerSelect, selectedMachineId]);
 
   return <div ref={mapContainer} className="h-full w-full outline-none" />;
 }
