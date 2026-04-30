@@ -32,19 +32,19 @@ function TechnicianAppLayout() {
         <header className="border-b border-[#dbe5e2] bg-white/95 shadow-sm backdrop-blur-md">
             <div className="flex flex-col gap-4 px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex items-center gap-8">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/80 text-white">
-                        <MaintoraLogo size={150} />
-                    </div>
-                    <div>
-                        <h1 className="text-[13px] font-extrabold uppercase tracking-wide text-primary">
-                            MAINTORA
-                        </h1>
-                        <p className="text-[10px] font-medium text-gray-400">
-                            Technician Panel
-                        </p>
-                    </div>
-                  </div>
+                  <MaintoraLogo
+                    to="/technician"
+                    size={28}
+                    showText
+                    title="MAINTORA"
+                    subtitle="Technician Panel"
+                    wrapperClassName="flex items-center gap-3"
+                    markClassName="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/80 text-white"
+                    textClassName="flex flex-col"
+                    titleClassName="text-[13px] font-extrabold uppercase tracking-wide text-primary"
+                    subtitleClassName="text-[10px] font-medium text-gray-400"
+                    ariaLabel="Go to technician dashboard"
+                  />
 
                   <nav className="flex items-center gap-1 overflow-x-auto">
                     {navigationLinks.map((item) => (

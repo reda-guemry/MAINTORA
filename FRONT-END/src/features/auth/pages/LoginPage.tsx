@@ -21,7 +21,12 @@ export function LoginPage() {
         <div className="w-full max-w-110">
           <div className="mb-8 flex flex-col items-center">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
-              <MaintoraLogo size={200} />
+              <MaintoraLogo
+                to="/"
+                size={46}
+                wrapperClassName="inline-flex items-center justify-center"
+                ariaLabel="Go to home page"
+              />
             </div>
 
             <p className="text-sm text-text-muted">

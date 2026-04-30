@@ -13,14 +13,17 @@ export function ChefAppLayout() {
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2E2D1] shadow-sm">
         <div className="max-w-[1600px] w-full mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-10">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#388E8E] text-white shadow-sm">
-                <MaintoraLogo />
-              </div>
-              <h2 className="text-[14px] font-black tracking-tighter text-[#1A1A1A] uppercase">
-                Maintora
-              </h2>
-            </div>
+            <MaintoraLogo
+              to="/chef-technician"
+              size={28}
+              showText
+              title="Maintora"
+              wrapperClassName="flex items-center gap-3"
+              markClassName="flex h-9 w-9 items-center justify-center rounded-lg bg-[#388E8E] text-white shadow-sm"
+              textClassName="flex flex-col"
+              titleClassName="text-[14px] font-black tracking-tighter text-[#1A1A1A] uppercase"
+              ariaLabel="Go to chef technician dashboard"
+            />
 
             <nav className="hidden lg:flex items-center gap-1">
               <NavElement to="/chef-technician" label="Dashboard" end />
