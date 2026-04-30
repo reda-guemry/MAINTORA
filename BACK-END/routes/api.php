@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Anomaly\AnomalyController;
 use App\Http\Controllers\Anomaly\RepairPurchaseOrderController;
@@ -34,6 +35,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('admin')->middleware(['admin'])->group(function () {
 
         
+        Route::get('dashboard', [AdminController::class, 'index'])->middleware('can:manage users');
         Route::apiResource('users', UserController::class)->middleware('can:manage users');
         Route::get('/roles', [RoleController::class, 'index'])->middleware('can:manage users');
         Route::get('machines/{machineId}/history', [MachineHistoryController::class, 'index']);
