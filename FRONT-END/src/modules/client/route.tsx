@@ -3,6 +3,7 @@ import Dashboard from "../client/pages/Dashboard";
 import MachinesManagement from "./pages/MachinesManagment";
 import ClientMapPage from "./pages/Map";
 import RepairRequestsPage from "./pages/RepairRequests";
+import MachineHistoryPage from "./pages/MachineHistory";
 
 export const clientRoutes = [
   {
@@ -15,6 +16,10 @@ export const clientRoutes = [
       {
         path: "machines",
         element: <MachinesManagement />,
+      },
+      {
+        path: "machines/:machineId/history",
+        element: <MachineHistoryPage />,
       },
       {
         path: "map",

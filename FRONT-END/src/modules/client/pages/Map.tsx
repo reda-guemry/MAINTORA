@@ -170,7 +170,7 @@ export default function ClientMapPage() {
                   </div>
                 </div>
 
-                <div className="mt-8 grid grid-cols-2 gap-3">
+                <div className="mt-8 grid grid-cols-1 gap-3">
                   <Button
                     className="h-auto rounded-2xl py-4 text-[10px] uppercase tracking-widest"
                     onClick={() => navigate("/client/repair-requests")}
@@ -183,6 +183,15 @@ export default function ClientMapPage() {
                     onClick={() => navigate("/client/machines")}
                   >
                     Machine List
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-auto rounded-2xl py-4 text-[10px] uppercase tracking-widest"
+                    onClick={() =>
+                      navigate(`/client/machines/${selectedMachine.id}/history`)
+                    }
+                  >
+                    History
                   </Button>
                 </div>
 

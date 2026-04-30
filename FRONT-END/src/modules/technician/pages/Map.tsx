@@ -57,7 +57,6 @@ function MapPage() {
     <div className="w-full px-2 pb-6">
       <section className="relative h-[calc(100vh-9rem)] min-h-162 overflow-hidden rounded-[38px] border-4 border-white bg-[#edf0ec] shadow-[0_40px_90px_-20px_rgba(35,53,53,0.2)]">
         
-        {/* MAP BACKGROUND */}
         <div className="absolute inset-0 z-0">
           <TechnicianAssetMap
             machines={machines}
@@ -149,7 +148,13 @@ function MapPage() {
                       Submit Maintenance
                     </button>
                   ) }
-                  <button className="flex items-center justify-center gap-2 rounded-2xl border-2 border-[#e6dbcd] py-4 text-[10px] font-black uppercase tracking-widest text-[#2d241c] transition-all hover:bg-[#fcfaf7]">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigate(`/technician/machines/${selectedMachine.id}/history`)
+                    }
+                    className="flex items-center justify-center gap-2 rounded-2xl border-2 border-[#e6dbcd] py-4 text-[10px] font-black uppercase tracking-widest text-[#2d241c] transition-all hover:bg-[#fcfaf7]"
+                  >
                     History
                   </button>
                 </div>
