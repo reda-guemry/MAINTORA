@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\CheckList\ChecklistItemsController;
 use App\Http\Controllers\CheckList\ChecklistTemplateController;
+use App\Http\Controllers\Client\ClientDashboardController;
 use App\Http\Controllers\Client\ClientRepairRequestController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Rounde\MaintenancePlanController;
@@ -49,6 +50,8 @@ Route::middleware(['auth:api'])->group(function () {
 
 
     Route::prefix('client')->middleware(['client'])->group(function () {
+
+        Route::get('dashboard', [ClientDashboardController::class, 'index'])->middleware('can:manage machines');
 
         /*
          * Manage users Routes
