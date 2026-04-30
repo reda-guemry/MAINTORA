@@ -4,6 +4,7 @@ import { ChecklistTemplatesPage } from "./pages/ChecklistTemplates";
 import { ChecklistItemsPage } from "./pages/ChecklistItems";
 import { Rounde } from "./pages/Rounde";
 import { AnomaliesPage } from "./pages/Anomalies";
+import { MachineHistoryPage } from "./pages/MachineHistory";
 
 
 export const chefRoutes = [
@@ -25,6 +26,10 @@ export const chefRoutes = [
       {
         path: "mape",
         element: <Rounde />,
+      },
+      {
+        path: "machines/:machineId/history",
+        element: <MachineHistoryPage />,
       },
       {
         path: "anomalies",

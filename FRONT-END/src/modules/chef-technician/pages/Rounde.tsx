@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMachines } from "@/features/roundes/hooks/useMachines";
 import { useTechnicians } from "@/features/roundes/hooks/useTechnisian";
 import type { Technician } from "@/features/roundes/types/technician";
@@ -24,6 +25,7 @@ function getInitials(technician: Technician) {
 }
 
 export function Rounde() {
+  const navigate = useNavigate();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [selectedMachineId, setSelectedMachineId] = useState<number | null>(
     null,
@@ -324,6 +326,18 @@ export function Rounde() {
                   {selectedMachine.status}
                 </span>
               </div>
+              <button
+                type="button"
+                onClick={() =>
+                  navigate(`/chef-technician/machines/${selectedMachine.id}/history`)
+                }
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-[14px] border border-[#d5eee9] bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:bg-[#edf8f7]"
+              >
+                <span className="material-symbols-outlined text-[16px]">
+                  history
+                </span>
+                History
+              </button>
             </div>
           )}
         </div>

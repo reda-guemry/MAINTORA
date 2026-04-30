@@ -27,6 +27,7 @@ export type MachinesTableProps = {
   error: string | null;
   onEdit: (machine: Machine) => void;
   onDelete: (machine: Machine) => void;
+  onHistory?: (machine: Machine) => void;
   children?: ReactNode;
 };
 
@@ -34,6 +35,7 @@ export type MachineTableRowProps = {
   machine: Machine;
   onEdit: (machine: Machine) => void;
   onDelete: (machine: Machine) => void;
+  onHistory?: (machine: Machine) => void;
 };
 
 export type AddMachineModalProps = {
