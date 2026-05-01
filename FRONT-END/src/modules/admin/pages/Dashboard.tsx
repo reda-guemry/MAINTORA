@@ -51,17 +51,6 @@ function Dashboard() {
             requests.
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => fetchDashboard(false)}
-          className="flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#2d7373]"
-        >
-          <span className="material-symbols-outlined text-[18px]">
-            refresh
-          </span>
-          Refresh
-        </button>
       </div>
 
       {error && (
@@ -215,13 +204,6 @@ function StatCard({
         >
           <span className="material-symbols-outlined text-[20px]">{icon}</span>
         </div>
-        <span
-          className={`rounded-md px-2 py-1 text-[10px] font-bold uppercase ${
-            danger ? "bg-red-50 text-red-500" : "bg-emerald-50 text-emerald-600"
-          }`}
-        >
-          Live
-        </span>
       </div>
       <div>
         <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">

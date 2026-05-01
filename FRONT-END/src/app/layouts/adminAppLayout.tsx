@@ -1,15 +1,19 @@
 import { useAuth } from "@/context/useAuth";
 import { useLogout } from "@/features/auth";
 import { MaintoraLogo } from "@/shared/components/ui";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { getAdminBreadcrumbLabel } from "../utils/layoutAdmin";
+
 
 function AdminAppLayout() {
   const { user } = useAuth();
   const { logout } = useLogout() ;
+  const { pathname } = useLocation();
+  const breadcrumbLabel = getAdminBreadcrumbLabel(pathname);
 
   return (
     <div className="flex h-screen bg-[#F7F6F2] font-sans text-slate-800 overflow-hidden">
-      <aside className="w-[260px] bg-white flex flex-col justify-between shadow-[2px_0_15px_rgba(0,0,0,0.03)] z-20">
+      <aside className="w-63 bg-white flex flex-col justify-between shadow-[2px_0_15px_rgba(0,0,0,0.03)] z-20">
         <div>
           <div className="p-6 flex items-center gap-3">
             <MaintoraLogo
@@ -91,7 +95,7 @@ function AdminAppLayout() {
 
         <div className="p-6">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#eaf3f3] flex items-center justify-center text-[#398e8e]">
+            <div className="w-9 h-9 rounded-full bg-[#eaf3f3] flex items-center justify-center text-primary">
               <span className="material-symbols-outlined text-[18px]">
                 person
               </span>
@@ -118,26 +122,16 @@ function AdminAppLayout() {
       </aside>
 
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        <header className="h-[76px] px-8 flex items-center justify-between z-10">
+        <header className="h-19 px-8 flex items-center justify-between z-10">
           <div className="flex items-center gap-2 text-[13px] font-medium text-gray-400">
             <span className="material-symbols-outlined text-[18px]">home</span>
             <span>/</span>
-            <span className="text-gray-700">dashboard</span>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <button className="text-gray-400 hover:text-[#398e8e] transition-colors relative">
-              <span className="material-symbols-outlined text-[22px]">
-                notifications
-              </span>
-              <span className="absolute top-0 right-0.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#F7F6F2]"></span>
-            </button>
+            <span className="text-gray-700">{breadcrumbLabel}</span>
           </div>
         </header>
 
-        {/* Page Content */}
         <div className="flex-1 overflow-y-auto px-8 pb-8">
-          <div className="max-w-[1100px] mx-auto">
+          <div className="max-w-275 mx-auto">
             {" "}
             <Outlet />
           </div>

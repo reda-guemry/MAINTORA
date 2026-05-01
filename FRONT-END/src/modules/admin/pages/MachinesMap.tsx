@@ -98,17 +98,6 @@ export default function MachinesMapPage() {
             location details.
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={fetchMachines}
-          className="flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#2d7373]"
-        >
-          <span className="material-symbols-outlined text-[18px]">
-            refresh
-          </span>
-          Refresh
-        </button>
       </div>
 
       <section className="relative h-[calc(100vh-12rem)] min-h-162 overflow-hidden rounded-[32px] border-4 border-white bg-[#ebe4d8] shadow-[0_20px_60px_rgba(62,52,39,0.15)]">
