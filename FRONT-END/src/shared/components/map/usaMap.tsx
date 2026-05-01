@@ -49,11 +49,6 @@ export function useMap() {
       attributionControl: false,
     });
 
-    mapRef.current.addControl(
-      new maplibregl.NavigationControl({ showCompass: false }),
-      "bottom-right",
-    );
-
     return () => {
       mapRef.current?.remove();
       mapRef.current = null;
