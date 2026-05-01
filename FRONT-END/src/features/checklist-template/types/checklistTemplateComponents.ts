@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { ApiResponse, PaginatedResponse } from "@/shared/types/api.types";
 
 export type ChecklistTemplateItem = {
   id: number;
@@ -28,21 +29,13 @@ export type ChecklistTemplatePayload = {
   checklist_items?: ChecklistTemplateItemAssignment[];
 };
 
-export type PaginateChecklistTemplateResponse = {
-  data: {
-    data: ChecklistTemplate[];
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-    from: number | null;
-    to: number | null;
-    next_page_url: string | null;
-    prev_page_url: string | null;
-  };
-  success: boolean;
-  message: string;
-};
+export type PaginateChecklistTemplateResponse = ApiResponse<PaginatedResponse<ChecklistTemplate>>;
+
+export type CreateChecklistTemplateResponse = ApiResponse<ChecklistTemplate>;
+
+export type UpdateChecklistTemplateResponse = ApiResponse<ChecklistTemplate>;
+
+export type DeleteChecklistTemplateResponse = ApiResponse<void>;
 
 export type ChecklistTemplatesTableProps = {
   templates: ChecklistTemplate[];

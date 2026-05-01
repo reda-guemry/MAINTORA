@@ -1,7 +1,7 @@
 import { useApi } from "@/shared/hooks/useApi";
 import { useState } from "react";
 import type { AddUserPayload } from "../types/usersComponents";
-import type { User } from "@/features/auth";
+import type { CreateUserResponse } from "../types/userResponses";
 
 
 
@@ -13,7 +13,7 @@ export function useCreateUser() {
     async function createUserCall(data: AddUserPayload) {
         
         try {
-            const response = await callApi<{ data: User }>(`admin/users`, {
+            const response = await callApi<CreateUserResponse>(`admin/users`, {
                 method: "POST",
                 body: data,
             });

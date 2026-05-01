@@ -10,6 +10,7 @@ import { ChefAppLayout } from "../layouts/chefAppLayout";
 import { chefRoutes } from "@/modules/chef-technician/route";
 import { technicianRoutes } from "@/modules/technician/route";
 import TechnicianAppLayout from "../layouts/technician";
+import LandingPage from "@/modules/guest/pages/LandingPage";
 
 export const router = createBrowserRouter([
   {
@@ -17,7 +18,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <h1>Home</h1>,
+        element: <LandingPage />,
       },
       {
         path: "/login",

@@ -3,40 +3,15 @@ import type {
   CreateRepairRequestPayload,
   RepairRequest,
 } from "./anomaly";
+import type { ApiResponse, PaginatedResponse } from "@/shared/types/api.types";
 
-export type PaginatedChefAnomaliesResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    data: ChefAnomaly[];
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-    from: number | null;
-    to: number | null;
-    next_page_url: string | null;
-    prev_page_url: string | null;
-  };
-};
+export type PaginatedChefAnomaliesResponse = ApiResponse<PaginatedResponse<ChefAnomaly>>;
 
-export type ChefAnomalyResponse = {
-  success: boolean;
-  message: string;
-  data: ChefAnomaly;
-};
+export type ChefAnomalyResponse = ApiResponse<ChefAnomaly>;
 
-export type CreateRepairRequestResponse = {
-  success: boolean;
-  message: string;
-  data: RepairRequest;
-};
+export type CreateRepairRequestResponse = ApiResponse<RepairRequest>;
 
-export type ReviewPurchaseOrderResponse = {
-  success: boolean;
-  message: string;
-  data: RepairRequest;
-};
+export type ReviewPurchaseOrderResponse = ApiResponse<RepairRequest>;
 
 export type CreateRepairRequestMutation = (
   anomalyId: number,

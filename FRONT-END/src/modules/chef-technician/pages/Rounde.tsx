@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMachines } from "@/features/roundes/hooks/useMachines";
 import { useTechnicians } from "@/features/roundes/hooks/useTechnisian";
 import type { Technician } from "@/features/roundes/types/technician";
@@ -14,27 +15,17 @@ import {
   type MaintenancePlan,
   type UpdateMaintenancePlanPayload,
 } from "@/features/maintenance-plan";
-import { AssetMap } from "../components/AssetMap";
+import { MachinesAssetMap } from "@/features/machines-map";
 import { cn } from "@/shared/utils";
+import { getMachineBadgeClasses } from "@/shared/utils/machineStatusHelpers";
 import type { Machine } from "@/features/roundes";
 
 function getInitials(technician: Technician) {
   return `${technician.first_name[0] ?? ""}${technician.last_name[0] ?? ""}`.toUpperCase();
 }
 
-function getMachineBadgeClasses(status: Machine["status"]) {
-  if (status === "anomalous") {
-    return "border border-red-200 bg-red-50 text-red-600";
-  }
-
-  if (status === "maintenance") {
-    return "border border-amber-200 bg-amber-50 text-amber-700";
-  }
-
-  return "border border-emerald-200 bg-emerald-50 text-emerald-700";
-}
-
 export function Rounde() {
+  const navigate = useNavigate();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [selectedMachineId, setSelectedMachineId] = useState<number | null>(
     null,
@@ -183,9 +174,9 @@ export function Rounde() {
   return (
     <div className="relative h-[calc(100vh-8rem)] w-full overflow-hidden rounded-[32px] bg-[#ebe4d8] shadow-[0_20px_60px_rgba(62,52,39,0.15)]">
       <div className="absolute inset-0 z-0">
-        <AssetMap
+        <MachinesAssetMap
           machines={machines}
-          selectedMarkerId={selectedMachineId}
+          selectedMachineId={selectedMachineId}
           onMarkerSelect={handleMarkerSelect}
           onMapBackgroundClick={handleClearSelection}
         />
@@ -335,6 +326,18 @@ export function Rounde() {
                   {selectedMachine.status}
                 </span>
               </div>
+              <button
+                type="button"
+                onClick={() =>
+                  navigate(`/chef-technician/machines/${selectedMachine.id}/history`)
+                }
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-[14px] border border-[#d5eee9] bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:bg-[#edf8f7]"
+              >
+                <span className="material-symbols-outlined text-[16px]">
+                  history
+                </span>
+                History
+              </button>
             </div>
           )}
         </div>

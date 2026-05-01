@@ -18,6 +18,13 @@ class MaintenanceTaskService
 
     public function getPaginate(array $filters = [], int $perPage = 10)
     {
+        if (!empty($filters['week_start'])) {
+            $weekStart = Carbon::createFromFormat('Y-m-d', $filters['week_start'])->startOfDay();
+
+            $filters['week_start'] = $weekStart;
+            $filters['week_end'] = $weekStart->copy()->addDays(6)->endOfDay();
+        }
+
         return $this->technicianMaintenanceTaskRepository->paginateAssignedTasks($filters, $perPage);
     }
 

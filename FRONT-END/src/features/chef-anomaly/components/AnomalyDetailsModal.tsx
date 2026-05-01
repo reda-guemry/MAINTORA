@@ -1,31 +1,9 @@
 import { Alert } from "@/shared/components/feedback";
 import { Button, Spinner } from "@/shared/components/ui";
-import type { ChefAnomaly, MaintenanceTaskCheckItem } from "../types/anomaly";
+import { formatDate } from "@/shared/utils/formatters";
+import { getChecklistItemClasses } from "@/shared/utils/statusHelpers";
+import type { ChefAnomaly } from "../types/anomaly";
 import { AnomalyStatusBadge } from "./AnomalyStatusBadge";
-
-function formatDate(value?: string) {
-  if (!value) {
-    return "Not available";
-  }
-
-  return new Date(value).toLocaleString();
-}
-
-function getChecklistItemClasses(item: MaintenanceTaskCheckItem) {
-  if (item.status === "anomaly") {
-    return "border-red-200 bg-red-50";
-  }
-
-  if (item.status === "not_ok") {
-    return "border-[#f4d6b3] bg-[#fff3e4]";
-  }
-
-  if (item.status === "ok") {
-    return "border-[#b9dfdc] bg-[#edf8f7]";
-  }
-
-  return "border-[#e6ddd2] bg-[#fcfaf7]";
-}
 
 type AnomalyDetailsModalProps = {
   anomaly: ChefAnomaly | null;
@@ -244,7 +222,7 @@ export function AnomalyDetailsModal({
                       (item) => (
                         <div
                           key={item.checklist_item_id}
-                          className={`rounded-2xl border px-4 py-4 ${getChecklistItemClasses(item)}`}
+                          className={`rounded-2xl border px-4 py-4 ${getChecklistItemClasses(item.status || "ok")}`}
                         >
                           <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                             <div>

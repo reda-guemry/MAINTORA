@@ -12,17 +12,19 @@ function AdminAppLayout() {
       <aside className="w-[260px] bg-white flex flex-col justify-between shadow-[2px_0_15px_rgba(0,0,0,0.03)] z-20">
         <div>
           <div className="p-6 flex items-center gap-3">
-            <div className="w-9 h-9 bg-primary/80  rounded-lg flex items-center justify-center text-white">
-              <MaintoraLogo size={150} />
-            </div>
-            <div>
-              <h1 className="text-[13px] font-extrabold text-[#398e8e] uppercase tracking-wide">
-                MAINTORA
-              </h1>
-              <p className="text-[10px] text-gray-400 font-medium">
-                Admin Control Panel
-              </p>
-            </div>
+            <MaintoraLogo
+              to="/admin"
+              size={28}
+              showText
+              title="MAINTORA"
+              subtitle="Admin Control Panel"
+              wrapperClassName="flex items-center gap-3"
+              markClassName="w-9 h-9 bg-primary/80 rounded-lg flex items-center justify-center text-white"
+              textClassName="flex flex-col"
+              titleClassName="text-[13px] font-extrabold text-[#398e8e] uppercase tracking-wide"
+              subtitleClassName="text-[10px] text-gray-400 font-medium"
+              ariaLabel="Go to admin dashboard"
+            />
           </div>
 
           <nav className="px-4 mt-2 space-y-1">

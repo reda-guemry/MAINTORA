@@ -1,17 +1,6 @@
 import type { ClientRepairRequest } from "./repairRequest";
+import type { ApiResponse, PaginatedResponse } from "@/shared/types/api.types";
 
-export type PaginatedClientRepairRequestsResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    data: ClientRepairRequest[];
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-    from: number | null;
-    to: number | null;
-    next_page_url: string | null;
-    prev_page_url: string | null;
-  };
-};
+export type PaginatedClientRepairRequestsResponse = ApiResponse<PaginatedResponse<ClientRepairRequest>>;
+
+export type ClientRepairRequestResponse = ApiResponse<ClientRepairRequest>;

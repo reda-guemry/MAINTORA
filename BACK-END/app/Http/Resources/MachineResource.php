@@ -22,7 +22,17 @@ class MachineResource extends JsonResource
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'status' => $this->status,
-            'created_by' => UserResource::make($this->whenLoaded('creator')),
+            'created_by' => $this->whenLoaded('creator', function () {
+                return [
+                    'id' => $this->creator?->id,
+                    'first_name' => $this->creator?->first_name,
+                    'last_name' => $this->creator?->last_name,
+                ];
+            }),
+            'active_anomalies_count' => $this->when(
+                isset($this->active_anomalies_count),
+                (int) $this->active_anomalies_count,
+            ),
             'maintenance_plans' => MaintenancePlanResource::collection($this->whenLoaded('maintenancePlans')),
         ];
     }

@@ -1,9 +1,9 @@
 import { useApi } from "@/shared/hooks/useApi";
 import { useState } from "react";
 import type {
-  ChecklistItem,
   ChecklistItemPayload,
 } from "../types/checklistItemComponents";
+import type { UpdateChecklistItemResponse } from "../types/checklistItemResponses";
 
 export function useEditChecklistItem() {
   const { callApi } = useApi();
@@ -14,7 +14,7 @@ export function useEditChecklistItem() {
     data: ChecklistItemPayload
   ) {
     try {
-      const response = await callApi<{ data: ChecklistItem }>(
+      const response = await callApi<UpdateChecklistItemResponse>(
         `chef-technician/checklist/items/${itemId}`,
         {
           method: "PUT",

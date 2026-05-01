@@ -1,7 +1,4 @@
 import type { ClientRepairRequest } from "./repairRequest";
+import type { ApiResponse } from "@/shared/types/api.types";
 
-export type UploadPurchaseOrderResponse = {
-  success: boolean;
-  message: string;
-  data: ClientRepairRequest;
-};
+export type UploadPurchaseOrderResponse = ApiResponse<ClientRepairRequest>;

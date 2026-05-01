@@ -1,5 +1,6 @@
 import { useApi } from "@/shared/hooks/useApi";
 import type { EditUserPayload } from "../types/usersComponents";
+import type { UpdateUserResponse } from "../types/userResponses";
 import { useState } from "react";
 
 
@@ -11,7 +12,7 @@ export function useEditUser() {
     async function editUserCall(userId: number, data: EditUserPayload) {
         
         try {
-            const response = await callApi(`admin/users/${userId}`, {
+            const response = await callApi<UpdateUserResponse>(`admin/users/${userId}`, {
                 method: "PUT",
                 body: data,
             });

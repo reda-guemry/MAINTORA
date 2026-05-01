@@ -1,34 +1,11 @@
 import { Button } from "@/shared/components/ui";
 import { cn } from "@/shared/utils";
+import {
+  getMaintenancePlanStatusClasses,
+  formatFrequency,
+  formatStartDate,
+} from "@/shared/utils/maintenancePlanHelpers";
 import type { MaintenancePlanCardProps } from "../types/maintenancePlan";
-
-function getStatusClasses(status: "active" | "inactive") {
-  if (status === "active") {
-    return "border border-emerald-200 bg-emerald-50 text-emerald-700";
-  }
-
-  return "border border-slate-200 bg-slate-100 text-slate-600";
-}
-
-function formatFrequency(repeatEvery: number, repeatUnit: string) {
-  const unitLabel = repeatEvery === 1 ? repeatUnit : `${repeatUnit}s`;
-
-  return `Every ${repeatEvery} ${unitLabel}`;
-}
-
-function formatStartDate(startDate: string) {
-  const date = new Date(startDate);
-
-  if (Number.isNaN(date.getTime())) {
-    return startDate;
-  }
-
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 export function MaintenancePlanCard({
   maintenancePlan,
@@ -46,7 +23,7 @@ export function MaintenancePlanCard({
             <span
               className={cn(
                 "rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em]",
-                getStatusClasses(maintenancePlan.status),
+                getMaintenancePlanStatusClasses(maintenancePlan.status),
               )}
             >
               {maintenancePlan.status}

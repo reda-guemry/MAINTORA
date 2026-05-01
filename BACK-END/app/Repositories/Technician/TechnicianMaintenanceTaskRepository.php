@@ -31,6 +31,9 @@ class TechnicianMaintenanceTaskRepository
             ->when($filters['scheduled_date'] ?? null, function ($query, $scheduledDate) {
                 $query->whereDate('scheduled_at', $scheduledDate);
             })
+            ->when($filters['week_start'] ?? null, function ($query, $weekStart) use ($filters) {
+                $query->whereBetween('scheduled_at', [$weekStart, $filters['week_end']]);
+            })
             ->when($filters['search'] ?? null, function ($query, $search) {
                 $query->whereHas('machine', function ($machineQuery) use ($search) {
                     $machineQuery

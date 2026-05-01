@@ -7,12 +7,13 @@ export function MachinesTable({
   error,
   onEdit,
   onDelete,
+  onHistory,
   children,
 }: MachinesTableProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[860px] text-left">
+        <table className="w-full min-w-215 text-left">
           <thead>
             <tr className="border-b border-gray-50">
               <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
@@ -66,6 +67,7 @@ export function MachinesTable({
                   machine={machine}
                   onEdit={onEdit}
                   onDelete={onDelete}
+                  onHistory={onHistory}
                 />
               ))}
           </tbody>

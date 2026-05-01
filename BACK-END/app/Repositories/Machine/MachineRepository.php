@@ -48,7 +48,13 @@ class MachineRepository
             'creator',
             'maintenancePlans.assignedTo.roles',
             'maintenancePlans.checklistTemplate',
-        ])->get();
+        ])
+            ->withCount([
+                'anomalies as active_anomalies_count' => function ($query) {
+                    $query->whereIn('status', ['open', 'in_progress']);
+                },
+            ])
+            ->get();
     }
 
     public function getAllForCurrentClient()

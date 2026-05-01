@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CheckList;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\StoreChecklistItemRequest;
 use App\Http\Requests\StoreChecklistTemplateRequest;
 use App\Http\Requests\UpdateChecklistItemRequest;
@@ -27,39 +28,20 @@ class ChecklistItemsController extends Controller
     {
         $data = $this->checklistItemsService->getPaginate();
 
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'Checklist items retrieved successfully',
-        //     'data' => $data,
-        // ]);
-
         $data->through(function ($checklistItem) {
             return new ChecklistItemResource($checklistItem);
         });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Checklist items retrieved successfully',
-            'data' => $data,
-        ]);
+        return ApiResponse::success($data, 'Checklist items retrieved successfully');
     }
 
     public function store(StoreChecklistItemRequest $request)
     {
         try {
             $checklistItem = $this->checklistItemsService->create($request->validated());
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Checklist item created successfully',
-                'data' => new ChecklistItemResource($checklistItem),
-            ], 201);
+            return ApiResponse::success(new ChecklistItemResource($checklistItem), 'Checklist item created successfully', 201);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while creating checklist item.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while creating checklist item', $e->getCode() ?: 500);
         }
     }
 
@@ -67,23 +49,11 @@ class ChecklistItemsController extends Controller
     {
         try {
             $checklistItem = $this->checklistItemsService->findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Checklist item retrieved successfully',
-                'data' => new ChecklistItemResource($checklistItem),
-            ]);
+            return ApiResponse::success(new ChecklistItemResource($checklistItem), 'Checklist item retrieved successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Checklist item not found.',
-            ], 404);
+            return ApiResponse::error('Checklist item not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while retrieving checklist item.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while retrieving checklist item', $e->getCode() ?: 500);
         }
     }
 
@@ -91,23 +61,11 @@ class ChecklistItemsController extends Controller
     {
         try {
             $checklistItem = $this->checklistItemsService->update($id, $request->validated());
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Checklist item updated successfully',
-                'data' => new ChecklistItemResource($checklistItem),
-            ]);
+            return ApiResponse::success(new ChecklistItemResource($checklistItem), 'Checklist item updated successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Checklist item not found.',
-            ], 404);
+            return ApiResponse::error('Checklist item not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while updating checklist item.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while updating checklist item', $e->getCode() ?: 500);
         }
     }
 
@@ -115,43 +73,20 @@ class ChecklistItemsController extends Controller
     {
         try {
             $this->checklistItemsService->delete($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Checklist item deleted successfully',
-            ]);
+            return ApiResponse::success(null, 'Checklist item deleted successfully');
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Checklist item not found.',
-            ], 404);
+            return ApiResponse::error('Checklist item not found', 404);
         }
     }
 
 
     public function search(Request $request)
     {
-
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'Search query received successfully',
-        //     'search' => $request->query('search', ''),
-        // ]);
-
         try {
             $data = $this->checklistItemsService->search($request);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Checklist items retrieved successfully',
-                'data' => ChecklistItemSearchResource::collection($data),
-            ]);
+            return ApiResponse::success(ChecklistItemSearchResource::collection($data), 'Checklist items retrieved successfully');
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while searching checklist items.',
-                'error' => $e->getMessage(),
-            ], 500);
+            return ApiResponse::error('Error occurred while searching checklist items', 500);
         }
     }
 
@@ -159,18 +94,9 @@ class ChecklistItemsController extends Controller
     {
         try {
             $data = $this->checklistItemsService->all();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Checklist items retrieved successfully',
-                'data' => ChecklistItemResource::collection($data),
-            ]);
+            return ApiResponse::success(ChecklistItemResource::collection($data), 'Checklist items retrieved successfully');
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while retrieving checklist items.',
-                'error' => $e->getMessage(),
-            ], 500);
+            return ApiResponse::error('Error occurred while retrieving checklist items', 500);
         }
     }
 

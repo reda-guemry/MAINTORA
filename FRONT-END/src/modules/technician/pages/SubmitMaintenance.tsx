@@ -13,33 +13,7 @@ import {
   saveMaintenanceDraft,
 } from "@/features/technician-maintenance";
 import { getStatusClasses } from "../utils/getStatus";
-
-function getCheckStatusClasses(
-  currentStatus: TechnicianCheckStatus | null,
-  targetStatus: TechnicianCheckStatus,
-) {
-  if (currentStatus !== targetStatus) {
-    if (targetStatus === "ok") {
-      return "border border-[#b9dfdc] bg-[#edf8f7] text-primary";
-    }
-
-    if (targetStatus === "not_ok") {
-      return "border border-[#f2d7b4] bg-[#fff3e5] text-[#c77422]";
-    }
-
-    return "border border-red-200 bg-red-50 text-red-600";
-  }
-
-  if (targetStatus === "ok") {
-    return "bg-primary text-white";
-  }
-
-  if (targetStatus === "not_ok") {
-    return "bg-[#d97706] text-white";
-  }
-
-  return "bg-[#d9534f] text-white";
-}
+import { getCheckStatusClasses } from "@/shared/utils/statusHelpers";
 
 function SubmitMaintenancePage() {
   const navigate = useNavigate();

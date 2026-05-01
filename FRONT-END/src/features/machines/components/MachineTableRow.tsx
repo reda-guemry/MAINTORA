@@ -5,6 +5,7 @@ export function MachineTableRow({
   machine,
   onEdit,
   onDelete,
+  onHistory,
 }: MachineTableRowProps) {
   return (
     <tr className="group transition-colors hover:bg-[#F9FBFB]">
@@ -27,6 +28,18 @@ export function MachineTableRow({
       </td>
       <td className="px-6 py-5 text-right">
         <div className="flex justify-end gap-2 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
+          {onHistory && (
+            <button
+              type="button"
+              onClick={() => onHistory(machine)}
+              className="rounded p-1.5 text-gray-400 transition-colors hover:text-primary"
+              aria-label={`View history for ${machine.name}`}
+            >
+              <span className="material-symbols-outlined text-[18px]">
+                history
+              </span>
+            </button>
+          )}
           <button
             type="button"
             onClick={() => onEdit(machine)}

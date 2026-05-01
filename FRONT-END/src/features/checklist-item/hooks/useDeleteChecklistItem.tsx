@@ -1,5 +1,6 @@
 import { useApi } from "@/shared/hooks/useApi";
 import { useState } from "react";
+import type { DeleteChecklistItemResponse } from "../types/checklistItemResponses";
 
 export function useDeleteChecklistItem() {
   const { callApi } = useApi();
@@ -7,7 +8,7 @@ export function useDeleteChecklistItem() {
 
   async function deleteChecklistItemCall(itemId: number) {
     try {
-      const response = await callApi(`chef-technician/checklist/items/${itemId}`, {
+      const response = await callApi<DeleteChecklistItemResponse>(`chef-technician/checklist/items/${itemId}`, {
         method: "DELETE",
       });
 

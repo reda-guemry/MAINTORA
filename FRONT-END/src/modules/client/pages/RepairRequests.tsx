@@ -1,32 +1,14 @@
 import { useMemo, useState } from "react";
 import { Alert } from "@/shared/components/feedback";
 import { Button, Input, Spinner } from "@/shared/components/ui";
+import { formatDate } from "@/shared/utils/formatters";
+import { getRepairStatusClasses } from "@/shared/utils/statusHelpers";
 import {
   UploadPurchaseOrderModal,
   usePaginateClientRepairRequests,
   useUploadRepairPurchaseOrder,
   type ClientRepairRequest,
 } from "@/features/client-repair-request";
-
-function getStatusClasses(status: string) {
-  if (status === "open") {
-    return "border border-[#f4d6b3] bg-[#fff3e4] text-[#b46a1f]";
-  }
-
-  if (status === "in_progress") {
-    return "border border-[#b9dfdc] bg-[#edf8f7] text-primary";
-  }
-
-  if (status === "completed") {
-    return "border border-emerald-200 bg-emerald-50 text-emerald-700";
-  }
-
-  return "border border-red-200 bg-red-50 text-red-600";
-}
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleString();
-}
 
 export default function RepairRequestsPage() {
   const [statusFilter, setStatusFilter] = useState("");
@@ -202,7 +184,7 @@ export default function RepairRequestsPage() {
                 </div>
 
                 <span
-                  className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] ${getStatusClasses(repairRequest.status)}`}
+                  className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] ${getRepairStatusClasses(repairRequest.status)}`}
                 >
                   {repairRequest.status.replace("_", " ")}
                 </span>
@@ -258,7 +240,7 @@ export default function RepairRequestsPage() {
 
                     <div className="flex items-center gap-3">
                       <span
-                        className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] ${getStatusClasses(repairRequest.purchase_order.status === "uploaded" ? "in_progress" : repairRequest.purchase_order.status)}`}
+                        className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] ${getRepairStatusClasses(repairRequest.purchase_order.status === "uploaded" ? "in_progress" : repairRequest.purchase_order.status)}`}
                       >
                         {repairRequest.purchase_order.status}
                       </span>

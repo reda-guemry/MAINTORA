@@ -1,170 +1,281 @@
+import { Alert } from "@/shared/components/feedback";
+import { Spinner } from "@/shared/components/ui";
+import { formatDateTime } from "@/shared/utils/formatters";
+import { useAdminDashboard } from "@/features/admin-dashboard";
+import {
+  formatNumber,
+  formatStatus,
+  getSystemHealthScore,
+  getUserStatusClasses,
+} from "@/features/admin-dashboard/utils/dashboardHelper";
+
+const emptyStats = {
+  total_users: 0,
+  total_clients: 0,
+  total_technicians: 0,
+  total_machines: 0,
+  active_anomalies: 0,
+  open_repair_requests: 0,
+  completed_maintenance_tasks: 0,
+};
 
 function Dashboard() {
+  const { dashboard, isLoading, error, fetchDashboard } = useAdminDashboard();
+  const stats = dashboard?.stats ?? emptyStats;
+  const healthScore = getSystemHealthScore(
+    stats.total_machines,
+    stats.active_anomalies,
+  );
+  const recentUsers = dashboard?.recent_users ?? [];
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[70vh] flex-col items-center justify-center rounded-2xl border border-gray-100 bg-white shadow-sm">
+        <Spinner size="lg" />
+        <span className="mt-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+          Loading admin dashboard
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
-          <div className="flex justify-between items-start mb-4">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#eaf3f3] text-[#398e8e]">
-              <span className="material-symbols-outlined text-[20px]">settings</span>
-            </div>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
-              +2.4%
-            </span>
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Active Machines</p>
-            <h3 className="text-[28px] leading-none font-bold text-gray-800">1,284</h3>
-          </div>
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
+            Admin Dashboard
+          </h1>
+          <p className="mt-1.5 text-sm text-gray-500">
+            Live system overview for users, machines, anomalies, and repair
+            requests.
+          </p>
         </div>
 
-        {/* Card 2 */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
-          <div className="flex justify-between items-start mb-4">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#eaf3f3] text-[#398e8e]">
-              <span className="material-symbols-outlined text-[20px]">person</span>
-            </div>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
-              +1.2%
-            </span>
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Total Users</p>
-            <h3 className="text-[28px] leading-none font-bold text-gray-800">856</h3>
-          </div>
-        </div>
-
-        {/* Card 3 (Alert) */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-red-100 flex flex-col justify-between">
-          <div className="flex justify-between items-start mb-4">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-red-50 text-red-500">
-              <span className="material-symbols-outlined text-[20px]">error</span>
-            </div>
-            <span className="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-md">
-              -5.3%
-            </span>
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Open Anomalies</p>
-            <h3 className="text-[28px] leading-none font-bold text-gray-800">42</h3>
-          </div>
-        </div>
-
-        {/* Card 4 */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
-          <div className="flex justify-between items-start mb-4">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#eaf3f3] text-[#398e8e]">
-              <span className="material-symbols-outlined text-[20px]">task_alt</span>
-            </div>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
-              +8.7%
-            </span>
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Rounds Completed</p>
-            <h3 className="text-[28px] leading-none font-bold text-gray-800">3,105</h3>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Chart Section */}
-      <div className="bg-white p-7 rounded-2xl shadow-sm border border-gray-100">
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h2 className="text-[16px] font-bold text-gray-800">System Activity Overview</h2>
-            <p className="text-[12px] text-gray-400 mt-1">Maintenance events and round logs over last 30 days</p>
-          </div>
-          <div className="flex gap-2">
-            <button className="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-[11px] font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors">
-              EXPORT PDF
-            </button>
-            <button className="px-4 py-2 bg-primary text-white rounded-lg text-[11px] font-bold uppercase tracking-wider hover:bg-[#2d7373] transition-colors">
-              FILTER VIEW
-            </button>
-          </div>
-        </div>
-
-        <div className="relative h-55 w-full">
-          <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1000 250">
-            <defs>
-              <linearGradient id="curveGradient" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="#398e8e" stopOpacity="0.1" />
-                <stop offset="100%" stopColor="#398e8e" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <path d="M0,180 C200,160 300,220 500,100 C700,-20 800,180 1000,100 V250 H0 Z" fill="url(#curveGradient)" />
-            <path d="M0,180 C200,160 300,220 500,100 C700,-20 800,180 1000,100" fill="none" stroke="#398e8e" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="300" cy="198" fill="#398e8e" r="4" />
-            <circle cx="500" cy="100" fill="#398e8e" r="4" />
-          </svg>
-          <div className="flex justify-between mt-3 text-[10px] font-bold text-gray-300 uppercase tracking-widest border-t border-gray-50 pt-3">
-            <span>DAY 01</span>
-            <span>DAY 07</span>
-            <span>DAY 14</span>
-            <span>DAY 21</span>
-            <span>DAY 30</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Activity Feed */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        
-        <div className="px-6 py-4 border-b border-gray-50 flex justify-between items-center">
-          <h2 className="text-[11px] font-bold text-gray-600 uppercase tracking-widest flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#398e8e] text-[16px]">history</span>
-            RECENT ACTIVITY FEED
-          </h2>
-          <span className="text-[9px] font-mono font-medium text-[#398e8e]/60 tracking-widest uppercase">
-            AUTO_REFRESH: ACTIVE
+        <button
+          type="button"
+          onClick={() => fetchDashboard(false)}
+          className="flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#2d7373]"
+        >
+          <span className="material-symbols-outlined text-[18px]">
+            refresh
           </span>
-        </div>
-
-        <div className="divide-y divide-gray-50">
-          {/* Feed Item 1 */}
-          <div className="p-4 px-6 flex items-center gap-4 hover:bg-gray-50/50 transition-colors group">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
-            <div className="flex-1">
-              <p className="text-[13px] text-gray-800 font-semibold">Compressor C-12 Round Completed</p>
-              <p className="text-[11px] text-gray-400 mt-0.5">Technician: Mark Stevens • Area: Zone 4 • 12 mins ago</p>
-            </div>
-            <button className="text-[10px] font-bold text-[#398e8e] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-              VIEW REPORT
-            </button>
-          </div>
-
-          {/* Feed Item 2 */}
-          <div className="p-4 px-6 flex items-center gap-4 hover:bg-gray-50/50 transition-colors group">
-            <div className="w-1.5 h-1.5 rounded-full bg-red-400"></div>
-            <div className="flex-1">
-              <p className="text-[13px] text-gray-800 font-semibold">Anomaly Detected: High Vibration</p>
-              <p className="text-[11px] text-gray-400 mt-0.5">Asset: Turbine T-08 • Severity: CRITICAL • 45 mins ago</p>
-            </div>
-            <button className="text-[10px] font-bold text-[#398e8e] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-              RESPOND
-            </button>
-          </div>
-
-          {/* Feed Item 3 */}
-          <div className="p-4 px-6 flex items-center gap-4 hover:bg-gray-50/50 transition-colors group">
-            <div className="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
-            <div className="flex-1">
-              <p className="text-[13px] text-gray-800 font-semibold">User Profile Updated</p>
-              <p className="text-[11px] text-gray-400 mt-0.5">User: Sarah Connor • Role: Maintenance Supervisor • 1.5 hours ago</p>
-            </div>
-            <button className="text-[10px] font-bold text-[#398e8e] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-              DETAILS
-            </button>
-          </div>
-        </div>
-
+          Refresh
+        </button>
       </div>
 
+      {error && (
+        <Alert variant="error" title="Dashboard unavailable">
+          {error}
+        </Alert>
+      )}
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          icon="precision_manufacturing"
+          label="Total Machines"
+          value={stats.total_machines}
+        />
+        <StatCard icon="group" label="Total Users" value={stats.total_users} />
+        <StatCard
+          icon="error"
+          label="Active Anomalies"
+          value={stats.active_anomalies}
+          danger
+        />
+        <StatCard
+          icon="task_alt"
+          label="Completed Tasks"
+          value={stats.completed_maintenance_tasks}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 pb-4 lg:grid-cols-3">
+        <section className="rounded-2xl border border-gray-100 bg-white p-7 shadow-sm lg:col-span-2">
+          <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+            <div>
+              <h2 className="text-[16px] font-bold text-gray-800">
+                System Health Overview
+              </h2>
+              <p className="mt-1 text-[12px] text-gray-400">
+                Calculated from total machines and active anomalies.
+              </p>
+            </div>
+            <span className="rounded-lg bg-[#eaf3f3] px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#398e8e]">
+              {healthScore}% Healthy
+            </span>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <MetricTile
+              label="Clients"
+              value={stats.total_clients}
+              icon="business_center"
+            />
+            <MetricTile
+              label="Technicians"
+              value={stats.total_technicians}
+              icon="engineering"
+            />
+            <MetricTile
+              label="Open Requests"
+              value={stats.open_repair_requests}
+              icon="build_circle"
+              warning
+            />
+          </div>
+
+          <div className="mt-6 rounded-xl border border-gray-100 bg-gray-50 p-4">
+            <div className="mb-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-gray-400">
+              <span>Anomaly Pressure</span>
+              <span>
+                {formatNumber(stats.active_anomalies)} /{" "}
+                {formatNumber(stats.total_machines)} machines
+              </span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-white">
+              <div
+                className="h-full rounded-full bg-[#398e8e]"
+                style={{
+                  width: `${Math.min(100, 100 - healthScore)}%`,
+                }}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-gray-100 bg-white p-7 shadow-sm">
+          <h2 className="text-[16px] font-bold text-gray-800">Recent Users</h2>
+          <p className="mt-1 text-[12px] text-gray-400">
+            Latest registered system accounts.
+          </p>
+
+          <div className="mt-5 space-y-3">
+            {recentUsers.length === 0 && (
+              <EmptyState label="No recent users found." />
+            )}
+
+            {recentUsers.map((user) => (
+              <article
+                key={user.id}
+                className="rounded-xl border border-gray-100 p-4 transition-colors hover:bg-gray-50"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[13px] font-bold text-gray-800">
+                      {user.first_name} {user.last_name}
+                    </p>
+                    <p className="mt-1 text-[11px] font-medium text-gray-400">
+                      {user.roles.map((role) => role.name).join(", ") ||
+                        "No role"}
+                    </p>
+                  </div>
+                  <span
+                    className={`rounded px-2.5 py-1 text-[10px] font-bold uppercase ${getUserStatusClasses(
+                      user.status,
+                    )}`}
+                  >
+                    {formatStatus(user.status)}
+                  </span>
+                </div>
+                <p className="mt-3 text-[10px] font-medium uppercase tracking-widest text-gray-300">
+                  {formatDateTime(user.created_at)}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
 
-export default Dashboard ;
+function StatCard({
+  icon,
+  label,
+  value,
+  danger = false,
+}: {
+  icon: string;
+  label: string;
+  value: number;
+  danger?: boolean;
+}) {
+  return (
+    <div
+      className={`flex flex-col justify-between rounded-2xl border bg-white p-5 shadow-sm ${
+        danger ? "border-red-100" : "border-gray-100"
+      }`}
+    >
+      <div className="mb-4 flex items-start justify-between">
+        <div
+          className={`flex h-9 w-9 items-center justify-center rounded-xl ${
+            danger ? "bg-red-50 text-red-500" : "bg-[#eaf3f3] text-[#398e8e]"
+          }`}
+        >
+          <span className="material-symbols-outlined text-[20px]">{icon}</span>
+        </div>
+        <span
+          className={`rounded-md px-2 py-1 text-[10px] font-bold uppercase ${
+            danger ? "bg-red-50 text-red-500" : "bg-emerald-50 text-emerald-600"
+          }`}
+        >
+          Live
+        </span>
+      </div>
+      <div>
+        <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+          {label}
+        </p>
+        <h3 className="text-[28px] font-bold leading-none text-gray-800">
+          {formatNumber(value)}
+        </h3>
+      </div>
+    </div>
+  );
+}
+
+function MetricTile({
+  label,
+  value,
+  icon,
+  warning = false,
+}: {
+  label: string;
+  value: number;
+  icon: string;
+  warning?: boolean;
+}) {
+  return (
+    <div className="rounded-xl border border-gray-100 bg-white p-4">
+      <div className="flex items-center justify-between">
+        <span
+          className={`material-symbols-outlined text-[22px] ${
+            warning ? "text-amber-600" : "text-[#398e8e]"
+          }`}
+        >
+          {icon}
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-300">
+          Total
+        </span>
+      </div>
+      <p className="mt-5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+        {label}
+      </p>
+      <p className="mt-1 text-2xl font-black text-gray-800">
+        {formatNumber(value)}
+      </p>
+    </div>
+  );
+}
+
+function EmptyState({ label }: { label: string }) {
+  return (
+    <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 px-4 py-8 text-center text-sm font-medium text-gray-500">
+      {label}
+    </div>
+  );
+}
+
+export default Dashboard;

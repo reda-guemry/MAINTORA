@@ -18,6 +18,28 @@ export type ApiErrorResponse = {
 };
 
 
+
+export type ApiResponse<T> = {
+  success: boolean;
+  message: string;
+  data: T;
+  errors?: Record<string, string[]> | null;
+};
+
+
+export type PaginatedResponse<T> = {
+  data: T[];
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+  from: number | null;
+  to: number | null;
+  next_page_url: string | null;
+  prev_page_url: string | null;
+  ge_url: string | null;
+};
+
 export class ApiError extends Error {
   status: number;
   errors?: ApiValidationErrors;

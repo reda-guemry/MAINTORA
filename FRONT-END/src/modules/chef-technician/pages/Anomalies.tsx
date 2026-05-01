@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Alert } from "@/shared/components/feedback";
 import { Button, Input, Spinner } from "@/shared/components/ui";
+import { formatDate } from "@/shared/utils/formatters";
 import {
   AnomalyDetailsModal,
   AnomalyStatusBadge,
@@ -10,10 +11,6 @@ import {
   useCreateRepairRequest,
   useReviewRepairPurchaseOrder,
 } from "@/features/chef-anomaly";
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleString();
-}
 
 
 export function AnomaliesPage() {

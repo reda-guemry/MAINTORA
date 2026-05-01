@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Anomaly;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\StoreAnomalyRequest;
 use App\Http\Requests\StoreRepairRequestRequest;
 use App\Http\Resources\AnomalyResource;
@@ -22,30 +23,18 @@ class RepairRequestController extends Controller
     ) {}
 
     
-     public function store(StoreRepairRequestRequest $request, int $id)
+    public function store(StoreRepairRequestRequest $request, int $id)
     {
         try {
             $repairRequest = $this->anomalyService->createForAnomaly(
                 $id,
                 $request->validated(),
             );
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Repair request created successfully',
-                'data' => new RepairRequestResource($repairRequest),
-            ], 201);
+            return ApiResponse::success(new RepairRequestResource($repairRequest), 'Repair request created successfully', 201);
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Anomaly not found.',
-            ], 404);
+            return ApiResponse::error('Anomaly not found', 404);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error occurred while creating repair request.',
-                'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            return ApiResponse::error('Error occurred while creating repair request', $e->getCode() ?: 500);
         }
     }
     
