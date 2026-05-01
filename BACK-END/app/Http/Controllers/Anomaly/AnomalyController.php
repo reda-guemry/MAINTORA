@@ -12,6 +12,8 @@ use App\Services\Anomaly\AnomalyService;
 use App\Services\ChefTechnician\ChefTechnicianAnomalyService;
 use App\Services\ChefTechnician\ChefTechnicianRepairRequestService;
 use App\Services\Technician\TechnicianAnomalyService;
+use App\Services\Email\EmailService;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -20,6 +22,7 @@ class AnomalyController extends Controller
 {
     public function __construct(
         private AnomalyService $anomalyService,
+        private EmailService $emailService,
     ) {}
 
     public function index(Request $request)
@@ -62,6 +65,20 @@ class AnomalyController extends Controller
     {
         try {
             $anomaly = $this->anomalyService->createForTask($taskId, $request->validated());
+            
+            $recipients = User::whereHas('roles', function($q) {
+                $q->whereIn('name', ['admin', 'chef technician']);
+            })->where('status', 'active')->pluck('email')->toArray();
+            
+            if (!empty($recipients)) {
+                $this->emailService->sendAnomalyNotification(
+                    anomalyId: $anomaly->id,
+                    severity: $anomaly->severity,
+                    description: $anomaly->description,
+                    recipients: $recipients
+                );
+            }
+            
             return ApiResponse::success(new AnomalyResource($anomaly), 'Anomaly created successfully', 201);
         } catch (Exception $e) {
             return ApiResponse::error('Error occurred while creating anomaly', $e->getCode() ?: 500);

@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateTechnicianMaintenanceTaskRequest;
 use App\Http\Resources\MaintenanceTaskResource;
 use App\Http\Helpers\ApiResponse;
 use App\Services\Rounde\MaintenanceTaskService;
+use App\Services\Email\EmailService;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -15,6 +17,7 @@ class TechnicianMaintenanceTaskController extends Controller
 {
     public function __construct(
         private MaintenanceTaskService $maintenanceTaskService,
+        private EmailService $emailService,
     ) {}
 
     public function index(TechnicianMaintenanceTaskIndexRequest $request)
@@ -47,12 +50,31 @@ class TechnicianMaintenanceTaskController extends Controller
     public function update(UpdateTechnicianMaintenanceTaskRequest $request, int $id)
     {
         try {
-            $task = $this->maintenanceTaskService->updateAssignedTask(
+            $task = $this->maintenanceTaskService->findAssignedTask($id);
+            $oldStatus = $task->status;
+            
+            $updatedTask = $this->maintenanceTaskService->updateAssignedTask(
                 $id,
                 $request->validated(),
             );
 
-            return ApiResponse::success(new MaintenanceTaskResource($task), 'Maintenance task updated successfully');
+            // Send notification if status changed
+            if ($oldStatus !== $updatedTask->status) {
+                $supervisors = User::whereHas('roles', function($q) {
+                    $q->whereIn('name', ['admin', 'chef technician']);
+                })->where('status', 'active')->pluck('email')->toArray();
+
+                if (!empty($supervisors)) {
+                    $this->emailService->sendMaintenanceTaskNotification(
+                        taskId: $updatedTask->id,
+                        taskName: $updatedTask->name,
+                        status: $updatedTask->status,
+                        recipients: $supervisors
+                    );
+                }
+            }
+
+            return ApiResponse::success(new MaintenanceTaskResource($updatedTask), 'Maintenance task updated successfully');
         } catch (ModelNotFoundException $e) {
             return ApiResponse::error('Maintenance task not found', 404);
         } catch (Exception $e) {

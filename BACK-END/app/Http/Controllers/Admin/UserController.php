@@ -8,6 +8,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\User\UserService;
+use App\Services\Email\EmailService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class UserController extends Controller
 
     public function __construct(
         private UserService $userService,
+        private EmailService $emailService,
     ) {
     }
 
@@ -35,6 +37,9 @@ class UserController extends Controller
     {
         try {
             $user = $this->userService->create($request->validated());
+            
+            $this->emailService->sendRegistrationEmail($user);
+            
             return ApiResponse::success(new UserResource($user), 'User created successfully', 201);
         } catch (Exception $e) {
             return ApiResponse::error('Error occurred while creating user', $e->getCode() ?: 500);

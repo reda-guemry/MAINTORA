@@ -11,3 +11,5 @@ Artisan::command('inspire', function () {
 Schedule::command('app:generate-planning-rounds')->dailyAt('00:00') ;
 
 
+
+
