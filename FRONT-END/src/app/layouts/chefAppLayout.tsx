@@ -2,7 +2,7 @@ import { useAuth } from "@/context/useAuth";
 import { useLogout } from "@/features/auth";
 import { NavElement } from "@/modules/chef-technician/components/NavElement";
 import { MaintoraLogo } from "@/shared/components/ui";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 export function ChefAppLayout() {
   const { user } = useAuth();
@@ -11,7 +11,7 @@ export function ChefAppLayout() {
 
   return (<div className="min-h-screen flex flex-col font-sans text-[#1A1A1A] bg-[#F8F6F0]">
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2E2D1] shadow-sm">
-        <div className="max-w-[1600px] w-full mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-400 w-full mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-10">
             <MaintoraLogo
               to="/chef-technician"
@@ -47,9 +47,13 @@ export function ChefAppLayout() {
             <div className="h-8 w-px bg-gray-100 mx-1" />
 
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#388E8E]/20 bg-white text-[12px] font-black text-[#388E8E] shadow-sm">
+              <NavLink
+                to="/chef-technician/profile"
+                className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#388E8E]/20 bg-white text-[12px] font-black text-[#388E8E] shadow-sm transition-colors hover:bg-[#eef7f6]"
+                aria-label="Edit profile"
+              >
                 {user?.first_name?.[0]}{user?.last_name?.[0]}
-              </div>
+              </NavLink>
               <button
                 type="button"
                 onClick={logout}

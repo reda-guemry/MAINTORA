@@ -73,6 +73,19 @@ function TechnicianAppLayout() {
                       notifications
                     </span>
                   </div>
+                  <NavLink
+                    to="/technician/profile"
+                    className={({ isActive }) =>
+                      cn(
+                        "rounded-full border border-[#dbe5e2] px-4 py-2 text-sm font-semibold transition-colors",
+                        isActive
+                          ? "bg-[#e9f4f4] text-primary"
+                          : "text-[#607776] hover:bg-[#f2f7f7] hover:text-text-main",
+                      )
+                    }
+                  >
+                    Profile
+                  </NavLink>
                   <button
                       onClick={logout}
                       className="rounded-full border border-[#dbe5e2] px-4 py-2 text-sm font-semibold text-[#607776] transition-colors hover:bg-[#f2f7f7] hover:text-text-main"
@@ -83,8 +96,7 @@ function TechnicianAppLayout() {
             </div>
         </header>
         
-        {/* Main Content */}
-        <main className="flex-grow px-6 py-8">
+        <main className="grow px-6 py-8">
             <Outlet />
         </main>
         

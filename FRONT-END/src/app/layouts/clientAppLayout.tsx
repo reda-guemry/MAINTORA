@@ -12,8 +12,7 @@ function ClientAppLayout() {
 
   return (
     <div className="flex h-screen bg-[#F7F6F2] font-sans text-slate-800 overflow-hidden">
-      {/* Sidebar */}
-      <aside className="w-[260px] bg-white flex flex-col justify-between shadow-[2px_0_15px_rgba(0,0,0,0.03)] z-20">
+      <aside className="w-65 bg-white flex flex-col justify-between shadow-[2px_0_15px_rgba(0,0,0,0.03)] z-20">
         <div>
           <div className="p-6 flex items-center gap-3">
             <MaintoraLogo
@@ -31,7 +30,6 @@ function ClientAppLayout() {
             />
           </div>
 
-          {/* Nav Menu */}
           <nav className="px-4 mt-2 space-y-1">
             <NavLink
               to="/client"
@@ -84,21 +82,26 @@ function ClientAppLayout() {
 
         <div className="p-6">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#eaf3f3] flex items-center justify-center text-[#398e8e]">
-              <span className="material-symbols-outlined text-[18px]">
-                person
-              </span>
-            </div>
-            <div>
-              <p className="text-[13px] font-bold text-gray-800">
-                {user?.first_name} {user?.last_name}
-              </p>
-              <p className="text-[11px] text-gray-400 font-medium">
-                {user?.roles?.[0]?.name ?? "No role"}
-              </p>
-            </div>
+            <NavLink
+              to="/client/profile"
+              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg transition-colors hover:text-primary"
+            >
+              <div className="w-9 h-9 rounded-full bg-[#eaf3f3] flex items-center justify-center text-primary ">
+                <span className="material-symbols-outlined text-[18px]">
+                  person
+                </span>
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-[13px] font-bold text-gray-800">
+                  {user?.first_name} {user?.last_name}
+                </p>
+                <p className="truncate text-[11px] text-gray-400 font-medium">
+                  {user?.roles?.[0]?.name ?? "No role"}
+                </p>
+              </div>
+            </NavLink>
 
-            <div className="flex-1 flex justify-end">
+            <div className="flex justify-end">
               <button
                 onClick={logout}
                 className="text-gray-400 hover:text-primary transition-colors"
@@ -110,10 +113,9 @@ function ClientAppLayout() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Header */}
-        <header className="h-[76px] px-8 flex items-center justify-between z-10">
+        <header className="h-19 px-8 flex items-center justify-between z-10">
           <div className="flex items-center gap-2 text-[13px] font-medium text-gray-400">
             <span className="material-symbols-outlined text-[18px]">home</span>
             <span>/</span>
@@ -121,7 +123,7 @@ function ClientAppLayout() {
           </div>
 
           <div className="flex items-center gap-5">
-            <button className="text-gray-400 hover:text-[#398e8e] transition-colors relative">
+            <button className="text-gray-400 hover:text-primary transition-colors relative">
               <span className="material-symbols-outlined text-[22px]">
                 notifications
               </span>
@@ -130,9 +132,8 @@ function ClientAppLayout() {
           </div>
         </header>
 
-        {/* Page Content */}
         <div className="flex-1 overflow-y-auto px-8 pb-8">
-          <div className="mx-auto w-full max-w-[1500px]">
+          <div className="mx-auto w-full max-w-375">
             <Outlet />
           </div>
         </div>

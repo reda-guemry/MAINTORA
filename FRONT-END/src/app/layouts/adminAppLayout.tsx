@@ -68,17 +68,7 @@ function AdminAppLayout() {
               </span>
               <span className="text-[13px]">Machines</span>
             </NavLink>
-            <NavLink
-              to="/admin/reports"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-medium transition-colors`
-              }
-            >
-              <span className="material-symbols-outlined text-[20px]">
-                analytics
-              </span>
-              <span className="text-[13px]">Reports</span>
-            </NavLink>
+
             <NavLink
               to="/admin/settings"
               className={({ isActive }) =>
@@ -95,21 +85,26 @@ function AdminAppLayout() {
 
         <div className="p-6">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#eaf3f3] flex items-center justify-center text-primary">
-              <span className="material-symbols-outlined text-[18px]">
-                person
-              </span>
-            </div>
-            <div>
-              <p className="text-[13px] font-bold text-gray-800">
-                {user?.first_name} {user?.last_name}
-              </p>
-              <p className="text-[11px] text-gray-400 font-medium">
-                {user?.roles?.[0]?.name ?? "No role"}
-              </p>
-            </div>
+            <NavLink
+              to="/admin/profile"
+              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg transition-colors hover:text-primary"
+            >
+              <div className="w-9 h-9 rounded-full bg-[#eaf3f3] flex items-center justify-center text-primary">
+                <span className="material-symbols-outlined text-[18px]">
+                  person
+                </span>
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-[13px] font-bold text-gray-800">
+                  {user?.first_name} {user?.last_name}
+                </p>
+                <p className="truncate text-[11px] text-gray-400 font-medium">
+                  {user?.roles?.[0]?.name ?? "No role"}
+                </p>
+              </div>
+            </NavLink>
 
-            <div className="flex-1 flex justify-end">
+            <div className="flex justify-end">
               <button
                 onClick={logout}
                 className="text-gray-400 hover:text-primary transition-colors"
