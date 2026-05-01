@@ -10,7 +10,7 @@ import {
   useChefAnomalyDetails,
   useCreateRepairRequest,
   useReviewRepairPurchaseOrder,
-} from "@/features/chef-anomaly";
+} from "@/features/anomaly";
 
 
 export function AnomaliesPage() {

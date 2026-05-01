@@ -87,3 +87,22 @@ export type CreateRepairRequestPayload = {
   description: string;
   estimated_cost: number;
 };
+
+
+
+
+export type AnomalyDetailsModalProps = {
+  anomaly: ChefAnomaly | null;
+  isOpen: boolean;
+  isLoading: boolean;
+  error: string | null;
+  reviewError: string | null;
+  isReviewingPurchaseOrder: boolean;
+  onClose: () => void;
+  onOpenRepairRequest: () => void;
+  onApprovePurchaseOrder: (repairRequestId: number) => void;
+  onRejectPurchaseOrder: (repairRequestId: number) => void;
+};
+
+
+

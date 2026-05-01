@@ -2,21 +2,8 @@ import { Alert } from "@/shared/components/feedback";
 import { Button, Spinner } from "@/shared/components/ui";
 import { formatDate } from "@/shared/utils/formatters";
 import { getChecklistItemClasses } from "@/shared/utils/statusHelpers";
-import type { ChefAnomaly } from "../types/anomaly";
+import type { AnomalyDetailsModalProps } from "../types/anomaly";
 import { AnomalyStatusBadge } from "./AnomalyStatusBadge";
-
-type AnomalyDetailsModalProps = {
-  anomaly: ChefAnomaly | null;
-  isOpen: boolean;
-  isLoading: boolean;
-  error: string | null;
-  reviewError: string | null;
-  isReviewingPurchaseOrder: boolean;
-  onClose: () => void;
-  onOpenRepairRequest: () => void;
-  onApprovePurchaseOrder: (repairRequestId: number) => void;
-  onRejectPurchaseOrder: (repairRequestId: number) => void;
-};
 
 export function AnomalyDetailsModal({
   anomaly,
