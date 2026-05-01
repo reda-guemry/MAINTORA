@@ -41,9 +41,11 @@ class AnomalyController extends Controller
         try {
             $anomaly = $this->anomalyService->findOrFail($id);
             
-            // Authorization check - verify machine belongs to current user or is admin
             $user = auth('api')->user();
-            if (!$user->hasRole('admin') && $anomaly->machine->created_by !== $user->id) {
+
+
+            
+            if (!$user->hasAnyRole(['admin' , 'chef technician']) && $anomaly->machine->created_by !== $user->id) {
                 return ApiResponse::error('Unauthorized', 403);
             }
             
