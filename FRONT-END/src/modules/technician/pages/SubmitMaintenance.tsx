@@ -1,359 +1,420 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Alert } from "@/shared/components/feedback";
 import { Spinner } from "@/shared/components/ui";
 import {
-  buildMaintenanceDraft,
-  clearMaintenanceDraft,
   type MaintenanceDraft,
   type TechnicianCheckStatus,
+  type TechnicianTaskDetails,
   useSubmitMaintenanceTask,
   useTechnicianMaintenanceTask,
-  readMaintenanceDraft,
-  saveMaintenanceDraft,
 } from "@/features/technician-maintenance";
-import { getStatusClasses } from "../utils/getStatus";
-import { getCheckStatusClasses } from "@/shared/utils/statusHelpers";
+
+type SubmitMaintenanceLocationState = {
+  checks?: MaintenanceDraft;
+};
+
+type SubmitMaintenanceFormProps = {
+  task: TechnicianTaskDetails;
+  taskId: number;
+  initialChecks?: MaintenanceDraft;
+};
+
+function createEmptyCheckDraft(): MaintenanceDraft[number] {
+  return {
+    status: null,
+    comment: "",
+    anomalyTitle: "",
+    anomalyDescription: "",
+    anomalySeverity: "low",
+  };
+}
+
+function buildInitialChecks(task: TechnicianTaskDetails): MaintenanceDraft {
+  return task.check_items.reduce<MaintenanceDraft>((draft, item) => {
+    draft[item.checklist_item_id] = {
+      status: item.status,
+      comment: item.comment ?? "",
+      anomalyTitle: "",
+      anomalyDescription: "",
+      anomalySeverity: "low",
+    };
+
+    return draft;
+  }, {});
+}
+
+function formatScheduledTime(scheduledAt: string) {
+  const date = new Date(scheduledAt);
+
+  if (Number.isNaN(date.getTime())) {
+    return scheduledAt;
+  }
+
+  return date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 function SubmitMaintenancePage() {
-  const navigate = useNavigate();
+  const location = useLocation();
   const { taskId } = useParams();
   const parsedTaskId = taskId ? Number(taskId) : null;
   const { task, isLoading, error } = useTechnicianMaintenanceTask(parsedTaskId);
+  const routeState = location.state as SubmitMaintenanceLocationState | null;
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (error || !task || !parsedTaskId) {
+    return <Alert variant="error">{error ?? "Task not found"}</Alert>;
+  }
+
+  return (
+    <SubmitMaintenanceForm
+      key={`${task.id}-${Boolean(routeState?.checks)}`}
+      task={task}
+      taskId={parsedTaskId}
+      initialChecks={routeState?.checks}
+    />
+  );
+}
+
+function SubmitMaintenanceForm({
+  task,
+  taskId,
+  initialChecks,
+}: SubmitMaintenanceFormProps) {
+  const navigate = useNavigate();
   const {
     submitMaintenanceTask,
     isSubmitting,
     error: submitError,
   } = useSubmitMaintenanceTask();
-  const [checks, setChecks] = useState<MaintenanceDraft>({});
+
+  const [checks, setChecks] = useState<MaintenanceDraft>(() => {
+    return initialChecks ?? buildInitialChecks(task);
+  });
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  useEffect(() => {
-    if (!task || !parsedTaskId) {
-      return;
-    }
-
-    const savedDraft = readMaintenanceDraft(parsedTaskId);
-    const nextDraft = savedDraft ?? buildMaintenanceDraft(task);
-
-    setChecks(nextDraft);
-    saveMaintenanceDraft(parsedTaskId, nextDraft);
-  }, [parsedTaskId, task]);
-
   const sortedItems = useMemo(() => {
-    if (!task) {
-      return [];
-    }
-
-    return [...task.check_items].sort((firstItem, secondItem) => {
-      return (firstItem.order ?? 0) - (secondItem.order ?? 0);
-    });
+    return [...task.check_items].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   }, [task]);
 
-  const completedChecksCount = sortedItems.filter((item) => {
-    return checks[item.checklist_item_id]?.status !== null;
+  const completedCount = sortedItems.filter((item) => {
+    return checks[item.checklist_item_id]?.status;
   }).length;
+  const progressPercent = sortedItems.length > 0 ? (completedCount / sortedItems.length) * 100 : 0;
+  const scheduledTime = formatScheduledTime(task.scheduled_at);
 
-  function updateCheck(
-    checklistItemId: number,
-    data: Partial<MaintenanceDraft[number]>,
-  ) {
-    if (!parsedTaskId) {
-      return;
-    }
+  function updateCheck(checklistItemId: number, data: Partial<MaintenanceDraft[number]>) {
+    setChecks((prev) => {
+      const currentDraft = prev[checklistItemId] ?? createEmptyCheckDraft();
 
-    setChecks((currentChecks) => {
-      const nextChecks = {
-        ...currentChecks,
+      return {
+        ...prev,
         [checklistItemId]: {
-          status: currentChecks[checklistItemId]?.status ?? null,
-          comment: currentChecks[checklistItemId]?.comment ?? "",
-          anomalyTitle: currentChecks[checklistItemId]?.anomalyTitle ?? "",
-          anomalyDescription:
-            currentChecks[checklistItemId]?.anomalyDescription ?? "",
-          anomalySeverity: currentChecks[checklistItemId]?.anomalySeverity ?? "low",
+          ...currentDraft,
           ...data,
         },
       };
-
-      saveMaintenanceDraft(parsedTaskId, nextChecks);
-
-      return nextChecks;
     });
   }
 
-  function openAnomalyPage(checklistItemId: number) {
-    if (!parsedTaskId) {
+  function updateCheckStatus(
+    checklistItemId: number,
+    status: TechnicianCheckStatus,
+  ) {
+    if (status === "anomaly") {
+      const currentDraft = checks[checklistItemId] ?? createEmptyCheckDraft();
+      const nextChecks: MaintenanceDraft = {
+        ...checks,
+        [checklistItemId]: {
+          ...currentDraft,
+          status: "anomaly",
+        },
+      };
+
+      setChecks(nextChecks);
+      navigate(`/technician/maintenance/${taskId}/anomaly/${checklistItemId}`, {
+        state: {
+          checks: nextChecks,
+        },
+      });
       return;
     }
 
-    saveMaintenanceDraft(parsedTaskId, checks);
-    navigate(`/technician/maintenance/${parsedTaskId}/anomaly/${checklistItemId}`);
+    updateCheck(checklistItemId, {
+      status,
+      anomalyTitle: "",
+      anomalyDescription: "",
+      anomalySeverity: "low",
+    });
   }
 
   async function handleSubmit() {
-    if (!task || !parsedTaskId) {
-      return;
-    }
-
-    const hasMissingStatus = sortedItems.some((item) => {
-      return checks[item.checklist_item_id]?.status === null;
+    const hasMissing = sortedItems.some((item) => {
+      return !checks[item.checklist_item_id]?.status;
     });
 
-    if (hasMissingStatus) {
-      setFormError("Please choose OK, Not OK, or Anomaly for every checklist item.");
+    if (hasMissing) {
+      setFormError("Please complete all control points.");
       return;
     }
 
-    const missingAnomalyData = sortedItems.find((item) => {
+    const missingAnomalyDetails = sortedItems.find((item) => {
       const draft = checks[item.checklist_item_id];
 
+      if (draft?.status !== "anomaly") {
+        return false;
+      }
+
       return (
-        draft?.status === "anomaly" &&
-        (!draft.anomalyTitle.trim() ||
-          !draft.anomalyDescription.trim() ||
-          !draft.anomalySeverity)
+        !draft.anomalyTitle.trim()
+        || !draft.anomalyDescription.trim()
+        || !draft.anomalySeverity
       );
     });
 
-    if (missingAnomalyData) {
-      setFormError("Please complete anomaly details before submitting.");
+    if (missingAnomalyDetails) {
+      setFormError("Please complete the anomaly report before completing the round.");
       return;
     }
 
     setFormError(null);
 
-    const response = await submitMaintenanceTask(parsedTaskId, {
+    const response = await submitMaintenanceTask(taskId, {
       checks: sortedItems.map((item) => {
         const draft = checks[item.checklist_item_id];
-
-        return {
+        const payload = {
           checklist_item_id: item.checklist_item_id,
           status: draft.status as TechnicianCheckStatus,
           comment: draft.comment.trim(),
-          ...(draft.status === "anomaly"
-            ? {
-                anomaly: {
-                  title: draft.anomalyTitle.trim(),
-                  description: draft.anomalyDescription.trim(),
-                  severity: draft.anomalySeverity,
-                },
-              }
-            : {}),
+        };
+
+        if (draft.status !== "anomaly") {
+          return payload;
+        }
+
+        return {
+          ...payload,
+          anomaly: {
+            title: draft.anomalyTitle.trim(),
+            description: draft.anomalyDescription.trim(),
+            severity: draft.anomalySeverity,
+          },
         };
       }),
     });
 
     if (response?.data) {
-      clearMaintenanceDraft(parsedTaskId);
       setIsSubmitted(true);
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[70vh] w-full flex-col items-center justify-center rounded-[40px] border border-[#dce5e2] bg-[#f8faf9]">
-        <Spinner />
-        <p className="mt-4 text-[10px] font-black uppercase tracking-[0.3em] text-[#6ba5a5]">
-          Loading Maintenance
-        </p>
-      </div>
-    );
-  }
-
-  if (error || !task) {
-    return (
-      <Alert variant="error" title="Maintenance unavailable">
-        {error ?? "Maintenance task could not be loaded."}
-      </Alert>
-    );
-  }
-
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 pb-8">
-      <header className="overflow-hidden rounded-[34px] border border-[#dce5e2] bg-white shadow-[0_24px_60px_rgba(35,53,53,0.08)]">
-        <div className="grid gap-4 bg-[linear-gradient(135deg,#f7fbfb_0%,#eef7f6_48%,#fff7ed_100%)] p-6 md:grid-cols-[1fr_280px] md:p-7">
+    <div className="min-h-screen bg-[#F4F7F6] pb-32 font-sans text-[#2D3748]">
+      <div className="mx-auto max-w-3xl px-4 pt-8">
+        <header className="mb-8 flex items-center justify-between rounded-xl bg-white p-6 shadow-sm">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#6ba5a5]">
-              Submit maintenance
+            <h1 className="text-xl font-bold text-[#1A202C]">{task.machine.name}</h1>
+            <p className="mt-1 text-xs font-medium text-gray-500">
+              Round ID: #{task.id} - Scheduled: {scheduledTime}
             </p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight text-[#2d241c]">
-              {task.machine.name}
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#648080]">
-              Mark every checklist item. If an item has an anomaly, open the
-              anomaly page, fill the details, then come back to complete the
-              maintenance form.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span
-                className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] ${getStatusClasses(task.machine.status)}`}
+          </div>
+          <span className="rounded-lg bg-[#E6F4F1] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#3D8D8D]">
+            In Progress
+          </span>
+        </header>
+
+        <h2 className="mb-4 text-[11px] font-black uppercase tracking-[0.15em] text-gray-500">
+          Critical Control Points
+        </h2>
+
+        <div className="space-y-4">
+          {sortedItems.map((item) => {
+            const draft = checks[item.checklist_item_id];
+            const isOk = draft?.status === "ok";
+            const isNotOk = draft?.status === "not_ok";
+            const isAnomaly = draft?.status === "anomaly";
+            const hasAnomalyDetails = Boolean(
+              draft?.anomalyTitle.trim() && draft.anomalyDescription.trim(),
+            );
+
+            return (
+              <article
+                key={item.checklist_item_id}
+                className="rounded-2xl bg-white p-6 shadow-sm transition-all"
               >
-                {task.machine.status}
-              </span>
-              <span className="rounded-full border border-[#b9dfdc] bg-[#edf8f7] px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-primary">
-                En maintenance aujourd&apos;hui
-              </span>
-            </div>
-          </div>
-
-          <div className="rounded-[26px] border border-white/80 bg-white/80 p-4 shadow-sm backdrop-blur">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9d9388]">
-              Progress
-            </p>
-            <p className="mt-2 text-3xl font-black text-[#2d241c]">
-              {completedChecksCount}/{sortedItems.length}
-            </p>
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#dce5e2]">
-              <div
-                className="h-full rounded-full bg-primary transition-all"
-                style={{
-                  width:
-                    sortedItems.length > 0
-                      ? `${(completedChecksCount / sortedItems.length) * 100}%`
-                      : "0%",
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {formError && (
-        <Alert variant="warning" title="Checklist incomplete">
-          {formError}
-        </Alert>
-      )}
-
-      {submitError && (
-        <Alert variant="error" title="Submit failed">
-          {submitError}
-        </Alert>
-      )}
-
-      {isSubmitted && (
-        <Alert variant="success" title="Maintenance submitted">
-          The maintenance round was submitted successfully.
-        </Alert>
-      )}
-
-      <section className="grid gap-4">
-        {sortedItems.map((item, index) => {
-          const draft = checks[item.checklist_item_id] ?? {
-            status: null,
-            comment: "",
-            anomalyTitle: "",
-            anomalyDescription: "",
-            anomalySeverity: "low",
-          };
-
-          return (
-            <article
-              key={item.checklist_item_id}
-              className="rounded-[28px] border border-[#dce5e2] bg-white p-5 shadow-[0_18px_40px_rgba(35,53,53,0.06)]"
-            >
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="min-w-0">
-                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#9d9388]">
-                    Checklist item {index + 1}
-                  </p>
-                  <h2 className="mt-2 text-lg font-black text-[#2d241c]">
-                    {item.label}
-                  </h2>
-                  {draft.status === "anomaly" && (
-                    <div className="mt-3 rounded-2xl border border-red-100 bg-red-50 px-4 py-3">
-                      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-red-600">
-                        Anomaly attached
-                      </p>
-                      <p className="mt-1 text-sm font-bold text-[#2d241c]">
-                        {draft.anomalyTitle}
-                      </p>
-                    </div>
-                  )}
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#F0F9F8] text-[#3D8D8D]">
+                    <span className="material-symbols-outlined">settings_suggest</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[#1A202C]">{item.label}</h3>
+                    <p className="text-xs text-gray-500">Perform standard visual inspection</p>
+                  </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
                   <button
                     type="button"
-                    onClick={() =>
-                      updateCheck(item.checklist_item_id, {
-                        status: "ok",
-                        anomalyTitle: "",
-                        anomalyDescription: "",
-                        anomalySeverity: "low",
-                      })
-                    }
-                    className={`rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.14em] ${getCheckStatusClasses(
-                      draft.status,
-                      "ok",
-                    )}`}
+                    onClick={() => updateCheckStatus(item.checklist_item_id, "ok")}
+                    className={`flex items-center justify-center gap-2 rounded-xl border-2 py-4 text-sm font-bold transition-all ${
+                      isOk
+                        ? "border-[#3D8D8D] bg-[#3D8D8D] text-white"
+                        : "border-gray-100 bg-white text-gray-600 hover:border-gray-200"
+                    }`}
                   >
+                    <span className="material-symbols-outlined text-lg">check_circle</span>
                     OK
                   </button>
                   <button
                     type="button"
-                    onClick={() =>
-                      updateCheck(item.checklist_item_id, {
-                        status: "not_ok",
-                        anomalyTitle: "",
-                        anomalyDescription: "",
-                        anomalySeverity: "low",
-                      })
-                    }
-                    className={`rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.14em] ${getCheckStatusClasses(
-                      draft.status,
-                      "not_ok",
-                    )}`}
+                    onClick={() => updateCheckStatus(item.checklist_item_id, "not_ok")}
+                    className={`flex items-center justify-center gap-2 rounded-xl border-2 py-4 text-sm font-bold transition-all ${
+                      isNotOk
+                        ? "border-[#F97316] bg-[#FFF7ED] text-[#C2410C]"
+                        : "border-gray-100 bg-white text-gray-600 hover:border-gray-200"
+                    }`}
                   >
+                    <span className="material-symbols-outlined text-lg">report</span>
                     Not OK
                   </button>
                   <button
                     type="button"
-                    onClick={() => openAnomalyPage(item.checklist_item_id)}
-                    className={`rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.14em] ${getCheckStatusClasses(
-                      draft.status,
-                      "anomaly",
-                    )}`}
+                    onClick={() => updateCheckStatus(item.checklist_item_id, "anomaly")}
+                    className={`flex items-center justify-center gap-2 rounded-xl border-2 py-4 text-sm font-bold transition-all ${
+                      isAnomaly
+                        ? "border-[#F56565] bg-white text-[#F56565]"
+                        : "border-gray-100 bg-white text-gray-600 hover:border-gray-200"
+                    }`}
                   >
-                    {draft.status === "anomaly" ? "Edit anomaly" : "Anomaly"}
+                    <span className="material-symbols-outlined text-lg">warning</span>
+                    {isAnomaly ? "Edit Anomaly" : "Anomaly"}
                   </button>
                 </div>
-              </div>
 
-              <textarea
-                value={draft.comment}
-                onChange={(event) =>
-                  updateCheck(item.checklist_item_id, {
-                    comment: event.target.value,
-                  })
-                }
-                rows={2}
-                placeholder="Add a maintenance note if needed..."
-                className="mt-4 w-full rounded-[18px] border border-[#dce5e2] bg-[#fbfdfd] px-4 py-3 text-sm text-[#2d241c] outline-none focus:border-[#8fc6c3]"
-              />
-            </article>
-          );
-        })}
-      </section>
+                {(isNotOk || isAnomaly) && (
+                  <div className="mt-4 animate-in fade-in slide-in-from-top-2">
+                    <div
+                      className={`rounded-xl border p-4 ${
+                        isAnomaly ? "border-red-100 bg-red-50" : "border-orange-100 bg-orange-50"
+                      }`}
+                    >
+                      <div
+                        className={`flex items-center gap-2 ${
+                          isAnomaly ? "text-[#C53030]" : "text-[#C2410C]"
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-sm">
+                          {isAnomaly ? "warning" : "info"}
+                        </span>
+                        <span className="text-[10px] font-black uppercase tracking-wider">
+                          {isAnomaly
+                            ? hasAnomalyDetails
+                              ? "Anomaly Report Attached"
+                              : "Anomaly Report Required"
+                            : "Observation"}
+                        </span>
+                      </div>
 
-      <div className="sticky bottom-4 z-10 flex justify-between gap-3 rounded-3xl border border-white/70 bg-white/85 p-3 shadow-[0_20px_40px_rgba(35,53,53,0.12)] backdrop-blur-xl">
-        <button
-          type="button"
-          onClick={() => navigate("/technician/map")}
-          className="rounded-[18px] border border-[#dce5e2] px-5 py-3 text-sm font-black text-[#5f7f7d]"
-        >
-          Back
-        </button>
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={isSubmitting || isSubmitted}
-          className="rounded-[18px] bg-[#2d241c] px-6 py-3 text-sm font-black uppercase tracking-[0.14em] text-white disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {isSubmitting ? "Submitting..." : "Submit"}
-        </button>
+                      {isAnomaly ? (
+                        hasAnomalyDetails ? (
+                          <div className="mt-3 rounded-lg bg-white/70 px-3 py-2 text-sm text-[#1A202C]">
+                            <p className="font-bold">{draft.anomalyTitle}</p>
+                            <p className="mt-1 text-xs uppercase tracking-[0.14em] text-red-500">
+                              Severity: {draft.anomalySeverity}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="mt-3 rounded-lg bg-white/70 px-3 py-2 text-sm font-semibold text-[#C53030]">
+                            Open the anomaly report page to complete title, severity, and description.
+                          </p>
+                        )
+                      ) : (
+                        <textarea
+                          value={draft?.comment ?? ""}
+                          onChange={(event) => {
+                            updateCheck(item.checklist_item_id, {
+                              comment: event.target.value,
+                            });
+                          }}
+                          placeholder="Add observation for this failed check..."
+                          className="mt-3 w-full border-none bg-transparent p-0 text-sm text-[#1A202C] outline-none placeholder-orange-300 focus:ring-0"
+                          rows={2}
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
+              </article>
+            );
+          })}
+        </div>
       </div>
+
+      <footer className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-100 bg-white p-4 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
+        <div className="mx-auto flex max-w-3xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-1 flex-col gap-1">
+            <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-gray-400">
+              <span>Progress</span>
+              <span>{Math.round(progressPercent)}%</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+              <div
+                className="h-full bg-[#3D8D8D] transition-all duration-500"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={isSubmitting || isSubmitted}
+            className="flex items-center justify-center gap-2 rounded-xl bg-[#3D8D8D] px-10 py-4 text-sm font-bold text-white shadow-lg shadow-[#3D8D8D]/20 transition-all hover:bg-[#347a7a] active:scale-95 disabled:opacity-50"
+          >
+            <span className="material-symbols-outlined text-lg">fact_check</span>
+            {isSubmitting ? "Submitting..." : isSubmitted ? "Round Completed" : "Complete Round"}
+          </button>
+
+          {isSubmitted && (
+            <button
+              type="button"
+              onClick={() => navigate("/technician/map")}
+              className="flex items-center justify-center gap-2 rounded-xl border border-[#dbe5e2] px-6 py-4 text-sm font-bold text-[#607776] transition-colors hover:bg-[#f2f7f7] hover:text-text-main"
+            >
+              <span className="material-symbols-outlined text-lg">map</span>
+              Back to Map
+            </button>
+          )}
+        </div>
+      </footer>
+
+      {(formError || submitError || isSubmitted) && (
+        <div className="fixed bottom-24 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2">
+          {isSubmitted ? (
+            <Alert variant="success" title="Completed">
+              Maintenance round submitted successfully.
+            </Alert>
+          ) : (
+            <Alert
+              variant={submitError ? "error" : "warning"}
+              title={submitError ? "Submit failed" : "Incomplete"}
+            >
+              {submitError ?? formError}
+            </Alert>
+          )}
+        </div>
+      )}
     </div>
   );
 }
