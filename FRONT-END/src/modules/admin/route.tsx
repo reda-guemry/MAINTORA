@@ -3,6 +3,7 @@ import Dashboard from "./pages/Dashboard";
 import UsersManagement from "./pages/UsersManagement";
 import MachineHistoryPage from "./pages/MachineHistory";
 import MachinesMapPage from "./pages/MachinesMap";
+import { ProfilePage } from "@/features/profile";
 
 export const adminRoutes = [
   {
@@ -15,6 +16,10 @@ export const adminRoutes = [
       {
         path: "users",
         element: <UsersManagement />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
       },
       {
         path: "machines",

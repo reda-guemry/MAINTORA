@@ -97,7 +97,6 @@ export function useProfile() {
 
   useEffect(() => {
     fetchProfile(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

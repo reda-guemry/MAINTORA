@@ -20,7 +20,7 @@ const emptyStats = {
 };
 
 function Dashboard() {
-  const { dashboard, isLoading, error, fetchDashboard } = useAdminDashboard();
+  const { dashboard, isLoading, error } = useAdminDashboard();
   const stats = dashboard?.stats ?? emptyStats;
   const healthScore = getSystemHealthScore(
     stats.total_machines,

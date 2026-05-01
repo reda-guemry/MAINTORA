@@ -34,8 +34,7 @@ function normalizeCoordinates(machine: MachinesMapMachine): MachinesMapMachine {
 
 export default function MachinesMapPage() {
   const navigate = useNavigate();
-  const { machines, isLoading, error, fetchMachines } =
-    useAllMachinesMap("admin/machines");
+  const { machines, isLoading, error } = useAllMachinesMap("admin/machines");
   const [selectedMachineId, setSelectedMachineId] = useState<number | null>(null);
 
   const mappedMachines = useMemo(

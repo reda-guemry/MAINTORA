@@ -4,6 +4,7 @@ import MachinesManagement from "./pages/MachinesManagment";
 import ClientMapPage from "./pages/Map";
 import RepairRequestsPage from "./pages/RepairRequests";
 import MachineHistoryPage from "./pages/MachineHistory";
+import { ProfilePage } from "@/features/profile";
 
 export const clientRoutes = [
   {
@@ -16,6 +17,10 @@ export const clientRoutes = [
       {
         path: "machines",
         element: <MachinesManagement />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
       },
       {
         path: "machines/:machineId/history",

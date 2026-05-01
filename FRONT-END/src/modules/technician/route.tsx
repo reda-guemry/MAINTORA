@@ -5,6 +5,7 @@ import SubmitMaintenancePage from "./pages/SubmitMaintenance";
 import MaintenanceAnomalyPage from "./pages/MaintenanceAnomaly";
 import CalendarPage from "./pages/Calendar";
 import MachineHistoryPage from "./pages/MachineHistory";
+import { ProfilePage } from "@/features/profile";
 
 
 export const technicianRoutes = [
@@ -22,6 +23,10 @@ export const technicianRoutes = [
       {
         path: "calendar",
         element: <CalendarPage />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
       },
       {
         path: "machines/:machineId/history",
