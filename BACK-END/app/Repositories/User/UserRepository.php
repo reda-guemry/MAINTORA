@@ -36,6 +36,22 @@ class UserRepository
         return $user;
     }
 
+    public function updateProfile($id, $data)
+    {
+        $user = User::findOrFail($id);
+        $user->update($data);
+        return $user;
+    }
+
+    public function updatePassword($id, string $password)
+    {
+        $user = User::findOrFail($id);
+        $user->update([
+            'password' => $password,
+        ]);
+        return $user;
+    }
+
     public function delete($id)
     {
         $user = User::findOrFail($id);

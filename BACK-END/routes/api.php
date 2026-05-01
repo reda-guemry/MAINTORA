@@ -6,6 +6,7 @@ use App\Http\Controllers\Anomaly\AnomalyController;
 use App\Http\Controllers\Anomaly\RepairPurchaseOrderController;
 use App\Http\Controllers\Anomaly\RepairRequestController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\CheckList\ChecklistItemsController;
 use App\Http\Controllers\CheckList\ChecklistTemplateController;
@@ -31,10 +32,14 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware(['auth:api'])->group(function () {
 
-    
+    Route::get('profile', [ProfileController::class, 'show']);
+    Route::put('profile', [ProfileController::class, 'update']);
+    Route::put('profile/password', [ProfileController::class, 'updatePassword']);
+
+
     Route::prefix('admin')->middleware(['admin'])->group(function () {
 
-        
+
         Route::get('dashboard', [AdminController::class, 'index'])->middleware('can:manage users');
         Route::apiResource('users', UserController::class)->middleware('can:manage users');
         Route::get('/roles', [RoleController::class, 'index'])->middleware('can:manage users');
@@ -57,7 +62,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('machines/{machineId}/history/{taskId}', [MachineHistoryController::class, 'show'])->middleware('can:manage machines');
         Route::apiResource('machines', MachineController::class)->middleware('can:manage machines');
 
-        
+
         Route::get('repair-requests', [ClientRepairRequestController::class, 'index'])->middleware('can:manage machines');
         Route::get('repair-requests/{id}', [ClientRepairRequestController::class, 'show'])->middleware('can:manage machines');
         Route::post('repair-requests/{id}/purchase-orders', [RepairPurchaseOrderController::class, 'store'])->middleware('can:manage machines');
@@ -67,7 +72,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('chef-technician')->middleware(['chef-technician'])->group(function () {
 
 
-       
+
 
         Route::get('checklist/items/search', [ChecklistItemsController::class, 'search'])->middleware('can:manage technicians');
         Route::get('checklist/templates/search', [ChecklistTemplateController::class, 'search'])->middleware('can:manage technicians');
@@ -84,9 +89,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('checklist/items', ChecklistItemsController::class)->middleware('can:manage technicians');
 
 
-        Route::apiResource('maintenance-plans', MaintenancePlanController::class)->except(['index', 'show']) ;
+        Route::apiResource('maintenance-plans', MaintenancePlanController::class)->except(['index', 'show']);
 
-        
+
         Route::get('anomalies', [AnomalyController::class, 'index'])->middleware('can:manage technicians');
         Route::get('anomalies/{id}', [AnomalyController::class, 'show'])->middleware('can:manage technicians');
         Route::post('anomalies/{id}/repair-requests', [RepairRequestController::class, 'store'])->middleware('can:manage technicians');
@@ -99,30 +104,30 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('technician')->middleware(['technician'])->group(function () {
 
-       
+
         Route::get('machines', [TechnicianMachineController::class, 'index']);
 
         Route::get('machines/{machineId}/history', [MachineHistoryController::class, 'index']);
         Route::get('machines/{machineId}/history/{taskId}', [MachineHistoryController::class, 'show']);
-        
+
         Route::get('tasks', [TechnicianMaintenanceTaskController::class, 'index']);
         Route::get('tasks/{id}', [TechnicianMaintenanceTaskController::class, 'show']);
-        Route::get('technician/statistics' , [TechnicianController::class, 'statistics']);
+        Route::get('technician/statistics', [TechnicianController::class, 'statistics']);
 
 
         Route::patch('tasks/{id}', [TechnicianMaintenanceTaskController::class, 'update']);
-        
-        
-        
+
+
+
         Route::post('tasks/{id}', [MaintenanceTaskCheckController::class, 'create']);
 
 
-        
+
         Route::post('tasks/{taskId}/anomalies', [AnomalyController::class, 'store']);
 
-        
+
         Route::get('anomalies', [AnomalyController::class, 'index']);
-        
+
 
     });
 
