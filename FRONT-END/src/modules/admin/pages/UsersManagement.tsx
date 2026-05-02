@@ -11,20 +11,33 @@ import {
   UsersTable,
 } from "@/features/user";
 
-import type { AddUserPayload, EditUserPayload } from "@/features/user";
+import type {
+  AddUserPayload,
+  EditUserPayload,
+  UserRoleFilterOption,
+  UserRoleFilterValue,
+} from "@/features/user";
 import { AppPagination } from "@/shared/components";
+import { cn } from "@/shared/utils";
+
+const roleFilterOptions: UserRoleFilterOption[] = [
+  { label: "All", value: "all" },
+  { label: "Admin", value: "admin", apiValue: "admin" },
+  { label: "Chef Technician", value: "chef_technician", apiValue: "chef_technician" },
+  { label: "Technician", value: "technician", apiValue: "technician" },
+  { label: "Client", value: "client", apiValue: "client" },
+];
 
 export default function UsersManagement() {
+  const [selectedRole, setSelectedRole] = useState<UserRoleFilterValue>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+
   const {
     paginate,
     isLoading,
-    currentPage,
-    setPage,
     error,
-    updateUserInList,
-    removeUserFromList,
-    addUserToList,
-  } = usePaginateUser();
+    refreshUsers,
+  } = usePaginateUser({ role: selectedRole, page: currentPage });
 
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
@@ -36,6 +49,18 @@ export default function UsersManagement() {
   const { createUserCall } = useCreateUser();
 
   const users = paginate?.data ?? [];
+  const activeRoleOption =
+    roleFilterOptions.find((option) => option.value === selectedRole) ??
+    roleFilterOptions[0];
+
+  function handleRoleChange(nextRole: UserRoleFilterValue) {
+    setSelectedRole(nextRole);
+    setCurrentPage(1);
+  }
+
+  function handlePageChange(page: number) {
+    setCurrentPage(page);
+  }
 
   function handleOpenEdit(user: User) {
     setEditUser(user);
@@ -66,7 +91,7 @@ export default function UsersManagement() {
     try {
       const response = await createUserCall(payload);
       if (response) {
-        addUserToList(response.data);
+        await refreshUsers();
       }
 
       handleCloseAdd();
@@ -81,7 +106,7 @@ export default function UsersManagement() {
     const ok = await editUserCall(editUser.id, payload);
 
     if (ok) {
-      updateUserInList({ ...editUser, ...payload });
+      await refreshUsers();
       handleCloseEdit();
     }
   }
@@ -92,24 +117,24 @@ export default function UsersManagement() {
     const ok = await deleteUserCall(deleteUser.id);
 
     if (ok) {
-      removeUserFromList(deleteUser.id);
+      await refreshUsers();
       handleCloseDelete();
     }
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-end mb-8">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
             User Management
           </h1>
-          <p className="text-sm text-gray-500 mt-1.5">
+          <p className="mt-1.5 text-sm text-gray-500">
             Configure user access levels and system permissions.
           </p>
         </div>
         <button
-          className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#2d7373] transition-colors shadow-sm"
+          className="flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#2d7373]"
           type="button"
           onClick={handleOpenAdd}
         >
@@ -120,39 +145,65 @@ export default function UsersManagement() {
         </button>
       </div>
 
-      <div className="border-b border-gray-200">
-        <nav className="flex gap-8 text-sm font-medium">
-          <a
-            href="#"
-            className="text-primary border-b-2 border-primary pb-4 px-1"
-          >
-            All Members ( {users.length} )
-          </a>
-          <a
-            href="#"
-            className="text-gray-500 hover:text-gray-700 pb-4 px-1 transition-colors"
-          >
-            Administrators
-          </a>
-          <a
-            href="#"
-            className="text-gray-500 hover:text-gray-700 pb-4 px-1 transition-colors"
-          >
-            Technicians
-          </a>
-          <a
-            href="#"
-            className="text-gray-500 hover:text-gray-700 pb-4 px-1 transition-colors"
-          >
-            Pending Invites
-          </a>
-        </nav>
-      </div>
+      <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-400">
+              Role Filter
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              Showing {activeRoleOption.label.toLowerCase()} users.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {roleFilterOptions.map((option) => {
+              const isActive = option.value === selectedRole;
+              const count =
+                isActive && paginate ? paginate.total : undefined;
+
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handleRoleChange(option.value)}
+                  disabled={isLoading && isActive}
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-bold transition-colors",
+                    isActive
+                      ? "border-[#388E8E] bg-[#eef7f6] text-[#2c7a7a]"
+                      : "border-gray-200 bg-white text-gray-500 hover:border-[#388E8E]/30 hover:bg-gray-50 hover:text-gray-800",
+                  )}
+                >
+                  {option.label}
+                  {count !== undefined && (
+                    <span
+                      className={cn(
+                        "rounded-full px-2 py-0.5 text-[10px]",
+                        isActive
+                          ? "bg-white text-[#2c7a7a]"
+                          : "bg-gray-100 text-gray-500",
+                      )}
+                    >
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       <UsersTable
         users={users}
         isLoading={isLoading}
         error={error}
+        emptyMessage={
+          selectedRole === "all"
+            ? "No users found."
+            : `No users found for ${activeRoleOption.label}.`
+        }
         onEdit={handleOpenEdit}
         onDelete={handleOpenDelete}
       >
@@ -164,7 +215,7 @@ export default function UsersManagement() {
           total={paginate?.total ?? 0}
           isLoading={isLoading}
           label="users"
-          onPageChange={setPage}
+          onPageChange={handlePageChange}
         />
       </UsersTable>
 

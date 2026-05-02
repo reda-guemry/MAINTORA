@@ -15,9 +15,9 @@ class UserService
     }
 
 
-    public function getPaginate()
+    public function getPaginate(?string $role = null)
     {
-        return $this->userRepository->paginateUsers();
+        return $this->userRepository->paginateUsers(role: $role);
     }
 
 

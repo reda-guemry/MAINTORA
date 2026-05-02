@@ -14,14 +14,11 @@ import {
 function hasValidCoordinates(machine: MachinesMapMachine) {
   const latitude = Number(machine.latitude);
   const longitude = Number(machine.longitude);
-
   return (
     Number.isFinite(latitude) &&
     Number.isFinite(longitude) &&
-    latitude >= -90 &&
-    latitude <= 90 &&
-    longitude >= -180 &&
-    longitude <= 180
+    latitude >= -90 && latitude <= 90 &&
+    longitude >= -180 && longitude <= 180
   );
 }
 
@@ -49,58 +46,47 @@ export default function MachinesMapPage() {
   );
 
   const selectedMachine = useMemo(
-    () =>
-      mappedMachines.find((machine) => machine.id === selectedMachineId) ??
-      null,
+    () => mappedMachines.find((machine) => machine.id === selectedMachineId) ?? null,
     [mappedMachines, selectedMachineId],
   );
 
   const statusSummary = useMemo(
     () => ({
       active: machines.filter((machine) => machine.status === "active").length,
-      anomalous: machines.filter((machine) => machine.status === "anomalous")
-        .length,
-      maintenance: machines.filter(
-        (machine) => machine.status === "maintenance",
-      ).length,
+      anomalous: machines.filter((machine) => machine.status === "anomalous").length,
     }),
     [machines],
   );
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[70vh] flex-col items-center justify-center rounded-2xl border border-gray-100 bg-white shadow-sm">
-        <Spinner size="lg" />
-        <span className="mt-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-          Loading machines map
+      <div className="flex min-h-[70vh] flex-col items-center justify-center rounded-[32px] border border-slate-100 bg-white">
+        <Spinner className="text-[#43968C]" size="lg" />
+        <span className="mt-4 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+          Loading Admin Map...
         </span>
       </div>
     );
   }
 
   if (error) {
-    return (
-      <Alert variant="error" title="Machines map unavailable">
-        {error}
-      </Alert>
-    );
+    return <Alert variant="error" title="Map Sync Error">{error}</Alert>;
   }
 
   return (
     <div className="space-y-6 pb-4">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
-            Machines Map
+          <h1 className="text-3xl font-black tracking-tight text-slate-900">
+            Fleet Intelligence Map
           </h1>
-          <p className="mt-1.5 text-sm text-gray-500">
-            Monitor every registered machine and inspect ownership, status, and
-            location details.
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            Global monitoring of assets and operational status.
           </p>
         </div>
       </div>
 
-      <section className="relative h-[calc(100vh-12rem)] min-h-162 overflow-hidden rounded-[32px] border-4 border-white bg-[#ebe4d8] shadow-[0_20px_60px_rgba(62,52,39,0.15)]">
+      <section className="relative h-[calc(100vh-12rem)] min-h-[600px] overflow-hidden rounded-[40px] border-4 border-white bg-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
         <div className="absolute inset-0 z-0">
           <MachinesAssetMap
             machines={mappedMachines}
@@ -110,84 +96,69 @@ export default function MachinesMapPage() {
           />
         </div>
 
-        <div className="pointer-events-none absolute left-6 right-6 top-6 z-10 flex flex-col items-end justify-between gap-4 md:flex-row md:items-start">
-          <div className="pointer-events-auto max-w-[360px] rounded-[24px] border border-white/60 bg-white/95 p-5 shadow-lg backdrop-blur-md">
-            <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#948674]">
-              Admin Fleet
+        <div className="pointer-events-none absolute left-8 right-8 top-8 z-10 flex flex-col items-end justify-between gap-4 md:flex-row md:items-start">
+          <div className="pointer-events-auto max-w-[340px] rounded-3xl border border-slate-200/50 bg-white/90 p-6 shadow-xl backdrop-blur-md">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#43968C]">
+              Admin Control
             </p>
-            <h2 className="mt-2 text-xl font-black leading-tight tracking-tight text-[#2d241c]">
-              All machines across every client workspace.
+            <h2 className="mt-2 text-xl font-bold leading-tight text-slate-900">
+              Complete Asset Distribution
             </h2>
           </div>
 
           <div className="pointer-events-auto flex flex-wrap justify-end gap-3">
-            <SummaryTile label="Machines" value={machines.length} />
-            <SummaryTile label="Mapped" value={mappedMachines.length} />
-            <SummaryTile label="Alerts" value={statusSummary.anomalous} alert />
+            <SummaryTile label="Total Fleet" value={machines.length} />
+            <SummaryTile label="Alerts" value={statusSummary.anomalous} variant="danger" />
           </div>
         </div>
 
-        <div className="pointer-events-none absolute bottom-6 right-6 z-10 flex flex-col items-end gap-3">
-          <div className="pointer-events-auto rounded-[20px] border border-white/80 bg-white/95 px-4 py-3 shadow-[0_14px_30px_rgba(62,52,39,0.1)] backdrop-blur-md">
-            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#988a79]">
-              Map Legend
-            </p>
-            <div className="mt-2 space-y-1.5 text-xs font-medium text-[#6f6254]">
-              <LegendItem color="bg-[#3b8f88]" label="Operational machine" />
-              <LegendItem color="bg-[#d58a1d]" label="Maintenance machine" />
-              <LegendItem color="bg-[#d9534f]" label="Anomalous machine" />
+        <div className="pointer-events-none absolute bottom-8 left-8 z-10 flex flex-col items-start gap-4">
+          <div className="pointer-events-auto rounded-2xl border border-slate-200/50 bg-white/90 p-4 shadow-lg backdrop-blur-md">
+            <div className="space-y-2.5 text-[11px] font-bold text-slate-600 uppercase tracking-wide">
+              <LegendItem color="bg-[#43968C]" label="Operational" />
+              <LegendItem color="bg-amber-500" label="In Maintenance" />
+              <LegendItem color="bg-red-500" label="Fault Detected" />
             </div>
           </div>
 
           {unmappedMachines.length > 0 && (
-            <div className="pointer-events-auto max-w-78 rounded-[20px] border border-[#f0dfc4] bg-white/95 px-4 py-3 text-[11px] leading-5 text-[#6f6254] shadow-[0_14px_30px_rgba(62,52,39,0.1)] backdrop-blur-md">
-              {unmappedMachines.length} machine
-              {unmappedMachines.length > 1 ? "s are" : " is"} hidden because
-              coordinates are missing or invalid.
+            <div className="pointer-events-auto rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white shadow-2xl">
+              {unmappedMachines.length} Missing Coordinates
             </div>
           )}
         </div>
 
         <MapSidebar
           isOpen={!!selectedMachine}
-          title="Machine Details"
+          title="Asset Details"
           subtitle={selectedMachine?.location}
           onClose={() => setSelectedMachineId(null)}
         >
           {selectedMachine && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               <MachineInfoCard
                 machineData={selectedMachine}
                 statusClassName={getMachineBadgeClasses(selectedMachine.status)}
               >
-                <span className="inline-flex rounded-full bg-[#f7f3ec] px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em] text-[#816b55]">
-                  {selectedMachine.active_anomalies_count ?? 0} active anomalies
-                </span>
+                <div className="mt-3 rounded-xl bg-slate-50 p-3 border border-slate-100 flex items-center justify-between">
+                  <span className="text-[10px] font-black text-slate-400 uppercase">Anomalies</span>
+                  <span className={cn(
+                    "text-xs font-black px-2 py-0.5 rounded-lg",
+                    (selectedMachine.active_anomalies_count ?? 0) > 0 ? "bg-red-100 text-red-600" : "bg-teal-100 text-teal-600"
+                  )}>
+                    {selectedMachine.active_anomalies_count ?? 0} Active
+                  </span>
+                </div>
               </MachineInfoCard>
 
-              <div className="space-y-3">
-                <DetailRow
-                  icon="location_on"
-                  label="Location"
-                  value={selectedMachine.location || "Not provided"}
-                />
-                <DetailRow
-                  icon="my_location"
-                  label="Coordinates"
-                  value={`${selectedMachine.latitude.toFixed(6)}, ${selectedMachine.longitude.toFixed(6)}`}
-                />
-                <DetailRow
-                  icon="business_center"
-                  label="Owner"
-                  value={
-                    selectedMachine.created_by
-                      ? `${selectedMachine.created_by.first_name} ${selectedMachine.created_by.last_name}`
-                      : "Not available"
-                  }
-                />
+              <div className="space-y-1">
+                <DetailRow icon="location_on" label="Address" value={selectedMachine.location || "Not Set"} />
+                <DetailRow icon="fingerprint" label="Asset Code" value={`#${selectedMachine.code}`} />
+                <DetailRow icon="person" label="Client" value={selectedMachine.created_by ? `${selectedMachine.created_by.first_name} ${selectedMachine.created_by.last_name}` : "System"} />
               </div>
 
-              <ActionButtons
+              <div className="pt-4">
+               <ActionButtons
                 actions={[
                   {
                     label: "History",
@@ -198,6 +169,7 @@ export default function MachinesMapPage() {
                   },
                 ]}
               />
+              </div>
             </div>
           )}
         </MapSidebar>
@@ -206,35 +178,24 @@ export default function MachinesMapPage() {
   );
 }
 
-function SummaryTile({
-  label,
-  value,
-  alert = false,
-}: {
-  label: string;
-  value: number;
-  alert?: boolean;
-}) {
+function SummaryTile({ label, value, variant = "default" }: any) {
+  const isDanger = variant === "danger";
   return (
-    <div
-      className={cn(
-        "flex flex-col items-center justify-center rounded-[20px] border border-white/60 px-5 py-3 shadow-lg backdrop-blur-md",
-        alert ? "bg-[#d9534f] text-white" : "bg-white/95 text-[#2d241c]",
-      )}
-    >
-      <p className="text-[9px] font-bold uppercase tracking-[0.24em] opacity-70">
-        {label}
-      </p>
-      <p className="mt-1 text-xl font-black">{value}</p>
+    <div className={cn(
+      "flex flex-col items-center justify-center rounded-[20px] border px-6 py-3 shadow-xl backdrop-blur-md",
+      isDanger ? "bg-red-500 border-red-400 text-white" : "bg-white/90 border-slate-200 text-slate-900"
+    )}>
+      <p className="text-[10px] font-black uppercase tracking-widest opacity-80">{label}</p>
+      <p className="mt-0.5 text-2xl font-black">{value}</p>
     </div>
   );
 }
 
 function LegendItem({ color, label }: { color: string; label: string }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className={cn("h-2 w-2 rounded-full", color)} />
-      {label}
+    <div className="flex items-center gap-3">
+      <span className={cn("h-2.5 w-2.5 rounded-full shadow-sm ring-2 ring-white", color)} />
+      <span>{label}</span>
     </div>
   );
 }

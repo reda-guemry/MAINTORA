@@ -22,9 +22,9 @@ class UserController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->userService->getPaginate();
+        $data = $this->userService->getPaginate($request->query('role'));
 
         $data->through(function ($user) {
             return new UserResource($user);

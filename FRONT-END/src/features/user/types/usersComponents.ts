@@ -3,6 +3,19 @@ import type { ReactNode } from "react";
 
 export type UserRole = string;
 
+export type UserRoleFilterValue =
+  | "all"
+  | "admin"
+  | "chef_technician"
+  | "technician"
+  | "client";
+
+export type UserRoleFilterOption = {
+  label: string;
+  value: UserRoleFilterValue;
+  apiValue?: string;
+};
+
 
 export type EditUserPayload = {
   first_name: string;
@@ -32,6 +45,7 @@ export type UsersTableProps = {
   users: User[];
   isLoading: boolean;
   error: string | null;
+  emptyMessage?: string;
   onEdit: (user: User) => void;
   onDelete: (user: User) => void;
   children?: ReactNode;
@@ -62,4 +76,3 @@ export type RoleOption = {
   id: number;
   name: string;
 };
-

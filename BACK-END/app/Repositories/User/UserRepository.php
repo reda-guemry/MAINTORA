@@ -3,12 +3,14 @@
 namespace App\Repositories\User;
 
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class UserRepository
 {
-    /**
-     * Create a new class instance.
-     */
+    private const ROLE_ALIASES = [
+        'chef_technician' => 'chef technician',
+    ];
+
     public function __construct(
 
     ){}
@@ -18,9 +20,35 @@ class UserRepository
         return User::create($data);
     }
 
-    public function paginateUsers($perPage = 10)
+    public function paginateUsers($perPage = 10, ?string $role = null)
     {
-        return User::with(['roles'])->paginate($perPage);
+        $query = User::with(['roles']);
+        $roleName = $this->resolveRoleName($role);
+
+        if ($roleName) {
+            $query->role($roleName);
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    private function resolveRoleName(?string $role): ?string
+    {
+        if (!$role) {
+            return null;
+        }
+
+        if (Role::where('name', $role)->exists()) {
+            return $role;
+        }
+
+        $alias = self::ROLE_ALIASES[$role] ?? null;
+
+        if ($alias && Role::where('name', $alias)->exists()) {
+            return $alias;
+        }
+
+        return null;
     }
 
 
