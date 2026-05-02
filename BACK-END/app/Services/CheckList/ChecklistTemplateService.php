@@ -4,6 +4,7 @@ namespace App\Services\CheckList;
 
 use App\Repositories\CheckList\ChecklistTemplateRepository;
 use DB;
+use Illuminate\Support\Arr;
 
 class ChecklistTemplateService
 {
@@ -34,17 +35,22 @@ class ChecklistTemplateService
         return DB::transaction(function () use ($id, $data) {
             $checklistTemplate = $this->checklistTemplateRepository->find($id);
 
-            $syncData = [];
+            if (array_key_exists('checklist_items', $data)) {
+                $syncData = [];
 
-            foreach ($data['checklist_items'] as $item) {
-                $syncData[$item['id']] = ['order' => $item['order']];
+                foreach ($data['checklist_items'] as $item) {
+                    $syncData[$item['id']] = ['order' => $item['order']];
+                }
+
+                $checklistTemplate->checklistItems()->sync($syncData);
             }
 
-            $checklistTemplate->checklistItems()->sync($syncData);
+            $updatedTemplate = $this->checklistTemplateRepository->update(
+                $id,
+                Arr::except($data, ['checklist_items'])
+            );
 
-            $updatedTemplate = $this->checklistTemplateRepository->update($id, $data);
-
-            return $updatedTemplate;
+            return $updatedTemplate->load('checklistItems');
         });
     }
 

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMachines } from "@/features/roundes/hooks/useMachines";
 import { useTechnicians } from "@/features/roundes/hooks/useTechnisian";
-import type { Technician } from "@/features/roundes/types/technician";
 import {
   DeleteMaintenancePlanDialog,
   MachineMaintenancePlans,
@@ -15,19 +14,12 @@ import { cn } from "@/shared/utils";
 import { getMachineBadgeClasses } from "@/shared/utils/machineStatusHelpers";
 import type { Machine } from "@/features/roundes";
 
-function getInitials(technician: Technician) {
-  return `${technician.first_name[0] ?? ""}${technician.last_name[0] ?? ""}`.toUpperCase();
-}
 
 export function Rounde() {
   const navigate = useNavigate();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedMachineId, setSelectedMachineId] = useState<number | null>(
-    null,
-  );
-
-  const [deleteMaintenancePlan, setDeleteMaintenancePlan] =
-    useState<MaintenancePlan | null>(null);
+  const [selectedMachineId, setSelectedMachineId] = useState<number | null>(null);
+  const [deleteMaintenancePlan, setDeleteMaintenancePlan] = useState<MaintenancePlan | null>(null);
   const [isSavingMaintenancePlan, setIsSavingMaintenancePlan] = useState(false);
 
   const {
@@ -43,8 +35,7 @@ export function Rounde() {
     fetchMachines,
     removeMaintenancePlanFromMachine,
   } = useMachines();
-  const { deleteMaintenancePlanCall, error: deleteMaintenancePlanError } =
-    useDeleteMaintenancePlan();
+  const { deleteMaintenancePlanCall, error: deleteMaintenancePlanError } = useDeleteMaintenancePlan();
 
   useEffect(() => {
     fetchTechnicians();
@@ -53,6 +44,7 @@ export function Rounde() {
 
   useEffect(() => {
     setDeleteMaintenancePlan(null);
+    if (selectedMachineId) setSidebarOpen(true);
   }, [selectedMachineId]);
 
   const selectedMachine = useMemo(
@@ -62,27 +54,18 @@ export function Rounde() {
   const totalMaintenancePlans = useMemo(
     () =>
       machines.reduce(
-        (totalPlans, machine) =>
-          totalPlans + (machine.maintenance_plans?.length ?? 0),
+        (totalPlans, machine) => totalPlans + (machine.maintenance_plans?.length ?? 0),
         0,
       ),
     [machines],
   );
 
-  const sidebarTechnicians = technicians;
-  const sidebarTitle = selectedMachine ? "Machine Focus" : "Technician Roster";
-  const sidebarSubtitle = selectedMachine
-    ? "Review this machine, manage its maintenance plans, and keep the available technicians nearby."
-    : "Select a machine marker on the map to inspect it and keep the technicians list in view.";
-  const selectedMachinePlans = selectedMachine?.maintenance_plans ?? [];
   const sidebarDataError = machinesError ?? techniciansError;
-  const selectedMachineHasActivePlan = selectedMachine
-    ? hasActiveMaintenancePlan(selectedMachine)
-    : false;
+  const selectedMachineHasActivePlan = selectedMachine ? hasActiveMaintenancePlan(selectedMachine) : false;
+  const selectedMachinePlans = selectedMachine?.maintenance_plans ?? [];
 
   function handleMarkerSelect(marker: Machine) {
     setSelectedMachineId(marker.id);
-    setSidebarOpen(true);
   }
 
   function handleClearSelection() {
@@ -90,14 +73,7 @@ export function Rounde() {
   }
 
   function handleCreateMaintenancePlanClick() {
-    if (!selectedMachine) {
-      return;
-    }
-
-    if (hasActiveMaintenancePlan(selectedMachine)) {
-      return;
-    }
-
+    if (!selectedMachine || hasActiveMaintenancePlan(selectedMachine)) return;
     navigate(`/chef-technician/maintenance-cycles?mode=create&machineId=${selectedMachine.id}`);
   }
 
@@ -105,24 +81,14 @@ export function Rounde() {
     navigate(`/chef-technician/maintenance-cycles?mode=edit&planId=${maintenancePlan.id}`);
   }
 
-
   async function handleDeleteMaintenancePlanConfirm() {
-    if (!selectedMachine || !deleteMaintenancePlan) {
-      return;
-    }
-
+    if (!selectedMachine || !deleteMaintenancePlan) return;
     setIsSavingMaintenancePlan(true);
 
     try {
-      const response = await deleteMaintenancePlanCall(
-        deleteMaintenancePlan.id,
-      );
-
+      const response = await deleteMaintenancePlanCall(deleteMaintenancePlan.id);
       if (response !== undefined) {
-        removeMaintenancePlanFromMachine(
-          selectedMachine.id,
-          deleteMaintenancePlan.id,
-        );
+        removeMaintenancePlanFromMachine(selectedMachine.id, deleteMaintenancePlan.id);
         setDeleteMaintenancePlan(null);
       }
     } finally {
@@ -131,179 +97,76 @@ export function Rounde() {
   }
 
   return (
-    <div className="relative h-[calc(100vh-8rem)] w-full overflow-hidden rounded-4xl bg-[#ebe4d8] shadow-[0_20px_60px_rgba(62,52,39,0.15)]">
-      <div className="absolute inset-0 z-0">
-        <MachinesAssetMap
-          machines={machines}
-          selectedMachineId={selectedMachineId}
-          onMarkerSelect={handleMarkerSelect}
-          onMapBackgroundClick={handleClearSelection}
-        />
-      </div>
-
-      <div className="pointer-events-none absolute left-6 right-6 top-6 z-10 flex flex-col items-end justify-between gap-4 md:flex-row md:items-start">
-        <div className="pointer-events-auto flex items-start gap-3">
-          <div
-            className={cn(
-              "max-w-85 rounded-3xl border border-white/60 bg-white/95 p-5 shadow-lg backdrop-blur-md transition-opacity duration-300",
-              isSidebarOpen ? "opacity-0 md:opacity-100" : "opacity-100",
-            )}
-          >
-            <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#948674]">
-              Round Map
-            </p>
-            <h1 className="mt-2 text-xl font-black leading-tight tracking-tight text-[#2d241c]">
-              Visualize every machine and keep technicians ready nearby.
-            </h1>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setSidebarOpen((currentValue) => !currentValue)}
-            className={cn(
-              "flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-white/60 bg-white/95 text-[#6f6254] shadow-lg backdrop-blur-md transition-all hover:bg-white",
-              !isSidebarOpen && "md:hidden",
-            )}
-          >
-            <span className="material-symbols-outlined text-[20px]">
-              {isSidebarOpen ? "left_panel_close" : "left_panel_open"}
-            </span>
-          </button>
-        </div>
-
-        <div className="pointer-events-auto flex flex-wrap gap-3">
-          <div className="flex flex-col items-center justify-center rounded-[20px] border border-white/60 bg-white/95 px-5 py-3 shadow-lg backdrop-blur-md">
-            <p className="text-3xl font-bold uppercase tracking-[0.24em] text-[#988a79]">
-              Machines
-            </p>
-            <p className="mt-1 text-xl font-black text-[#2d241c]">
-              {machines.length}
-            </p>
-          </div>
-          <div className="flex flex-col items-center justify-center rounded-[20px] border border-white/60 bg-white/95 px-5 py-3 shadow-lg backdrop-blur-md">
-            <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-[#988a79]">
-              Technicians
-            </p>
-            <p className="mt-1 text-xl font-black text-[#2d241c]">
-              {technicians.length}
-            </p>
-          </div>
-          <div className="flex flex-col items-center justify-center rounded-[20px] border border-white/60 bg-white/95 px-5 py-3 shadow-lg backdrop-blur-md">
-            <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-[#988a79]">
-              Plans
-            </p>
-            <p className="mt-1 text-xl font-black text-[#2d241c]">
-              {selectedMachine
-                ? selectedMachinePlans.length
-                : totalMaintenancePlans}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="pointer-events-none absolute bottom-6 right-6 z-10 flex flex-col items-end gap-3">
-        <div className="pointer-events-auto rounded-[20px] border border-white/80 bg-white/95 px-4 py-3 shadow-[0_14px_30px_rgba(62,52,39,0.1)] backdrop-blur-md">
-          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#988a79]">
-            Map Legend
-          </p>
-          <div className="mt-2 space-y-1.5 text-xs font-medium text-[#6f6254]">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#3b8f88]" />
-              Operational machine
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#d58a1d]" />
-              Warning or maintenance
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#d9534f]" />
-              Critical machine
-            </div>
-          </div>
-        </div>
-
-        <div className="pointer-events-auto max-w-70 rounded-[20px] border border-white/80 bg-white/95 px-4 py-3 text-[11px] leading-5 text-[#6f6254] shadow-[0_14px_30px_rgba(62,52,39,0.1)] backdrop-blur-md">
-          Click a machine marker to zoom into it. Click anywhere on the map to
-          go back to the full technician roster.
-        </div>
-      </div>
+    <div className="relative flex h-[calc(100vh-6rem)] w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+      <button
+        type="button"
+        onClick={() => setSidebarOpen((prev) => !prev)}
+        className={cn(
+          "absolute top-4 z-30 flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:bg-gray-50 hover:text-[#388E8E]",
+          isSidebarOpen ? "left-89 max-md:left-[calc(100%-3rem)]" : "left-4"
+        )}
+        aria-label="Toggle Sidebar"
+      >
+        <span className="material-symbols-outlined text-[20px]">
+          {isSidebarOpen ? "menu_open" : "menu"}
+        </span>
+      </button>
 
       <aside
         className={cn(
-          "pointer-events-auto absolute bottom-6 top-40 z-20 flex w-[min(26rem,calc(100%-3rem))] flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/95 shadow-[0_24px_48px_rgba(62,52,39,0.15)] backdrop-blur-xl transition-all duration-300",
-          isSidebarOpen
-            ? "left-6 opacity-100"
-            : "-left-full opacity-0",
+          "absolute inset-y-0 left-0 z-20 flex w-full max-w-85 flex-col border-r border-gray-200 bg-[#FAFAFA] transition-transform duration-300",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="shrink-0 border-b border-[#ece3d7] bg-white/50 px-5 py-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-[#988a79]">
-                {sidebarTitle}
-              </p>
-              <h2 className="mt-1 truncate text-lg font-black text-[#2d241c]">
-                {selectedMachine
-                  ? selectedMachine.name
-                  : "All Available Technicians"}
-              </h2>
-            </div>
-            {selectedMachine && (
+        <div className="flex items-center justify-between border-b border-gray-200 bg-white px-5 py-5">
+          <div>
+            <h2 className="text-[16px] font-bold text-[#1A1A1A]">
+              {selectedMachine ? "Machine Details" : "Technicians"}
+            </h2>
+            <p className="mt-0.5 text-[12px] text-gray-500">
+              {selectedMachine ? selectedMachine.location : "Available for assignment"}
+            </p>
+          </div>
+        </div>
+
+        <div className="custom-scrollbar flex-1 overflow-y-auto p-4">
+          {selectedMachine ? (
+            <div className="animate-in fade-in slide-in-from-left-4 duration-300">
               <button
                 type="button"
                 onClick={handleClearSelection}
-                className="shrink-0 rounded-full border border-[#ddd5c8] bg-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-[#6f6254] transition-colors hover:border-[#cfc4b4] hover:bg-[#f8f2e8]"
+                className="mb-4 flex items-center gap-1 text-[12px] font-medium text-[#388E8E] hover:underline"
               >
-                Clear
+                <span className="material-symbols-outlined text-[14px]">arrow_back</span>
+                Back to All Technicians
               </button>
-            )}
-          </div>
 
-          {!selectedMachine && (
-            <p className="mt-1.5 text-xs leading-5 text-[#6f6254]">
-              {sidebarSubtitle}
-            </p>
-          )}
-
-          {selectedMachine && (
-            <div className="mt-3 rounded-2xl border border-[#e6dbcd] bg-[#fbfaf8] p-3 shadow-sm">
-              <div className="flex items-center justify-between gap-2">
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[10px] font-bold uppercase tracking-[0.22em] text-[#988a79]">
+              <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
                     {selectedMachine.code}
-                  </p>
-                  <p className="truncate text-sm font-black text-[#2d241c]">
-                    {selectedMachine.location}
-                  </p>
+                  </span>
+                  <span
+                    className={cn(
+                      "rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                      getMachineBadgeClasses(selectedMachine.status)
+                    )}
+                  >
+                    {selectedMachine.status}
+                  </span>
                 </div>
-                <span
-                  className={cn(
-                    "shrink-0 rounded-full px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em]",
-                    getMachineBadgeClasses(selectedMachine.status),
-                  )}
+                <h3 className="text-[15px] font-bold text-[#1A1A1A]">{selectedMachine.name}</h3>
+                
+                <button
+                  type="button"
+                  onClick={() => navigate(`/chef-technician/machines/${selectedMachine.id}/history`)}
+                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-[12px] font-bold text-gray-700 hover:bg-gray-100 hover:text-[#388E8E]"
                 >
-                  {selectedMachine.status}
-                </span>
+                  <span className="material-symbols-outlined text-[16px]">history</span>
+                  View History
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() =>
-                  navigate(`/chef-technician/machines/${selectedMachine.id}/history`)
-                }
-                className="mt-3 flex w-full items-center justify-center gap-2 rounded-[14px] border border-[#d5eee9] bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:bg-[#edf8f7]"
-              >
-                <span className="material-symbols-outlined text-[16px]">
-                  history
-                </span>
-                History
-              </button>
-            </div>
-          )}
-        </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-4 custom-scrollbar">
-          {selectedMachine && (
-            <div className="mb-5">
               <MachineMaintenancePlans
                 hasActivePlan={selectedMachineHasActivePlan}
                 machineName={selectedMachine.name}
@@ -313,67 +176,90 @@ export function Rounde() {
                 onDelete={setDeleteMaintenancePlan}
               />
             </div>
-          )}
-
-          <div className="mb-3 flex items-center justify-between">
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#988a79]">
-              Technicians
-            </p>
-            <span className="rounded-full bg-[#e1efed] px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-[#3b8f88]">
-              {sidebarTechnicians.length} Ready
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            {sidebarDataError ? (
-              <div className="rounded-2xl border border-dashed border-[#ecd6d6] bg-white/50 px-3 py-4 text-xs text-[#8a4f4f]">
-                {sidebarDataError}
-              </div>
-            ) : isLoadingMachines || isLoadingTechnicians ? (
-              <div className="rounded-2xl border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-xs text-[#7f7468]">
-                Loading workspace data...
-              </div>
-            ) : sidebarTechnicians.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-xs text-[#7f7468]">
-                No technicians available right now.
-              </div>
-            ) : (
-              sidebarTechnicians.map((technician, index) => (
-                <div
-                  key={technician.id}
-                  className="rounded-2xl border border-[#e7ddd0] bg-white p-3 shadow-[0_2px_8px_rgba(62,52,39,0.04)] transition-transform hover:-translate-y-0.5"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#dff1ef] text-xs font-black text-[#3b8f88]">
-                      {getInitials(technician)}
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="truncate text-xs font-bold text-[#2d241c]">
-                          {technician.first_name} {technician.last_name}
-                        </p>
-                        <span className="shrink-0 rounded-full bg-[#f7f3ec] px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.18em] text-[#816b55]">
-                          #{index + 1}
-                        </span>
-                      </div>
-
-                      <div className="mt-0.5 flex items-center justify-between gap-2">
-                        <p className="truncate text-[11px] text-[#6f6254]">
-                          {technician.email}
-                        </p>
-                        <p className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#9d9388]">
-                          {technician.phone || "N/A"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+          ) : (
+            <div className="animate-in fade-in duration-300 space-y-3">
+              {sidebarDataError ? (
+                <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-[13px] text-red-600">
+                  {sidebarDataError}
                 </div>
-              ))
-            )}
-          </div>
+              ) : isLoadingMachines || isLoadingTechnicians ? (
+                <div className="text-center text-[13px] text-gray-500 py-6">Loading data...</div>
+              ) : technicians.length === 0 ? (
+                <div className="text-center text-[13px] text-gray-500 py-6">No technicians available.</div>
+              ) : (
+                technicians.map((technician) => (
+                  <div
+                    key={technician.id}
+                    className="flex cursor-pointer flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:border-[#388E8E]/40 hover:shadow-md"
+                  >
+                    <div className="mb-2 flex items-center justify-between">
+                       <span className="rounded bg-[#eef7f6] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#388E8E]">
+                         Ready
+                       </span>
+                       <span className="text-[11px] text-gray-400">Available</span>
+                    </div>
+                    <h3 className="text-[14px] font-bold text-[#1A1A1A]">
+                      {technician.first_name} {technician.last_name}
+                    </h3>
+                    <p className="mt-0.5 text-[12px] text-gray-500">{technician.email}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
         </div>
       </aside>
+
+      <main className="relative flex-1 bg-[#F0F2F5]">
+        <div className="absolute inset-0 z-0">
+          <MachinesAssetMap
+            machines={machines}
+            selectedMachineId={selectedMachineId}
+            onMarkerSelect={handleMarkerSelect}
+            onMapBackgroundClick={handleClearSelection}
+          />
+        </div>
+
+        <div className="pointer-events-auto absolute bottom-6 left-6 z-10 hidden w-60 rounded-xl border border-gray-100 bg-white p-4 shadow-lg sm:block">
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+            Live Feed Status
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 text-[12px] font-medium text-gray-700">
+              <span className="material-symbols-outlined text-[16px] text-red-500">warning</span>
+              Machines Total ({machines.length})
+            </div>
+            <div className="flex items-center gap-3 text-[12px] font-medium text-gray-700">
+              <span className="material-symbols-outlined text-[16px] text-[#388E8E]">engineering</span>
+              Technicians Active ({technicians.length})
+            </div>
+            <div className="flex items-center gap-3 text-[12px] font-medium text-gray-700">
+              <span className="material-symbols-outlined text-[16px] text-gray-400">assignment</span>
+              Total Plans ({totalMaintenancePlans})
+            </div>
+          </div>
+        </div>
+
+        <div className="pointer-events-auto absolute bottom-6 right-6 z-10 hidden w-55 rounded-xl border border-gray-100 bg-white p-4 shadow-lg sm:block">
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+            Map Legend
+          </p>
+          <div className="space-y-2.5 text-[12px] font-medium text-gray-600">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-[#388E8E]" />
+              Operational
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-amber-500" />
+              Warning / Maint.
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-red-500" />
+              Critical
+            </div>
+          </div>
+        </div>
+      </main>
 
       <DeleteMaintenancePlanDialog
         maintenancePlan={deleteMaintenancePlan}

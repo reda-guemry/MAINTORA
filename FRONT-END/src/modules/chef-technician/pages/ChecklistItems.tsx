@@ -85,102 +85,103 @@ export function ChecklistItemsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[26px] border border-[#d9d1c5] bg-[linear-gradient(180deg,#eee7da_0%,#ece2d3_100%)] px-6 py-7 shadow-[0_18px_45px_rgba(62,52,39,0.08)]">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#948674]">
-              Checklist Items
-            </p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight text-[#2d241c] md:text-[42px]">
-              Build the item library your templates will reuse.
-            </h1>
-            <p className="mt-3 max-w-xl text-sm leading-7 text-[#6f6254]">
-              Create labels directly from the page, edit them inline, and keep
-              the library lightweight for template building.
-            </p>
-          </div>
+    <div className="mx-auto flex w-full max-w-300 flex-col gap-8 pb-10">
+      
+      <div>
+        <h1 className="text-[26px] font-bold tracking-tight text-[#111827] md:text-[30px]">
+          Checklist Items
+        </h1>
+        <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-gray-500">
+          Build and manage the core item library your templates will reuse. Create labels, edit them inline, and keep your maintenance tasks organized.
+        </p>
+      </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
-                Total Items
-              </p>
-              <p className="mt-3 text-3xl font-black text-[#2d241c]">
-                {paginate?.total ?? 0}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
-                Current Page
-              </p>
-              <p className="mt-3 text-3xl font-black text-[#2d241c]">
-                {currentPage}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
-                Search View
-              </p>
-              <p className="mt-3 text-3xl font-black text-[#2d241c]">
-                {filteredItems.length}
-              </p>
-            </div>
+      <div className="grid grid-cols-1 gap-4 ">
+        <div className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#eef7f6] text-[#388E8E]">
+            <span className="material-symbols-outlined text-[24px]">dataset</span>
+          </div>
+          <div>
+            <p className="text-[12px] font-semibold text-gray-500">Total Items</p>
+            <p className="mt-0.5 text-[22px] font-bold text-[#111827]">
+              {paginate?.total ?? 0}
+            </p>
           </div>
         </div>
-      </section>
 
-      <section className="rounded-[24px] border border-[#ddd5c8] bg-white p-5 shadow-[0_16px_40px_rgba(62,52,39,0.07)]">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="relative w-full lg:max-w-sm">
-            <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9d9388]">
+      </div>
+
+      <div className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        
+        <div className="flex flex-col gap-4 border-b border-gray-100 bg-gray-50/50 p-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="relative w-full lg:max-w-xs">
+            <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-gray-400">
               search
             </span>
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search item labels..."
-              className="border-[#ddd5c8] bg-[#fcfaf7] pl-10"
+              placeholder="Search items..."
+              className="w-full border-gray-200 bg-white pl-9 text-[13px] text-[#111827] placeholder:text-gray-400 focus:border-[#388E8E] focus:ring-1 focus:ring-[#388E8E]"
             />
           </div>
 
-          <div className="flex w-full flex-col gap-3 md:flex-row lg:w-auto">
+          <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center lg:w-auto">
             <Input
               value={draftLabel}
               onChange={(event) => setDraftLabel(event.target.value)}
-              placeholder="Write a checklist item label..."
-              className="min-w-[320px] border-[#ddd5c8] bg-[#fcfaf7]"
+              placeholder="E.g., Check hydraulic fluid level..."
+              className="w-full border-gray-200 bg-white text-[13px] text-[#111827] placeholder:text-gray-400 focus:border-[#388E8E] focus:ring-1 focus:ring-[#388E8E] sm:min-w-[300px]"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleCreate();
+              }}
             />
-            <Button onClick={handleCreate} isLoading={isCreating}>
-              {isCreating ? "Creating..." : "Add Item"}
+            <Button 
+              onClick={handleCreate} 
+              isLoading={isCreating}
+              className="flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-[#388E8E] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#2c7a7a]"
+            >
+              {isCreating ? (
+                <span>Creating...</span>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined relative top-px text-[18px]">add</span>
+                  <span>Add Item</span>
+                </>
+              )}
             </Button>
           </div>
         </div>
-      </section>
 
-      <ChecklistItemsList
-        items={filteredItems}
-        isLoading={isLoading}
-        error={error}
-        editingItemId={editingItemId}
-        editingValue={editingValue}
-        onEditStart={handleEditStart}
-        onEditCancel={handleEditCancel}
-        onEditChange={setEditingValue}
-        onEditSubmit={handleEditSubmit}
-        onDelete={handleDelete}
-      >
-        <AppPagination
-          currentPage={currentPage}
-          lastPage={paginate?.last_page ?? 1}
-          from={paginate?.from ?? 0}
-          to={paginate?.to ?? 0}
-          total={paginate?.total ?? 0}
-          isLoading={isLoading}
-          label="checklist items"
-          onPageChange={setPage}
-        />
-      </ChecklistItemsList>
+        <div className="p-5">
+          <ChecklistItemsList
+            items={filteredItems}
+            isLoading={isLoading}
+            error={error}
+            editingItemId={editingItemId}
+            editingValue={editingValue}
+            onEditStart={handleEditStart}
+            onEditCancel={handleEditCancel}
+            onEditChange={setEditingValue}
+            onEditSubmit={handleEditSubmit}
+            onDelete={handleDelete}
+          >
+            <div className="mt-6 border-t border-gray-100 pt-6">
+              <AppPagination
+                currentPage={currentPage}
+                lastPage={paginate?.last_page ?? 1}
+                from={paginate?.from ?? 0}
+                to={paginate?.to ?? 0}
+                total={paginate?.total ?? 0}
+                isLoading={isLoading}
+                label="checklist items"
+                onPageChange={setPage}
+              />
+            </div>
+          </ChecklistItemsList>
+        </div>
+      </div>
+      
     </div>
   );
 }

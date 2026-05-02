@@ -93,9 +93,7 @@ export function EditChecklistTemplateModal({
 
   function handleRemoveItem(itemId: number) {
     setTemplateItems((currentItems) =>
-      normalizeTemplateItems(
-        currentItems.filter((item) => item.id !== itemId),
-      ),
+      normalizeTemplateItems(currentItems.filter((item) => item.id !== itemId)),
     );
   }
 
@@ -112,33 +110,24 @@ export function EditChecklistTemplateModal({
     setSearchResults([]);
   }
 
-  function handleChangeOrder(itemId: number, nextOrder: number) {
-    setTemplateItems((currentItems) => {
-      if (currentItems.length === 0) {
-        return currentItems;
-      }
+  function handleChangeOrder(itemId: number, newOrder: number) {
+    setTemplateItems((prev) => {
+      const items = [...prev];
 
-      const currentIndex = currentItems.findIndex((item) => item.id === itemId);
+      const currentIndex = items.findIndex((i) => i.id === itemId);
+      if (currentIndex === -1) return prev;
 
-      if (currentIndex === -1) {
-        return currentItems;
-      }
+      const [movedItem] = items.splice(currentIndex, 1);
 
-      const boundedOrder = Math.min(
-        Math.max(nextOrder, 1),
-        currentItems.length,
-      );
-      const nextIndex = boundedOrder - 1;
+      items.splice(newOrder - 1, 0, movedItem);
 
-      if (currentIndex === nextIndex) {
-        return currentItems;
-      }
-
-      const reorderedItems = [...currentItems];
-      const [movedItem] = reorderedItems.splice(currentIndex, 1);
-      reorderedItems.splice(nextIndex, 0, movedItem);
-
-      return normalizeTemplateItems(reorderedItems);
+      return items.map((item, index) => ({
+        ...item,
+        pivot: {
+          ...item.pivot,
+          order: index + 1,
+        },
+      }));
     });
   }
 
@@ -162,7 +151,6 @@ export function EditChecklistTemplateModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
       <div className="flex w-full max-w-3xl max-h-[90vh] flex-col rounded-2xl border border-gray-200 bg-white shadow-xl">
-        {/* Header - Fixed */}
         <div className="shrink-0 border-b border-gray-100 px-6 py-5">
           <h3 className="text-[18px] font-bold text-[#1A1A1A]">
             Edit Checklist Template
@@ -172,7 +160,6 @@ export function EditChecklistTemplateModal({
           </p>
         </div>
 
-        {/* Body - Scrollable */}
         <div className="overflow-y-auto px-6 py-6">
           <form
             id="edit-template-form"
@@ -181,7 +168,11 @@ export function EditChecklistTemplateModal({
           >
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="col-span-1 md:col-span-2">
-                <FormField label="Template name" htmlFor="edit_template_name" required>
+                <FormField
+                  label="Template name"
+                  htmlFor="edit_template_name"
+                  required
+                >
                   <Input
                     id="edit_template_name"
                     {...register("name", {
@@ -191,13 +182,18 @@ export function EditChecklistTemplateModal({
                     className="border-gray-200 bg-gray-50 text-[13px] text-[#1A1A1A] focus:border-[#388E8E] focus:bg-white focus:ring-1 focus:ring-[#388E8E]"
                   />
                   {errors.name && (
-                    <p className="mt-1 text-[12px] text-red-500">{errors.name.message}</p>
+                    <p className="mt-1 text-[12px] text-red-500">
+                      {errors.name.message}
+                    </p>
                   )}
                 </FormField>
               </div>
 
               <div className="col-span-1 md:col-span-2">
-                <FormField label="Description" htmlFor="edit_template_description">
+                <FormField
+                  label="Description"
+                  htmlFor="edit_template_description"
+                >
                   <textarea
                     id="edit_template_description"
                     {...register("description")}
@@ -208,7 +204,6 @@ export function EditChecklistTemplateModal({
               </div>
             </div>
 
-            {/* Checklist Items Management Area */}
             <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between border-b border-gray-100 pb-4">
                 <div>
@@ -276,7 +271,6 @@ export function EditChecklistTemplateModal({
                 </div>
               </div>
 
-              {/* Selected Items List */}
               <div className="mt-4 flex flex-col gap-3">
                 {templateItems.length === 0 ? (
                   <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 py-8 text-center">
@@ -312,18 +306,24 @@ export function EditChecklistTemplateModal({
 
                       <div className="flex flex-wrap items-center gap-3">
                         <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5">
-                          <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
                             Order
                           </span>
                           <select
                             value={item.pivot?.order ?? index + 1}
                             onChange={(event) =>
-                              handleChangeOrder(item.id, Number(event.target.value))
+                              handleChangeOrder(
+                                item.id,
+                                Number(event.target.value),
+                              )
                             }
                             className="rounded-md border border-gray-200 bg-white px-2 py-1 text-[13px] font-semibold text-[#1A1A1A] outline-none transition-all focus:border-[#388E8E] focus:ring-1 focus:ring-[#388E8E]"
                           >
                             {templateItems.map((_, orderIndex) => (
-                              <option key={orderIndex + 1} value={orderIndex + 1}>
+                              <option
+                                key={orderIndex + 1}
+                                value={orderIndex + 1}
+                              >
                                 {orderIndex + 1}
                               </option>
                             ))}
@@ -351,17 +351,17 @@ export function EditChecklistTemplateModal({
 
         <div className="shrink-0 border-t border-gray-100 bg-gray-50 px-6 py-4">
           <div className="flex justify-end gap-3">
-            <Button 
-              type="button" 
-              variant="secondary" 
+            <Button
+              type="button"
+              variant="secondary"
               onClick={onClose}
               className="border-gray-200 bg-white text-gray-600 hover:bg-gray-100"
             >
               Cancel
             </Button>
-            <Button 
-              form="edit-template-form" 
-              type="submit" 
+            <Button
+              form="edit-template-form"
+              type="submit"
               isLoading={isLoading}
               className="bg-[#388E8E] text-white hover:bg-[#2c7a7a]"
             >

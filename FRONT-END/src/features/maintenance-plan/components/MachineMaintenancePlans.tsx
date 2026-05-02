@@ -18,31 +18,31 @@ export function MachineMaintenancePlans({
     return firstPlan.start_date.localeCompare(secondPlan.start_date);
   });
 
-  return (<div className="rounded-[20px] border border-[#e6dbcd] bg-[#fcfaf7] p-4 shadow-sm">
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
       <div className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-[#988a79]">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
               Maintenance Plans
             </p>
-            <h3 className="mt-1 truncate text-base font-black text-[#2d241c]">
+            <h3 className="mt-1 truncate text-[15px] font-bold text-[#1A1A1A]">
               {machineName}
             </h3>
           </div>
-          <span className="shrink-0 rounded-full bg-[#e1efed] px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-[#3b8f88]">
+          <span className="shrink-0 rounded-md bg-[#eef7f6] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#388E8E]">
             {maintenancePlans.length} Total
           </span>
         </div>
 
-        <p className="text-[11px] leading-5 text-[#6f6254]">
-          Create, update, or remove preventive routines without leaving the
-          round workspace.
+        <p className="text-[12px] text-gray-500">
+          Create, update, or remove preventive routines for this machine.
         </p>
 
-        <div className="mt-1">
+        <div className="mt-2">
           {hasActivePlan ? (
-            <div className="flex items-start gap-2 rounded-[14px] border border-[#d5eee9] bg-[#edf8f7] px-3 py-3 text-[11px] font-semibold leading-5 text-[#3b7772]">
-              <span className="material-symbols-outlined mt-0.5 text-[18px] text-[#388E8E]">
+            <div className="flex items-start gap-2 rounded-lg border border-[#388E8E]/20 bg-[#eef7f6] p-3 text-[12px] font-medium text-[#2c7a7a]">
+              <span className="material-symbols-outlined mt-0.5 text-[16px] text-[#388E8E]">
                 verified
               </span>
               <span>This machine already has an active maintenance plan.</span>
@@ -52,18 +52,22 @@ export function MachineMaintenancePlans({
               type="button"
               size="sm"
               onClick={onAdd}
-              className="flex w-full items-center justify-center gap-1.5"
+              className="group flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#388E8E] text-[13px] text-white transition-colors hover:bg-[#2c7a7a]"
             >
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              New Plan
+              <div className="flex items-center gap-1.5 rounded-lg text-[13px] text-white transition-colors">
+                <span className="material-symbols-outlined text-[18px]">
+                  add
+                </span>
+                <span >New Plan</span>
+              </div>
             </Button>
           )}
         </div>
       </div>
 
-      <div className="mt-4 space-y-2.5">
+      <div className="mt-4 space-y-3">
         {sortedPlans.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-center text-xs text-[#7f7468]">
+          <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 p-4 text-center text-[12px] text-gray-500">
             No maintenance plans are linked to this machine yet.
           </div>
         ) : (
@@ -77,5 +81,6 @@ export function MachineMaintenancePlans({
           ))
         )}
       </div>
-    </div>);
+    </div>
+  );
 }

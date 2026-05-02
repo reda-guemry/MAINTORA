@@ -33,7 +33,8 @@ class ChecklistTemplate extends Model
             'checklist_item_id'
         )->using(ChecklistTemplateItem::class)
          ->withPivot('id' , 'order')
-         ->withTimestamps() ;
+         ->withTimestamps()
+         ->orderByPivot('order') ;
     }
 
 }
