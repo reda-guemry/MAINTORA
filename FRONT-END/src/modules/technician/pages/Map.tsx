@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Alert } from "@/shared/components/feedback";
 import { Spinner } from "@/shared/components/ui";
-import { cn } from "@/shared/utils";
+import { ActionButtons, DetailRow, MachineInfoCard, MapSidebar } from "@/shared/components";
 import { useTechnicianMachines } from "@/features/technician-map";
 import { useTodayMaintenanceTasks } from "@/features/technician-maintenance";
 import { TechnicianAssetMap } from "../components/TechnicianAssetMap";
@@ -84,90 +84,71 @@ function MapPage() {
           </div>
         </div>
 
-        <div
-          className={cn(
-            "pointer-events-auto absolute bottom-0 left-0 z-20 w-full overflow-y-auto rounded-t-4xl bg-white/95 p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] md:bottom-auto md:top-1/2 md:w-96 md:-translate-y-1/2 md:rounded-4xl md:p-8 md:shadow-[0_32px_64px_rgba(0,0,0,0.12)]",
-            selectedMachine
-              ? "max-h-[85vh] translate-y-0 opacity-100 md:left-8 md:translate-x-0"
-              : "translate-y-full opacity-0 md:left-0 md:translate-y-0 md:-translate-x-full"
-          )}
+        <MapSidebar
+          isOpen={!!selectedMachine}
+          title="Machine Details"
+          subtitle={selectedMachine?.location}
+          onClose={() => setSelectedMachineId(null)}
         >
           {selectedMachine && (
-            <div className="flex h-full flex-col">
-              <div className="mb-5 flex items-center justify-between md:mb-6">
-                <div className="h-1.5 w-10 rounded-full bg-[#3b8f88]/20 md:w-12"></div>
-                <span
-                  className={cn(
-                    "rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest md:px-3 md:py-1.5 md:text-[10px]",
-                    getStatusClasses(selectedMachine.status)
-                  )}
-                >
-                  {selectedMachine.status}
-                </span>
-              </div>
+            <div className="space-y-4">
+              <MachineInfoCard
+                machineData={selectedMachine}
+                statusClassName={getStatusClasses(selectedMachine.status)}
+              />
 
-              <h2 className="text-[24px] font-black leading-none text-[#2d241c] md:text-[28px]">{selectedMachine.name}</h2>
-              <p className="mt-2 font-mono text-[11px] font-bold uppercase tracking-wider text-[#6ba5a5] md:text-[12px]">{selectedMachine.code}</p>
-
-              <div className="mt-6 space-y-3 md:mt-8 md:space-y-4">
-                <div className="flex items-center gap-3 rounded-2xl border border-[#edf2f1] bg-[#f8faf9] p-3 md:gap-4 md:p-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#3b8f88] shadow-sm md:h-12 md:w-12">
-                    <span className="material-symbols-outlined text-[20px] md:text-[24px]">location_on</span>
-                  </div>
-                  <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-[#9d9388] md:text-[10px]">Zone / Floor</p>
-                    <p className="mt-0.5 text-[13px] font-bold text-[#2d241c] md:text-[14px]">{selectedMachine.location}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 rounded-2xl border border-[#edf2f1] bg-[#f8faf9] p-3 md:gap-4 md:p-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#3b8f88] shadow-sm md:h-12 md:w-12">
-                    <span className="material-symbols-outlined text-[20px] md:text-[24px]">sensors</span>
-                  </div>
-                  <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-[#9d9388] md:text-[10px]">Health Status</p>
-                    <p className="mt-0.5 text-[13px] font-bold text-[#2d241c] md:text-[14px]">{getStatusLabel(selectedMachine.status)}</p>
-                  </div>
-                </div>
+              <div className="space-y-3">
+                <DetailRow
+                  icon="location_on"
+                  label="Zone / Floor"
+                  value={selectedMachine.location}
+                />
+                <DetailRow
+                  icon="sensors"
+                  label="Health Status"
+                  value={getStatusLabel(selectedMachine.status)}
+                />
               </div>
 
               {selectedMachine.status === "maintenance" && (
-                <div className="mt-5 rounded-2xl border border-[#b9dfdc] bg-[#edf8f7] px-4 py-3 md:mt-6 md:px-5 md:py-4">
+                <div className="rounded-xl border border-[#b9dfdc] bg-[#edf8f7] px-4 py-3">
                   <div className="flex items-center gap-2 text-[#3b8f88]">
-                    <span className="material-symbols-outlined text-[16px] md:text-[18px]">build_circle</span>
-                    <p className="text-[9px] font-black uppercase tracking-[0.18em] md:text-[10px]">Maintenance today</p>
+                    <span className="material-symbols-outlined text-[18px]">build_circle</span>
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em]">Maintenance today</p>
                   </div>
-                  <p className="mt-1.5 text-[12px] font-semibold leading-tight text-[#2d241c] md:mt-2 md:text-[13px]">
+                  <p className="mt-2 text-[13px] font-semibold leading-tight text-[#2d241c]">
                     Cette machine est en maintenance aujourd'hui.
                   </p>
                 </div>
               )}
 
-              <div className="mt-6 grid grid-cols-2 gap-2 md:mt-8 md:gap-3">
-                {selectedMachine.status === "maintenance" && (
-                  <button
-                    type="button"
-                    onClick={() => selectedTodayTask && navigate(`/technician/maintenance/${selectedTodayTask.id}`)}
-                    disabled={!selectedTodayTask}
-                    className="flex items-center justify-center gap-2 rounded-2xl bg-[#2d241c] py-3 text-[10px] font-black uppercase tracking-widest text-white shadow-lg transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 md:py-4 md:text-[11px]"
-                  >
-                    Submit
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => navigate(`/technician/machines/${selectedMachine.id}/history`)}
-                  className={cn(
-                    "flex items-center justify-center gap-2 rounded-2xl border-2 py-3 text-[10px] font-black uppercase tracking-widest transition-all hover:bg-gray-50 md:py-4 md:text-[11px]",
-                    selectedMachine.status === "maintenance" ? "col-span-1 border-[#e6dbcd] text-[#2d241c]" : "col-span-2 border-[#e6dbcd] text-[#2d241c]"
-                  )}
-                >
-                  History
-                </button>
-              </div>
+              <ActionButtons
+                columns={selectedMachine.status === "maintenance" ? 2 : 1}
+                actions={[
+                  ...(selectedMachine.status === "maintenance"
+                    ? [
+                        {
+                          label: "Submit",
+                          icon: "task_alt",
+                          disabled: !selectedTodayTask,
+                          onClick: () =>
+                            selectedTodayTask &&
+                            navigate(`/technician/maintenance/${selectedTodayTask.id}`),
+                        },
+                      ]
+                    : []),
+                  {
+                    label: "History",
+                    icon: "history",
+                    variant: "outline",
+                    onClick: () =>
+                      navigate(`/technician/machines/${selectedMachine.id}/history`),
+                  },
+                ]}
+              />
             </div>
           )}
-        </div>
+        </MapSidebar>
 
       </section>
     </div>

@@ -58,5 +58,5 @@ export function getClientMachineStatusLabel(
     return "Maintenance in progress";
   }
 
-  return "Operational";
+  return "Active";
 }

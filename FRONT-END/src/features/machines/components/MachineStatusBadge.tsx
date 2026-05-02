@@ -2,26 +2,26 @@ import { cn } from "@/shared/utils/cn";
 import type { MachineStatus } from "../types/machineComponents";
 
 const statusClasses: Record<MachineStatus, string> = {
-  active: "bg-[#E6F4F1] text-[#388E8E]",
-  maintenance: "bg-[#FFF4E5] text-[#E67E22]",
-  anomalous: "bg-[#F2F2F2] text-[#555555]",
+  active: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  maintenance: "border-amber-200 bg-amber-50 text-amber-700",
+  anomalous: "border-slate-200 bg-slate-50 text-slate-600",
 };
 
 const dotClasses: Record<MachineStatus, string> = {
-  active: "bg-[#388E8E]",
-  maintenance: "bg-[#E67E22]",
-  anomalous: "bg-[#999999]",
+  active: "bg-emerald-500",
+  maintenance: "bg-amber-500",
+  anomalous: "bg-slate-400",
 };
 
 export function MachineStatusBadge({ status }: { status: MachineStatus }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-widest",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest shadow-sm",
         statusClasses[status]
       )}
     >
-      <span className={cn("h-2 w-2 rounded-full", dotClasses[status])} />
+      <span className={cn("h-1.5 w-1.5 rounded-full", dotClasses[status])} />
       {status}
     </span>
   );

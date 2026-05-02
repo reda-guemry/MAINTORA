@@ -10,7 +10,7 @@ import {
   type MaintenancePlan,
 } from "@/features/maintenance-plan";
 import { MachinesAssetMap } from "@/features/machines-map";
-import { cn } from "@/shared/utils";
+import { ActionButtons, MachineInfoCard, MapSidebar } from "@/shared/components";
 import { getMachineBadgeClasses } from "@/shared/utils/machineStatusHelpers";
 import type { Machine } from "@/features/roundes";
 
@@ -98,83 +98,44 @@ export function Rounde() {
 
   return (
     <div className="relative flex h-[calc(100vh-6rem)] w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-      <button
-        type="button"
-        onClick={() => setSidebarOpen((prev) => !prev)}
-        className={cn(
-          "absolute top-4 z-30 flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:bg-gray-50 hover:text-[#388E8E]",
-          isSidebarOpen ? "left-89 max-md:left-[calc(100%-3rem)]" : "left-4"
-        )}
-        aria-label="Toggle Sidebar"
+      <MapSidebar
+        isOpen={isSidebarOpen}
+        title={selectedMachine ? "Machine Details" : "Technicians"}
+        subtitle={selectedMachine ? selectedMachine.location : "Available for assignment"}
+        showToggle
+        onToggle={() => setSidebarOpen((prev) => !prev)}
+        onClose={selectedMachine ? handleClearSelection : undefined}
+        closeLabel="Back"
       >
-        <span className="material-symbols-outlined text-[20px]">
-          {isSidebarOpen ? "menu_open" : "menu"}
-        </span>
-      </button>
-
-      <aside
-        className={cn(
-          "absolute inset-y-0 left-0 z-20 flex w-full max-w-85 flex-col border-r border-gray-200 bg-[#FAFAFA] transition-transform duration-300",
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
-        <div className="flex items-center justify-between border-b border-gray-200 bg-white px-5 py-5">
-          <div>
-            <h2 className="text-[16px] font-bold text-[#1A1A1A]">
-              {selectedMachine ? "Machine Details" : "Technicians"}
-            </h2>
-            <p className="mt-0.5 text-[12px] text-gray-500">
-              {selectedMachine ? selectedMachine.location : "Available for assignment"}
-            </p>
-          </div>
-        </div>
-
-        <div className="custom-scrollbar flex-1 overflow-y-auto p-4">
           {selectedMachine ? (
             <div className="animate-in fade-in slide-in-from-left-4 duration-300">
-              <button
-                type="button"
-                onClick={handleClearSelection}
-                className="mb-4 flex items-center gap-1 text-[12px] font-medium text-[#388E8E] hover:underline"
+              <MachineInfoCard
+                machineData={selectedMachine}
+                statusClassName={getMachineBadgeClasses(selectedMachine.status)}
               >
-                <span className="material-symbols-outlined text-[14px]">arrow_back</span>
-                Back to All Technicians
-              </button>
+                <ActionButtons
+                  actions={[
+                    {
+                      label: "View History",
+                      icon: "history",
+                      variant: "secondary",
+                      onClick: () =>
+                        navigate(`/chef-technician/machines/${selectedMachine.id}/history`),
+                    },
+                  ]}
+                />
+              </MachineInfoCard>
 
-              <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
-                    {selectedMachine.code}
-                  </span>
-                  <span
-                    className={cn(
-                      "rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-                      getMachineBadgeClasses(selectedMachine.status)
-                    )}
-                  >
-                    {selectedMachine.status}
-                  </span>
-                </div>
-                <h3 className="text-[15px] font-bold text-[#1A1A1A]">{selectedMachine.name}</h3>
-                
-                <button
-                  type="button"
-                  onClick={() => navigate(`/chef-technician/machines/${selectedMachine.id}/history`)}
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-[12px] font-bold text-gray-700 hover:bg-gray-100 hover:text-[#388E8E]"
-                >
-                  <span className="material-symbols-outlined text-[16px]">history</span>
-                  View History
-                </button>
+              <div className="mt-4">
+                <MachineMaintenancePlans
+                  hasActivePlan={selectedMachineHasActivePlan}
+                  machineName={selectedMachine.name}
+                  maintenancePlans={selectedMachinePlans}
+                  onAdd={handleCreateMaintenancePlanClick}
+                  onEdit={handleEditMaintenancePlanClick}
+                  onDelete={setDeleteMaintenancePlan}
+                />
               </div>
-
-              <MachineMaintenancePlans
-                hasActivePlan={selectedMachineHasActivePlan}
-                machineName={selectedMachine.name}
-                maintenancePlans={selectedMachinePlans}
-                onAdd={handleCreateMaintenancePlanClick}
-                onEdit={handleEditMaintenancePlanClick}
-                onDelete={setDeleteMaintenancePlan}
-              />
             </div>
           ) : (
             <div className="animate-in fade-in duration-300 space-y-3">
@@ -207,8 +168,7 @@ export function Rounde() {
               )}
             </div>
           )}
-        </div>
-      </aside>
+      </MapSidebar>
 
       <main className="relative flex-1 bg-[#F0F2F5]">
         <div className="absolute inset-0 z-0">

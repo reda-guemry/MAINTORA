@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "@/shared/components/feedback";
 import { Spinner } from "@/shared/components/ui";
+import { ActionButtons, DetailRow, MachineInfoCard, MapSidebar } from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { getMachineBadgeClasses } from "@/shared/utils/machineStatusHelpers";
 import {
@@ -147,52 +148,24 @@ export default function MachinesMapPage() {
           )}
         </div>
 
-        <aside
-          className={cn(
-            "pointer-events-auto absolute top-40 z-20 flex max-h-[calc(100%-11rem)] flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/95 shadow-[0_24px_48px_rgba(62,52,39,0.15)] backdrop-blur-xl transition-all duration-300",
-            selectedMachine
-              ? "left-6 w-105 opacity-100"
-              : "-left-full w-105 opacity-0",
-          )}
+        <MapSidebar
+          isOpen={!!selectedMachine}
+          title="Machine Details"
+          subtitle={selectedMachine?.location}
+          onClose={() => setSelectedMachineId(null)}
         >
           {selectedMachine && (
-            <>
-              <div className="shrink-0 border-b border-[#ece3d7] bg-white/50 px-5 py-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[10px] font-bold uppercase tracking-[0.22em] text-[#988a79]">
-                      {selectedMachine.code}
-                    </p>
-                    <h2 className="mt-1 truncate text-lg font-black text-[#2d241c]">
-                      {selectedMachine.name}
-                    </h2>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedMachineId(null)}
-                    className="shrink-0 rounded-full border border-[#ddd5c8] bg-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-[#6f6254] transition-colors hover:border-[#cfc4b4] hover:bg-[#f8f2e8]"
-                  >
-                    Clear
-                  </button>
-                </div>
+            <div className="space-y-4">
+              <MachineInfoCard
+                machineData={selectedMachine}
+                statusClassName={getMachineBadgeClasses(selectedMachine.status)}
+              >
+                <span className="inline-flex rounded-full bg-[#f7f3ec] px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em] text-[#816b55]">
+                  {selectedMachine.active_anomalies_count ?? 0} active anomalies
+                </span>
+              </MachineInfoCard>
 
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <span
-                    className={cn(
-                      "rounded-full px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em]",
-                      getMachineBadgeClasses(selectedMachine.status),
-                    )}
-                  >
-                    {selectedMachine.status}
-                  </span>
-                  <span className="rounded-full bg-[#f7f3ec] px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em] text-[#816b55]">
-                    {selectedMachine.active_anomalies_count ?? 0} active
-                    anomalies
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
+              <div className="space-y-3">
                 <DetailRow
                   icon="location_on"
                   label="Location"
@@ -212,23 +185,22 @@ export default function MachinesMapPage() {
                       : "Not available"
                   }
                 />
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    navigate(`/admin/machines/${selectedMachine.id}/history`)
-                  }
-                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-[14px] border border-[#d5eee9] bg-white px-3 py-3 text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:bg-[#edf8f7]"
-                >
-                  <span className="material-symbols-outlined text-[16px]">
-                    history
-                  </span>
-                  History
-                </button>
               </div>
-            </>
+
+              <ActionButtons
+                actions={[
+                  {
+                    label: "History",
+                    icon: "history",
+                    variant: "outline",
+                    onClick: () =>
+                      navigate(`/admin/machines/${selectedMachine.id}/history`),
+                  },
+                ]}
+              />
+            </div>
           )}
-        </aside>
+        </MapSidebar>
       </section>
     </div>
   );
@@ -263,32 +235,6 @@ function LegendItem({ color, label }: { color: string; label: string }) {
     <div className="flex items-center gap-2">
       <span className={cn("h-2 w-2 rounded-full", color)} />
       {label}
-    </div>
-  );
-}
-
-function DetailRow({
-  icon,
-  label,
-  value,
-}: {
-  icon: string;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex items-center gap-4 rounded-[18px] border border-[#e7ddd0] bg-white p-4">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f0f4f3] text-[#3b8f88]">
-        <span className="material-symbols-outlined text-[20px]">{icon}</span>
-      </div>
-      <div className="min-w-0">
-        <p className="text-[9px] font-black uppercase tracking-widest text-[#9d9388]">
-          {label}
-        </p>
-        <p className="truncate text-[13px] font-bold text-[#2d241c]">
-          {value}
-        </p>
-      </div>
     </div>
   );
 }

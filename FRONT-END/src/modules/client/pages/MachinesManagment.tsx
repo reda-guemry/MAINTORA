@@ -11,7 +11,7 @@ import {
   type MachinePayload,
 } from "@/features/machines";
 import { AppPagination } from "@/shared/components";
-import { Button, Input } from "@/shared/components/ui";
+import { Input } from "@/shared/components/ui";
 import { AddMachineFlow } from "../components/AddMachineFlow";
 import { useFiltering, useModalState } from "@/shared";
 
@@ -35,7 +35,6 @@ export default function MachinesManagement() {
 
   const machines = paginate?.data ?? [];
 
-  // Filtering hook
   const { filtered: filteredMachines, search, setSearch, filters, setFilter } = useFiltering(
     machines,
     (machine, searchTerm) =>
@@ -45,7 +44,6 @@ export default function MachinesManagement() {
     { status: "all" },
   );
 
-  // Modal state hooks
   const editModal = useModalState<Machine>(null);
   const deleteModal = useModalState<Machine>(null);
 
@@ -84,31 +82,27 @@ export default function MachinesManagement() {
   }
 
   return (
-    <div
-      className="min-h-screen w-full p-6 md:p-10"
-      style={{
-        backgroundColor: "#F8F6F0",
-        backgroundImage: "radial-gradient(#d1d1d1 1px, transparent 1px)",
-        backgroundSize: "24px 24px",
-      }}
-    >
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+    <div className="min-h-screen w-full bg-slate-50 p-6 md:p-10">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div>
-            <h1 className="mb-4 text-[44px] font-black  leading-[0.9] tracking-tighter text-[#1A1A1A] md:text-[54px]">
-              My Asset <br /> Fleet
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              My Asset Fleet
             </h1>
-            <div className="inline-flex items-center rounded bg-[#DDEEEB] px-3 py-1">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#388E8E]">
+            <p className="mt-1 text-sm text-slate-500">
+              Manage and monitor your registered machines and their statuses.
+            </p>
+            <div className="mt-3 inline-flex items-center rounded-md bg-teal-50 px-2.5 py-1 border border-teal-100">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-teal-700">
                 {machines.length} Registered Machines
               </span>
             </div>
           </div>
 
-          <div className="flex flex-col gap-5 lg:items-end">
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <div className="relative w-full sm:w-80">
-                <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-gray-400">
+          <div className="flex flex-col gap-4 lg:items-end">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+              <div className="relative w-full sm:w-72">
+                <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
                   <span className="material-symbols-outlined text-[18px]">
                     search
                   </span>
@@ -118,7 +112,7 @@ export default function MachinesManagement() {
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Search by asset name or ID..."
-                  className="pl-10 shadow-sm"
+                  className="h-11 w-full rounded-xl border-slate-200 bg-white pl-10 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-[#43968C] focus:ring-2 focus:ring-[#43968C]/20"
                 />
               </div>
 
@@ -127,45 +121,49 @@ export default function MachinesManagement() {
                 onChange={(event) =>
                   setFilter("status", event.target.value)
                 }
-                className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-11 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm outline-none transition-colors hover:bg-slate-50 focus:border-[#43968C] focus:ring-2 focus:ring-[#43968C]/20"
               >
                 <option value="all">All Assets</option>
                 <option value="active">Active</option>
                 <option value="maintenance">Maintenance</option>
                 <option value="anomalous">Anomalous</option>
               </select>
-            </div>
 
-            <Button
-              type="button"
-              onClick={() => setIsAddModalOpen(true)}
-              className="px-8"
-            >
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              Register New Machine
-            </Button>
+              <button
+                type="button"
+                onClick={() => setIsAddModalOpen(true)}
+                className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#43968C] px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#367971]"
+              >
+                <span className="material-symbols-outlined text-[18px]">add</span>
+                Register New Machine
+              </button>
+            </div>
           </div>
         </div>
 
-        <MachinesTable
-          machines={filteredMachines}
-          isLoading={isLoading}
-          error={error}
-          onEdit={editModal.open}
-          onDelete={deleteModal.open}
-          onHistory={(machine) => navigate(`/client/machines/${machine.id}/history`)}
-        >
-          <AppPagination
-            currentPage={currentPage}
-            lastPage={paginate?.last_page ?? 1}
-            from={paginate?.from ?? 0}
-            to={paginate?.to ?? 0}
-            total={paginate?.total ?? 0}
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <MachinesTable
+            machines={filteredMachines}
             isLoading={isLoading}
-            label="assets"
-            onPageChange={setPage}
-          />
-        </MachinesTable>
+            error={error}
+            onEdit={editModal.open}
+            onDelete={deleteModal.open}
+            onHistory={(machine) => navigate(`/client/machines/${machine.id}/history`)}
+          >
+            <div className="border-t border-slate-100 bg-white px-6 py-4">
+              <AppPagination
+                currentPage={currentPage}
+                lastPage={paginate?.last_page ?? 1}
+                from={paginate?.from ?? 0}
+                to={paginate?.to ?? 0}
+                total={paginate?.total ?? 0}
+                isLoading={isLoading}
+                label="assets"
+                onPageChange={setPage}
+              />
+            </div>
+          </MachinesTable>
+        </div>
       </div>
 
       <AddMachineFlow

@@ -2,5 +2,5 @@
 
 export * from "./feedback";
 export * from "./ui";
-export * from "./map/usaMap";
+export * from "./map";
 export * from "./pagination/AppPagination";

@@ -11,33 +11,33 @@ export function MachinesTable({
   children,
 }: MachinesTableProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
+    <div className="flex w-full flex-col">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-215 text-left">
+        <table className="w-full min-w-200 text-left">
           <thead>
-            <tr className="border-b border-gray-50">
-              <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+            <tr className="border-b border-slate-100 bg-slate-50/50">
+              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400">
                 Code
               </th>
-              <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400">
                 Machine Name
               </th>
-              <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400">
                 Location
               </th>
-              <th className="px-6 py-5 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400">
                 Status
               </th>
-              <th className="px-6 py-5 text-right text-[11px] font-bold uppercase tracking-widest text-gray-400">
+              <th className="px-6 py-4 text-right text-[11px] font-bold uppercase tracking-widest text-slate-400">
                 Actions
               </th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-slate-100 bg-white">
             {isLoading && (
               <tr>
-                <td colSpan={6} className="py-10 text-center text-gray-500">
+                <td colSpan={5} className="py-12 text-center text-sm font-medium text-slate-500">
                   Loading machines...
                 </td>
               </tr>
@@ -45,7 +45,7 @@ export function MachinesTable({
 
             {!isLoading && error && (
               <tr>
-                <td colSpan={6} className="py-10 text-center text-red-500">
+                <td colSpan={5} className="py-12 text-center text-sm font-medium text-red-600">
                   {error}
                 </td>
               </tr>
@@ -53,7 +53,7 @@ export function MachinesTable({
 
             {!isLoading && !error && machines.length === 0 && (
               <tr>
-                <td colSpan={6} className="py-10 text-center text-gray-500">
+                <td colSpan={5} className="py-12 text-center text-sm font-medium text-slate-500">
                   No machines found.
                 </td>
               </tr>
@@ -74,6 +74,7 @@ export function MachinesTable({
         </table>
       </div>
 
+      {/* Pagination Container */}
       {children}
     </div>
   );

@@ -1,9 +1,13 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "@/shared/components/feedback";
-import { Button, Spinner } from "@/shared/components/ui";
+import { Spinner } from "@/shared/components/ui";
+import { ActionButtons, DetailRow, MachineInfoCard, MapSidebar } from "@/shared/components";
 import { cn } from "@/shared/utils";
-import { getMachineStatusClasses, getClientMachineStatusLabel } from "@/shared/utils/machineStatusHelpers";
+import {
+  getMachineStatusClasses,
+  getClientMachineStatusLabel,
+} from "@/shared/utils/machineStatusHelpers";
 import { useClientMachines } from "@/features/machines";
 import { ClientAssetMap } from "../components/ClientAssetMap";
 
@@ -14,7 +18,7 @@ export default function ClientMapPage() {
 
   const selectedMachine = useMemo(
     () => machines.find((machine) => machine.id === selectedMachineId) ?? null,
-    [machines, selectedMachineId],
+    [machines, selectedMachineId]
   );
 
   const statusSummary = useMemo(
@@ -23,15 +27,15 @@ export default function ClientMapPage() {
       anomalous: machines.filter((machine) => machine.status === "anomalous").length,
       maintenance: machines.filter((machine) => machine.status === "maintenance").length,
     }),
-    [machines],
+    [machines]
   );
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[70vh] w-full flex-col items-center justify-center rounded-[40px] border border-[#dce5e2] bg-[#f8faf9]">
+      <div className="flex min-h-[70vh] w-full flex-col items-center justify-center rounded-3xl border border-slate-200 bg-slate-50">
         <Spinner />
-        <p className="mt-4 text-[10px] font-black uppercase tracking-[0.3em] text-[#6ba5a5]">
-          Loading asset map
+        <p className="mt-4 text-xs font-bold uppercase tracking-widest text-slate-400">
+          Loading asset map...
         </p>
       </div>
     );
@@ -46,8 +50,10 @@ export default function ClientMapPage() {
   }
 
   return (
-    <div className="w-full px-2 pb-6">
-      <section className="relative h-[calc(100vh-9rem)] min-h-162 overflow-hidden rounded-[38px] border-4 border-white bg-[#edf0ec] shadow-[0_40px_90px_-20px_rgba(35,53,53,0.2)]">
+    <div className="w-full px-4 pb-6">
+      <section className="relative h-[calc(100vh-8rem)] min-h-150 w-full overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm">
+        
+        {/* Map Layer */}
         <div className="absolute inset-0 z-0">
           <ClientAssetMap
             machines={machines}
@@ -57,50 +63,47 @@ export default function ClientMapPage() {
           />
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-6 md:p-8">
-          <div className="pointer-events-auto flex flex-col gap-1">
-            <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#2d241c] text-white shadow-lg">
-                <span className="material-symbols-outlined text-[18px]">
-                  location_on
-                </span>
-              </span>
-              <h1 className="text-2xl font-black tracking-tighter text-[#2d241c]">
-                Client Asset Map
-              </h1>
-            </div>
-            <p className="ml-11 text-[11px] font-bold uppercase tracking-[0.15em] text-[#648080]">
-              Visual monitoring of your machines
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col justify-between gap-6 p-6 sm:flex-row sm:items-start md:p-8">
+          
+          <div className="pointer-events-auto flex flex-col drop-shadow-md">
+            <h1 className="text-2xl font-black tracking-tight text-slate-900">
+              Asset Map
+            </h1>
+            <p className="mt-0.5 text-[11px] font-extrabold uppercase tracking-widest text-slate-600">
+              Visual Monitoring
             </p>
           </div>
 
-          <div className="pointer-events-auto flex gap-2">
+          <div className="pointer-events-auto flex flex-wrap gap-3">
             {[
-              { label: "Fleet", value: machines.length, bg: "bg-white" },
-              { label: "Alerts", value: statusSummary.anomalous, bg: "bg-[#d9534f]", text: "text-white" },
-              { label: "Maintenance", value: statusSummary.maintenance, bg: "bg-white" },
+              {
+                label: "active",
+                value: statusSummary.active,
+                dotColor: "bg-slate-300",
+                textColor: "text-slate-800",
+              },
+              {
+                label: "Alerts",
+                value: statusSummary.anomalous,
+                dotColor: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]",
+                textColor: "text-red-600",
+              },
+              {
+                label: "Maint.",
+                value: statusSummary.maintenance,
+                dotColor: "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]",
+                textColor: "text-amber-600",
+              },
             ].map((item) => (
               <div
                 key={item.label}
-                className={cn(
-                  "flex flex-col items-end rounded-2xl border border-[#dce5e2] px-4 py-2 shadow-sm backdrop-blur-md",
-                  item.bg,
-                )}
+                className="flex items-center gap-3 rounded-full border border-white/60 bg-white/80 px-4 py-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.06)] backdrop-blur-md transition-all hover:bg-white/95"
               >
-                <span
-                  className={cn(
-                    "text-[9px] font-black uppercase tracking-widest opacity-60",
-                    item.text || "text-[#2d241c]",
-                  )}
-                >
+                <span className={cn("h-2.5 w-2.5 rounded-full", item.dotColor)}></span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                   {item.label}
                 </span>
-                <span
-                  className={cn(
-                    "text-lg font-black leading-tight",
-                    item.text || "text-[#2d241c]",
-                  )}
-                >
+                <span className={cn("text-base font-black leading-none", item.textColor)}>
                   {item.value}
                 </span>
               </div>
@@ -108,118 +111,88 @@ export default function ClientMapPage() {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-20 flex items-center px-6 md:px-8">
-          <div
-            className={cn(
-              "pointer-events-auto w-85 overflow-hidden rounded-4xl border border-white/40 bg-white/80 p-1 shadow-[0_32px_64px_rgba(0,0,0,0.12)] backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
-              selectedMachine ? "translate-x-0 opacity-100" : "-translate-x-100 opacity-0",
-            )}
-          >
-            {selectedMachine && (
-              <div className="rounded-[28px] bg-white p-6 shadow-inner">
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="h-2 w-12 rounded-full bg-[#3b8f88]/20"></div>
-                  <span
-                    className={cn(
-                      "rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest",
-                      getMachineStatusClasses(selectedMachine.status),
-                    )}
-                  >
-                    {selectedMachine.status}
-                  </span>
-                </div>
+        <MapSidebar
+          isOpen={!!selectedMachine}
+          title="Machine Details"
+          subtitle={selectedMachine?.location}
+          onClose={() => setSelectedMachineId(null)}
+        >
+          {selectedMachine && (
+            <div className="space-y-4">
+              <MachineInfoCard
+                machineData={selectedMachine}
+                statusClassName={getMachineStatusClasses(selectedMachine.status)}
+              />
 
-                <h2 className="text-2xl font-black leading-none text-[#2d241c]">
-                  {selectedMachine.name}
-                </h2>
-                <p className="mt-2 font-mono text-[11px] font-bold uppercase text-[#6ba5a5]">
-                  {selectedMachine.code}
-                </p>
-
-                <div className="mt-8 space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f0f4f3] text-[#3b8f88]">
-                      <span className="material-symbols-outlined text-[20px]">
-                        location_on
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-[#9d9388]">
-                        Location
-                      </p>
-                      <p className="text-[13px] font-bold text-[#2d241c]">
-                        {selectedMachine.location}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f0f4f3] text-[#3b8f88]">
-                      <span className="material-symbols-outlined text-[20px]">
-                        monitor_heart
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-[#9d9388]">
-                        Status
-                      </p>
-                      <p className="text-[13px] font-bold text-[#2d241c]">
-                        {getClientMachineStatusLabel(selectedMachine.status)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8 grid grid-cols-1 gap-3">
-                  <Button
-                    className="h-auto rounded-2xl py-4 text-[10px] uppercase tracking-widest"
-                    onClick={() => navigate("/client/repair-requests")}
-                  >
-                    Repair Requests
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="h-auto rounded-2xl py-4 text-[10px] uppercase tracking-widest"
-                    onClick={() => navigate("/client/machines")}
-                  >
-                    Machine List
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="h-auto rounded-2xl py-4 text-[10px] uppercase tracking-widest"
-                    onClick={() =>
-                      navigate(`/client/machines/${selectedMachine.id}/history`)
-                    }
-                  >
-                    History
-                  </Button>
-                </div>
-
-                {selectedMachine.status === "anomalous" && (
-                  <div className="mt-4 rounded-2xl border border-[#f7c79f] bg-[#fff2e8] px-4 py-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#d8711f]">
-                      Alert state
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-[#2d241c]">
-                      This machine has an active anomaly linked to a repair flow.
-                    </p>
-                  </div>
-                )}
-
-                {selectedMachine.status === "maintenance" && (
-                  <div className="mt-4 rounded-2xl border border-[#b9dfdc] bg-[#edf8f7] px-4 py-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#398e8e]">
-                      Maintenance zone
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-[#2d241c]">
-                      This machine is currently in maintenance follow-up.
-                    </p>
-                  </div>
-                )}
+              <div className="space-y-3">
+                <DetailRow
+                  icon="location_on"
+                  label="Location"
+                  value={selectedMachine.location}
+                />
+                <DetailRow
+                  icon="monitor_heart"
+                  label="Status"
+                  value={getClientMachineStatusLabel(selectedMachine.status)}
+                />
               </div>
-            )}
-          </div>
-        </div>
+
+              {selectedMachine.status === "anomalous" && (
+                <div className="rounded-xl border border-red-100 bg-red-50 p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-red-800">
+                    Alert State
+                  </p>
+                  <p className="mt-1 text-xs font-medium text-red-600">
+                    Active anomaly detected. Repair flow might be required.
+                  </p>
+                </div>
+              )}
+
+              {selectedMachine.status === "maintenance" && (
+                <div className="rounded-xl border border-amber-100 bg-amber-50 p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-amber-800">
+                    Maintenance Zone
+                  </p>
+                  <p className="mt-1 text-xs font-medium text-amber-600">
+                    Machine is currently under maintenance follow-up.
+                  </p>
+                </div>
+              )}
+
+              <div className="border-t border-gray-100 pt-4">
+                <ActionButtons
+                  actions={[
+                    {
+                      label: "Repair Requests",
+                      icon: "construction",
+                      onClick: () => navigate("/client/repair-requests"),
+                    },
+                  ]}
+                />
+                <div className="mt-3">
+                  <ActionButtons
+                    columns={2}
+                    actions={[
+                      {
+                        label: "List",
+                        icon: "list",
+                        variant: "secondary",
+                        onClick: () => navigate("/client/machines"),
+                      },
+                      {
+                        label: "History",
+                        icon: "history",
+                        variant: "outline",
+                        onClick: () =>
+                          navigate(`/client/machines/${selectedMachine.id}/history`),
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </MapSidebar>
       </section>
     </div>
   );

@@ -1,20 +1,36 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useLogout } from "@/features/auth/";
 import { MaintoraLogo } from "@/shared/components/ui";
 import { useAuth } from "@/context/useAuth";
 
 function ClientAppLayout() {
+  const { logout } = useLogout();
+  const { user } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const location = useLocation();
 
-  const { logout } = useLogout() ;
-
-  const { user } = useAuth() ;
-
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
 
   return (
-    <div className="flex h-screen bg-[#F7F6F2] font-sans text-slate-800 overflow-hidden">
-      <aside className="w-65 bg-white flex flex-col justify-between shadow-[2px_0_15px_rgba(0,0,0,0.03)] z-20">
+    <div className="flex h-screen bg-slate-50 font-sans text-slate-800 overflow-hidden">
+      
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm transition-opacity lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col justify-between bg-white shadow-[2px_0_15px_rgba(0,0,0,0.03)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <div>
-          <div className="p-6 flex items-center gap-3">
+          <div className="flex items-center justify-between p-6">
             <MaintoraLogo
               to="/client"
               size={28}
@@ -22,118 +38,153 @@ function ClientAppLayout() {
               title="MAINTORA"
               subtitle="Client Workspace"
               wrapperClassName="flex items-center gap-3"
-              markClassName="w-9 h-9 bg-primary/80 rounded-lg flex items-center justify-center text-white"
+              markClassName="w-9 h-9 bg-[#43968C] rounded-xl flex items-center justify-center text-white shadow-sm"
               textClassName="flex flex-col"
-              titleClassName="text-[13px] font-extrabold text-primary uppercase tracking-wide"
-              subtitleClassName="text-[10px] text-gray-400 font-medium"
+              titleClassName="text-[13px] font-extrabold text-[#43968C] uppercase tracking-wide"
+              subtitleClassName="text-[10px] text-slate-400 font-medium"
               ariaLabel="Go to client dashboard"
             />
+            {/* Bouton bach tsed l-sidebar f mobile */}
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-500 lg:hidden"
+            >
+              <span className="material-symbols-outlined text-[20px]">close</span>
+            </button>
           </div>
 
-          <nav className="px-4 mt-2 space-y-1">
+          <nav className="mt-2 space-y-1 px-4">
             <NavLink
               to="/client"
               end
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-semibold transition-colors`
+                `flex items-center gap-3 rounded-xl px-4 py-3 text-[13px] transition-all ${
+                  isActive
+                    ? "bg-teal-50 font-bold text-[#43968C]"
+                    : "font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                }`
               }
             >
               <span className="material-symbols-outlined text-[20px]">
                 space_dashboard
               </span>
-              <span className="text-[13px]">Dashboard</span>
+              <span>Dashboard</span>
             </NavLink>
 
             <NavLink
               to="/client/machines"
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-medium transition-colors`
+                `flex items-center gap-3 rounded-xl px-4 py-3 text-[13px] transition-all ${
+                  isActive
+                    ? "bg-teal-50 font-bold text-[#43968C]"
+                    : "font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                }`
               }
             >
               <span className="material-symbols-outlined text-[20px]">
-                settings_suggest
+                precision_manufacturing
               </span>
-              <span className="text-[13px]">Machines</span>
+              <span>Machines</span>
             </NavLink>
+
             <NavLink
               to="/client/map"
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-medium transition-colors`
+                `flex items-center gap-3 rounded-xl px-4 py-3 text-[13px] transition-all ${
+                  isActive
+                    ? "bg-teal-50 font-bold text-[#43968C]"
+                    : "font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                }`
               }
             >
-              <span className="material-symbols-outlined text-[20px]">
-                map
-              </span>
-              <span className="text-[13px]">Map</span>
+              <span className="material-symbols-outlined text-[20px]">map</span>
+              <span>Asset Map</span>
             </NavLink>
+
             <NavLink
               to="/client/repair-requests"
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg ${isActive ? "bg-[#eaf3f3] text-primary" : "text-gray-500 hover:bg-gray-50"} font-medium transition-colors`
+                `flex items-center gap-3 rounded-xl px-4 py-3 text-[13px] transition-all ${
+                  isActive
+                    ? "bg-teal-50 font-bold text-[#43968C]"
+                    : "font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                }`
               }
             >
               <span className="material-symbols-outlined text-[20px]">
-                build
+                home_repair_service
               </span>
-              <span className="text-[13px]">Repair Requests</span>
+              <span>Repair Requests</span>
             </NavLink>
           </nav>
         </div>
 
         <div className="p-6">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-3">
             <NavLink
               to="/client/profile"
-              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg transition-colors hover:text-primary"
+              className="flex min-w-0 flex-1 items-center gap-3 transition-colors hover:opacity-80"
             >
-              <div className="w-9 h-9 rounded-full bg-[#eaf3f3] flex items-center justify-center text-primary ">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-[#43968C]">
                 <span className="material-symbols-outlined text-[18px]">
                   person
                 </span>
               </div>
               <div className="min-w-0">
-                <p className="truncate text-[13px] font-bold text-gray-800">
+                <p className="truncate text-xs font-bold text-slate-900">
                   {user?.first_name} {user?.last_name}
                 </p>
-                <p className="truncate text-[11px] text-gray-400 font-medium">
+                <p className="truncate text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                   {user?.roles?.[0]?.name ?? "No role"}
                 </p>
               </div>
             </NavLink>
 
-            <div className="flex justify-end">
-              <button
-                onClick={logout}
-                className="text-gray-400 hover:text-primary transition-colors"
-              >
-                <span className="material-symbols-outlined">logout</span>
-              </button>
-            </div>
+            <button
+              onClick={logout}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white hover:text-red-500 hover:shadow-sm"
+              title="Logout"
+            >
+              <span className="material-symbols-outlined text-[18px]">
+                logout
+              </span>
+            </button>
           </div>
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Header */}
-        <header className="h-19 px-8 flex items-center justify-between z-10">
-          <div className="flex items-center gap-2 text-[13px] font-medium text-gray-400">
-            <span className="material-symbols-outlined text-[18px]">home</span>
-            <span>/</span>
-            <span className="text-gray-700">dashboard</span>
+      <main className="flex h-screen min-w-0 flex-1 flex-col overflow-hidden">
+        <header className="z-10 flex h-20 shrink-0 items-center justify-between px-4 sm:px-8">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm transition-all hover:bg-slate-50 lg:hidden"
+            >
+              <span className="material-symbols-outlined text-[24px]">menu</span>
+            </button>
+
+            <div className="hidden items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 sm:flex">
+              <span className="material-symbols-outlined text-[16px]">home</span>
+              <span>/</span>
+              <span className="text-[#43968C]">
+                {location.pathname.split("/").pop()?.replace("-", " ") || "dashboard"}
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-5">
-            <button className="text-gray-400 hover:text-primary transition-colors relative">
-              <span className="material-symbols-outlined text-[22px]">
+          <div className="flex items-center gap-4">
+            <button className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 shadow-sm transition-all hover:text-[#43968C] hover:border-[#43968C]/30 hover:bg-teal-50">
+              <span className="material-symbols-outlined text-[20px]">
                 notifications
               </span>
-              <span className="absolute top-0 right-0.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#F7F6F2]"></span>
+              <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border-2 border-white bg-red-500"></span>
             </button>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-8 pb-8">
-          <div className="mx-auto w-full max-w-375">
+        {/* Page Content */}
+        <div className="flex-1 overflow-y-auto px-4 pb-8 sm:px-8">
+          <div className="mx-auto w-full max-w-350">
             <Outlet />
           </div>
         </div>

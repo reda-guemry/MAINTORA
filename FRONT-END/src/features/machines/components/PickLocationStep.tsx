@@ -25,7 +25,6 @@ export function PickLocationStep({
   async function handleMapClick(lat: number, lng: number) {
     try {
       const { city } = await reverseGeocode(lat, lng);
-
       const resolvedLocation = city;
 
       setSelectedLocation({
@@ -34,11 +33,9 @@ export function PickLocationStep({
         longitude: lng,
       });
 
-      return resolvedLocation ;
-
+      return resolvedLocation;
     } catch (error) {
       console.error("Failed to reverse geocode location:", error);
-      // Optionally, you can still call onSelectLocation with lat/lng even if reverse geocoding fails
       onSelectLocation({
         location: "",
         latitude: lat,
@@ -56,29 +53,50 @@ export function PickLocationStep({
   }
 
   return (
-    <div className="px-6 py-5">
-      <h3 className="text-lg font-bold text-gray-900">Pick machine location</h3>
-
-      <div className="mt-4 h-80 rounded-lg border">
-        <MapView onMapClick={handleMapClick} />
+    <div className="flex h-full flex-col">
+      <div className="border-b border-slate-100 bg-slate-50/50 px-8 py-6 flex items-center justify-between">
+        <div>
+          <h3 className="text-xl font-bold text-slate-900">Pin Machine Location</h3>
+          <p className="mt-1 text-sm text-slate-500">
+            Click anywhere on the map to set the exact coordinates.
+          </p>
+        </div>
+        {selectedLocation && (
+          <div className="rounded-lg bg-teal-50 px-4 py-2 border border-teal-100 text-right">
+             <p className="text-sm font-bold text-teal-800">{selectedLocation.location || "Location Found"}</p>
+             <p className="text-[10px] font-medium text-teal-600 tracking-wider">
+               LAT: {selectedLocation.latitude.toFixed(4)} | LNG: {selectedLocation.longitude.toFixed(4)}
+             </p>
+          </div>
+        )}
       </div>
 
-      <div className="flex justify-end gap-3 mt-4">
-        <div className="mt-4 flex justify-end gap-3 ">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onSave}
-            className="bg-primary rounded-lg px-4 py-3"
-            disabled={!selectedLocation}
-          >
-            Save
-          </Button>
+      <div className="p-6">
+        <div className="h-112.5 w-full overflow-hidden rounded-2xl border border-slate-200 shadow-inner">
+          <MapView onMapClick={handleMapClick} />
         </div>
 
-        <div className="mt-4 flex justify-end gap-3">
-          <Button type="button" variant="secondary" onClick={onBack}>
-            Back
+        <div className="mt-6 flex justify-between items-center">
+          <Button 
+            type="button" 
+            variant="secondary" 
+            onClick={onBack}
+            className="flex items-center gap-2 rounded-xl px-6 font-medium bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+          >
+            <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            <span> Back to Form </span>
+
+            </div>
+          </Button>
+
+          <Button
+            type="button"
+            onClick={onSave}
+            disabled={!selectedLocation}
+            className="rounded-xl bg-[#43968C] px-8 font-semibold text-white shadow-sm transition-all hover:bg-[#367971] disabled:opacity-50 disabled:hover:bg-[#43968C]"
+          >
+            Confirm Location
           </Button>
         </div>
       </div>

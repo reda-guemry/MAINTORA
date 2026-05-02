@@ -5,7 +5,6 @@ import { useCreateMachine } from "@/features/machines/hooks/useCreateMachine";
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
-
 const defaultValues: MachinePayload = {
   code: "",
   name: "",
@@ -15,7 +14,6 @@ const defaultValues: MachinePayload = {
 };
 
 type Step = "form" | "map";
-
 
 export function AddMachineFlow({
   isOpen,
@@ -28,7 +26,6 @@ export function AddMachineFlow({
   onCreated?: (machine: Machine) => void;
   isLoading?: boolean;
 }) {
-
   const methods = useForm<MachinePayload>({ defaultValues });
   const [step, setStep] = useState<Step>("form");
   const { createMachineCall } = useCreateMachine();
@@ -68,8 +65,8 @@ export function AddMachineFlow({
 
   return (
     <FormProvider {...methods}>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-        <div className="w-full max-w-lg rounded-xl bg-white shadow-xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm sm:p-6 transition-all">
+        <div className="w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl">
           {step === "form" ? (
             <AddMachineForm
               onClose={handleClose}
