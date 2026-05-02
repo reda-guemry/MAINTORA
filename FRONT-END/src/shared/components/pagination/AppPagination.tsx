@@ -45,7 +45,7 @@ export function AppPagination({
           </span>
         </button>
 
-        <span className="min-w-[80px] text-center text-[13px] font-medium text-gray-600">
+        <span className="min-w-20 text-center text-[13px] font-medium text-gray-600">
           Page {currentPage} of {normalizedLastPage}
         </span>
 

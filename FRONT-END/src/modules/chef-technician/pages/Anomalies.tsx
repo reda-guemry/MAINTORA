@@ -13,21 +13,16 @@ import {
   useReviewRepairPurchaseOrder,
 } from "@/features/anomaly";
 
-
 export function AnomaliesPage() {
-
-
   const [statusFilter, setStatusFilter] = useState("");
   const [severityFilter, setSeverityFilter] = useState("");
   const [search, setSearch] = useState("");
 
-
   const [selectedAnomalyId, setSelectedAnomalyId] = useState<number | null>(
     null,
   );
-
-
-  const [isRepairRequestModalOpen, setIsRepairRequestModalOpen] = useState(false);
+  const [isRepairRequestModalOpen, setIsRepairRequestModalOpen] =
+    useState(false);
 
   const {
     anomalies,
@@ -47,12 +42,12 @@ export function AnomaliesPage() {
     refreshAnomaly,
   } = useChefAnomalyDetails(selectedAnomalyId);
 
-  
   const {
     createRepairRequestCall,
     isLoading: isCreatingRepairRequest,
     error: createRepairRequestError,
   } = useCreateRepairRequest();
+
   const {
     reviewPurchaseOrderCall,
     isLoading: isReviewingPurchaseOrder,
@@ -61,10 +56,7 @@ export function AnomaliesPage() {
 
   const filteredAnomalies = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
-
-    if (!normalizedSearch) {
-      return anomalies;
-    }
+    if (!normalizedSearch) return anomalies;
 
     return anomalies.filter((anomaly) => {
       return (
@@ -82,6 +74,7 @@ export function AnomaliesPage() {
   const openCount = anomalies.filter(
     (anomaly) => anomaly.status === "open" || anomaly.status === "pending",
   ).length;
+
   const inProgressCount = anomalies.filter(
     (anomaly) => anomaly.status === "in_progress",
   ).length;
@@ -100,24 +93,13 @@ export function AnomaliesPage() {
     description: string;
     estimated_cost: number;
   }) {
-    if (!selectedAnomalyId) {
-      return;
-    }
-
+    if (!selectedAnomalyId) return;
     const response = await createRepairRequestCall(selectedAnomalyId, payload);
-
-    if (!response) {
-      return;
-    }
+    if (!response) return;
 
     setIsRepairRequestModalOpen(false);
-
     const updatedAnomaly = await refreshAnomaly();
-
-    if (updatedAnomaly) {
-      updateAnomalyInList(updatedAnomaly);
-    }
-
+    if (updatedAnomaly) updateAnomalyInList(updatedAnomaly);
     await refreshAnomalies();
   }
 
@@ -125,117 +107,130 @@ export function AnomaliesPage() {
     repairRequestId: number,
     decision: "approve" | "reject",
   ) {
-    if (!repairRequestId) {
-      return;
-    }
-
+    if (!repairRequestId) return;
     const response = await reviewPurchaseOrderCall(repairRequestId, decision);
-
-    if (!response) {
-      return;
-    }
+    if (!response) return;
 
     const updatedAnomaly = await refreshAnomaly();
-
-    if (updatedAnomaly) {
-      updateAnomalyInList(updatedAnomaly);
-    }
-
+    if (updatedAnomaly) updateAnomalyInList(updatedAnomaly);
     await refreshAnomalies();
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[26px] border border-[#d9d1c5] bg-[linear-gradient(180deg,#eee7da_0%,#ece2d3_100%)] px-6 py-7 shadow-[0_18px_45px_rgba(62,52,39,0.08)]">
-        <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-          <div className="max-w-3xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#948674]">
-              Anomalies Workspace
-            </p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight text-[#2d241c] md:text-[42px]">
-              Review field anomalies and turn pending issues into repair
-              requests.
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-[#6f6254]">
-              Keep one clean page for anomaly follow-up, technician visibility,
-              checklist context, and client repair request creation.
-            </p>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-2">
-            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
-                Total machines
-              </p>
-              <p className="mt-3 text-3xl font-black text-[#2d241c]">{paginate?.total ?? 0}</p>
-            </div>
-
-            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
-                Open now
-              </p>
-              <p className="mt-3 text-3xl font-black text-[#2d241c]">{openCount}</p>
-            </div>
-
-            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
-                In progress
-              </p>
-              <p className="mt-3 text-3xl font-black text-[#2d241c]">{inProgressCount}</p>
-            </div>
-
-            <div className="rounded-2xl border border-white/70 bg-white/70 px-4 py-4">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-[#988a79]">
-                Current page
-              </p>
-              <p className="mt-3 text-3xl font-black text-[#2d241c]">{currentPage}</p>
-            </div>
-
-
-          </div>
+    <div className="min-h-screen  p-4 md:p-8 space-y-10">
+      <header className="grid grid-cols-1 lg:grid-cols-[2fr,3fr] items-center gap-8 bg-white p-6 rounded-3xl ">
+        <div className="max-w-3xl">
+          <p className="text-[12px] font-bold uppercase tracking-wider text-teal-600">
+            Operations Workspace
+          </p>
+          <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl">
+            Anomalies Registry
+          </h1>
+          <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-slate-600">
+            Centralized hub to review field reported anomalies, track their
+            status, and seamlessy convert pending issues into repair requests.
+          </p>
         </div>
-      </section>
 
-      <section className="rounded-3xl border border-[#ddd5c8] bg-white p-5 shadow-[0_16px_40px_rgba(62,52,39,0.07)]">
-        <div className="grid gap-4 xl:grid-cols-[1.4fr_0.8fr_0.8fr]">
-          <div className="relative">
-            <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9d9388]">
-              search
-            </span>
-            <Input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search by anomaly, machine, or technician..."
-              className="border-[#ddd5c8] bg-[#fcfaf7] pl-10"
-            />
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            {
+              label: "Total Machines",
+              value: paginate?.total ?? 0,
+              icon: "precision_manufacturing",
+            },
+            {
+              label: "Open Now",
+              value: openCount,
+              icon: "pending_actions",
+              isTeal: true,
+            },
+            {
+              label: "In Progress",
+              value: inProgressCount,
+              icon: "published_with_changes",
+            },
+            { label: "Current Page", value: currentPage, icon: "find_in_page" },
+          ].map((stat, i) => (
+            <div
+              key={i}
+              className="rounded-3xl bg-white border border-slate-100 p-5 flex items-center gap-4 shadow-inner shadow-slate-50"
+            >
+              <div
+                className={
+                  stat.isTeal
+                    ? "rounded-full bg-teal-50 text-teal-600 p-3"
+                    : "rounded-full bg-slate-100 text-slate-600 p-3"
+                }
+              >
+                <span className="material-symbols-outlined text-[24px] flex">
+                  {stat.icon}
+                </span>
+              </div>
+              <div>
+                <p className="text-[12px] font-medium text-slate-500">
+                  {stat.label}
+                </p>
+                <p
+                  className={
+                    stat.isTeal
+                      ? "mt-1 text-3xl font-bold text-teal-600"
+                      : "mt-1 text-3xl font-bold text-slate-950"
+                  }
+                >
+                  {stat.value}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </header>
 
+      <section className="rounded-3xl bg-white border border-slate-100 p-3 flex flex-col md:flex-row items-center gap-3 shadow-md shadow-slate-100">
+        <div className="relative grow w-full md:w-auto">
+          <span className="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[20px] text-slate-400">
+            search
+          </span>
+          <Input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search anomalies, machines, or technicians..."
+            className="border-none bg-slate-50 pl-12 h-13 rounded-2xl w-full text-[15px] focus:bg-white focus:ring-2  transition-colors"
+          />
+        </div>
+
+        <div className="flex items-center gap-3 w-full md:w-auto">
           <select
             value={statusFilter}
             onChange={(event) => setStatusFilter(event.target.value)}
-            className="h-12 rounded-lg border border-[#ddd5c8] bg-[#fcfaf7] px-4 text-sm text-[#2d241c] outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="grow md:grow-0 h-13 md:w-45 rounded-2xl border-none bg-slate-50 px-5 text-[14px] font-medium text-slate-900 outline-none transition-colors focus:bg-white focus:ring-2 focus:ring-gray-500"
           >
             <option value="">All statuses</option>
-            <option value="open">Open</option>
-            <option value="pending">Pending</option>
-            <option value="in_progress">In progress</option>
-            <option value="resolved">Resolved</option>
-            <option value="rejected">Rejected</option>
+            {["Open", "Pending", "In progress", "Resolved", "Rejected"].map(
+              (s) => (
+                <option key={s} value={s.toLowerCase().replace(" ", "_")}>
+                  {s}
+                </option>
+              ),
+            )}
           </select>
 
           <select
             value={severityFilter}
             onChange={(event) => setSeverityFilter(event.target.value)}
-            className="h-12 rounded-lg border border-[#ddd5c8] bg-[#fcfaf7] px-4 text-sm text-[#2d241c] outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="grow md:grow-0 h-13 md:w-45 rounded-2xl border-none bg-slate-50 px-5 text-[14px] font-medium text-slate-900 outline-none transition-colors focus:bg-white focus:ring-2 focus:ring-gray-500"
           >
             <option value="">All severities</option>
-            <option value="low">Low severity</option>
-            <option value="medium">Medium severity</option>
-            <option value="high">High severity</option>
+            {["Low severity", "Medium severity", "High severity"].map((s) => (
+              <option key={s} value={s.toLowerCase().replace(" severity", "")}>
+                {s}
+              </option>
+            ))}
           </select>
         </div>
       </section>
 
+      {/* 3. CONTENT AREA */}
       {error && (
         <Alert variant="error" title="Anomalies unavailable">
           {error}
@@ -243,96 +238,122 @@ export function AnomaliesPage() {
       )}
 
       {isLoading && anomalies.length === 0 ? (
-        <div className="flex min-h-70 flex-col items-center justify-center rounded-[30px] border border-[#ddd5c8] bg-white shadow-[0_16px_40px_rgba(62,52,39,0.07)]">
-          <Spinner />
-          <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.24em] text-[#8f8477]">
-            Loading anomalies
+        <div className="flex min-h-96 flex-col items-center justify-center rounded-[40px] bg-white shadow-xl shadow-slate-100">
+          <Spinner className="text-teal-600 w-10 h-10" />
+          <p className="mt-5 text-[14px] font-semibold text-slate-500 animate-pulse">
+            Loading real-time data...
           </p>
         </div>
       ) : filteredAnomalies.length === 0 ? (
-        <div className="rounded-[30px] border border-dashed border-[#d8d0c4] bg-white px-6 py-16 text-center shadow-[0_16px_40px_rgba(62,52,39,0.05)]">
-          <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#8f8477]">
-            No anomalies found
+        <div className="rounded-[40px] border-2 border-dashed border-slate-200 bg-slate-50/50 px-10 py-24 text-center shadow-inner">
+          <span className="material-symbols-outlined text-[64px] text-slate-300">
+            search_off
+          </span>
+          <p className="mt-6 text-[18px] font-bold text-slate-800">
+            No anomalies match your criteria
           </p>
-          <p className="mt-3 text-sm text-[#6f6254]">
-            Try another filter or search term to view anomaly reports.
+          <p className="mt-3 text-[15px] text-slate-600 max-w-md mx-auto">
+            Try refining your search term or adjusting the status and severity
+            filters to find what you're looking for.
           </p>
         </div>
       ) : (
-        <section className="grid gap-5 xl:grid-cols-3">
+        // OVERHAULED CARDS GRID
+        <section className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
           {filteredAnomalies.map((anomaly) => (
             <article
               key={anomaly.id}
-              className="flex h-full flex-col rounded-[28px] border border-[#ddd5c8] bg-white p-5 shadow-[0_16px_40px_rgba(62,52,39,0.07)]"
+              className="group relative flex flex-col justify-between rounded-3xl bg-white p-7 shadow-xl shadow-slate-100 transition-all duration-300 hover:shadow-2xl hover:border-teal-100 hover:-translate-y-1"
             >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#988a79]">
-                    {anomaly.machine.code}
-                  </p>
-                  <h2 className="mt-2 text-xl font-black tracking-tight text-[#2d241c]">
-                    {anomaly.title}
-                  </h2>
+              <div>
+                {/* Card Header */}
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[12px] font-bold uppercase tracking-wider text-slate-400">
+                      {anomaly.machine.code}
+                    </p>
+                    <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950 line-clamp-1 group-hover:text-teal-700 transition-colors">
+                      {anomaly.title}
+                    </h2>
+                  </div>
+                  <AnomalyStatusBadge
+                    status={anomaly.status}
+                    severity={anomaly.severity}
+                  />
                 </div>
-                <AnomalyStatusBadge
-                  status={anomaly.status}
-                  severity={anomaly.severity}
-                />
+
+                <p className="mt-5 text-[15px] leading-relaxed text-slate-600 line-clamp-3">
+                  {anomaly.description}
+                </p>
+
+                {/* Overhauled modern Data Grid */}
+                <div className="grid grid-cols-2 gap-x-4 gap-y-3 pt-6 border-t border-slate-100 mt-6">
+                  {[
+                    {
+                      label: "Machine",
+                      value: anomaly.machine.name,
+                      icon: "build",
+                    },
+                    {
+                      label: "Technician",
+                      value: `${anomaly.reported_by.first_name} ${anomaly.reported_by.last_name}`,
+                      icon: "engineering",
+                    },
+                    {
+                      label: "Checklist",
+                      value:
+                        anomaly.maintenance_task?.checklist_template?.name ??
+                        "Not linked",
+                      icon: "assignment",
+                    },
+                    {
+                      label: "Reported at",
+                      value: formatDate(anomaly.created_at),
+                      icon: "event_available",
+                    },
+                  ].map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex flex-col gap-1.5 rounded-xl bg-slate-50/50 p-3 border border-slate-100"
+                    >
+                      <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                        <span className="material-symbols-outlined text-[15px]">
+                          {item.icon}
+                        </span>
+                        {item.label}
+                      </span>
+                      <span className="text-[13px] font-semibold text-slate-900 truncate">
+                        {item.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <p className="mt-4 text-sm leading-7 text-[#6f6254]">
-                {anomaly.description}
-              </p>
-
-              <div className="mt-5 grid gap-3 rounded-[22px] bg-[#f7f3ec] px-4 py-4">
-                <div className="flex items-center justify-between gap-3 text-sm">
-                  <span className="text-[#8d8173]">Machine</span>
-                  <span className="font-bold text-[#2d241c]">
-                    {anomaly.machine.name}
+              <div className="mt-8 flex items-center justify-between gap-4 pt-5 border-t border-slate-100">
+                <div className="flex flex-col">
+                  <span className="text-[12px] font-medium text-slate-500">
+                    Status Context
                   </span>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 text-sm">
-                  <span className="text-[#8d8173]">Technician</span>
-                  <span className="font-bold text-[#2d241c]">
-                    {anomaly.reported_by.first_name}{" "}
-                    {anomaly.reported_by.last_name}
+                  <span className="mt-1 text-[13px] font-bold text-slate-900">
+                    {anomaly.repair_request
+                      ? "Repair request created"
+                      : anomaly.status === "pending"
+                        ? "Waiting for action"
+                        : "Already processed"}
                   </span>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 text-sm">
-                  <span className="text-[#8d8173]">Checklist</span>
-                  <span className="font-bold text-right text-[#2d241c]">
-                    {anomaly.maintenance_task?.checklist_template?.name ??
-                      "Not linked"}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 text-sm">
-                  <span className="text-[#8d8173]">Reported at</span>
-                  <span className="font-bold text-right text-[#2d241c]">
-                    {formatDate(anomaly.created_at)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-5 flex items-center justify-between gap-3">
-                <div className="text-sm text-[#6f6254]">
-                  {anomaly.repair_request
-                    ? "Repair request already created"
-                    : anomaly.status === "pending"
-                      ? "Waiting for action"
-                      : "Already processed"}
                 </div>
 
                 <Button
-                  variant="secondary"
                   onClick={() => handleOpenDetails(anomaly.id)}
+                  className="rounded-xl h-11 px-6 text-[14px] font-semibold bg-[#43968C] text-white flex items-center gap-2 hover:bg-[#367971] shadow-md shadow-teal-100 transition-all active:scale-95"
                 >
-                  <span className="material-symbols-outlined text-[18px]">
-                    visibility
-                  </span>
-                  View details
+                  <div className="flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[18px]">
+                      visibility
+                    </span>
+                    <span>View Details</span>
+                  </div>
                 </Button>
               </div>
             </article>
@@ -341,17 +362,19 @@ export function AnomaliesPage() {
       )}
 
       {paginate && paginate.last_page > 1 && (
-        <section className="overflow-hidden rounded-3xl border border-[#ddd5c8] shadow-[0_16px_40px_rgba(62,52,39,0.07)]">
-          <AppPagination
-            currentPage={currentPage}
-            lastPage={paginate.last_page}
-            from={paginate.from ?? 0}
-            to={paginate.to ?? 0}
-            total={paginate.total}
-            isLoading={isLoading}
-            label="anomalies"
-            onPageChange={setPage}
-          />
+        <section className="flex justify-center pt-8 border-t border-slate-100 mt-10">
+          <div className="bg-white rounded-full px-2 py-1 shadow-md border border-slate-100">
+            <AppPagination
+              currentPage={currentPage}
+              lastPage={paginate.last_page}
+              from={paginate.from ?? 0}
+              to={paginate.to ?? 0}
+              total={paginate.total}
+              isLoading={isLoading}
+              label="anomalies"
+              onPageChange={setPage}
+            />
+          </div>
         </section>
       )}
 

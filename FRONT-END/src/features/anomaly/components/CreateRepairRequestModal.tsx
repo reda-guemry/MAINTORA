@@ -62,24 +62,26 @@ export function CreateRepairRequestModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#2d2d2d]/45 p-4">
-      <div className="w-full max-w-2xl rounded-[30px] border border-[#ddd5c8] bg-[#fcfaf7] shadow-[0_30px_80px_rgba(0,0,0,0.22)]">
-        <div className="border-b border-[#ece6dc] px-6 py-5">
-          <h3 className="text-xl font-black tracking-tight text-[#2d241c]">
+    <div className="fixed inset-0 z-60 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+      <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        <div className="border-b border-slate-100 px-8 py-6">
+          <h3 className="text-xl font-bold tracking-tight text-slate-900">
             Send Repair Request
           </h3>
-          <p className="mt-1 text-sm text-[#6f6254]">
-            Create the repair request that will be sent to the client for this anomaly.
+          <p className="mt-1 text-sm text-slate-500">
+            Create the repair request that will be sent to the client for this
+            anomaly.
           </p>
         </div>
 
-        <div className="space-y-4 px-6 py-5">
+        <div className="space-y-5 px-8 py-6">
           <FormField label="Title" htmlFor="repair_request_title" required>
             <Input
               id="repair_request_title"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               placeholder="Repair request title"
+              className="h-11 rounded-xl border-slate-200 bg-slate-50 text-slate-900  focus:bg-white  "
             />
           </FormField>
 
@@ -92,8 +94,8 @@ export function CreateRepairRequestModal({
               id="repair_request_description"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              rows={6}
-              className="w-full rounded-lg border border-[#ddd5c8] bg-white px-4 py-3 text-sm text-[#2d241c] outline-none transition-colors placeholder:text-[#9d9388] focus:border-primary focus:ring-2 focus:ring-primary/20"
+              rows={5}
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400  focus:bg-white focus:ring-2 "
               placeholder="Describe the repair request for the client..."
             />
           </FormField>
@@ -111,24 +113,36 @@ export function CreateRepairRequestModal({
               value={estimatedCost}
               onChange={(event) => setEstimatedCost(event.target.value)}
               placeholder="0.00"
+              className="h-11 rounded-xl border-slate-200 bg-slate-50 text-slate-900  focus:bg-white focus:ring-2 "
             />
           </FormField>
 
           {(formError || error) && (
-            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
               {formError ?? error}
             </div>
           )}
 
-          <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
-            <Button variant="secondary" onClick={onClose} disabled={isLoading}>
+          <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end">
+            <Button
+              variant="secondary"
+              onClick={onClose}
+              disabled={isLoading}
+              className="h-11 rounded-xl"
+            >
               Cancel
             </Button>
-            <Button onClick={handleSubmit} isLoading={isLoading}>
-              <span className="material-symbols-outlined text-[18px]">
-                send
-              </span>
-              Save Repair Request
+            <Button
+              onClick={handleSubmit}
+              isLoading={isLoading}
+              className="h-11 rounded-xl bg-[#43968C] text-white hover:bg-[#367971]"
+            >
+              <div className="flex gap-1 items-center">
+                <span className="material-symbols-outlined text-[18px]">
+                  send
+                </span>
+                <span>Save Repair Request</span>
+              </div>
             </Button>
           </div>
         </div>

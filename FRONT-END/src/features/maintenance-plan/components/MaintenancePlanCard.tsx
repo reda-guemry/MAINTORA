@@ -76,8 +76,10 @@ export function MaintenancePlanCard({
             onClick={() => onEdit(maintenancePlan)}
             className="flex h-9 flex-1 items-center justify-center gap-1.5 text-[12px] font-medium"
           >
-            <span className="material-symbols-outlined text-[16px]">edit</span>
-            Edit
+            <div className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[16px]">edit</span>
+              <span>Edit</span>
+            </div>
           </Button>
           <Button
             variant="danger"
@@ -85,8 +87,10 @@ export function MaintenancePlanCard({
             onClick={() => onDelete(maintenancePlan)}
             className="flex h-9 flex-1 items-center justify-center gap-1.5 text-[12px] font-medium"
           >
-            <span className="material-symbols-outlined text-[16px]">delete</span>
-            Delete
+            <div className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[16px]">delete</span>
+              <span>Delete</span>
+            </div>
           </Button>
         </div>
       </div>
