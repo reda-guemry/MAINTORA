@@ -105,24 +105,30 @@ export function ChecklistTemplatesPage() {
   return (
     <div className="w-full space-y-6">
       <section className="flex flex-col gap-6 overflow-hidden rounded-2xl border border-gray-200 border-t-4 border-t-[#388E8E] bg-white p-6 shadow-sm md:p-8 lg:flex-row lg:items-center lg:justify-between">
-        
         <div className="flex max-w-2xl flex-col items-start">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#eef7f6] text-[#388E8E]">
-              <span className="material-symbols-outlined text-[26px]">rule_folder</span>
+              <span className="material-symbols-outlined text-[26px]">
+                rule_folder
+              </span>
             </div>
             <div>
               <h1 className="text-[22px] font-bold tracking-tight text-[#1A1A1A] md:text-[28px]">
                 Checklist Templates
               </h1>
               <p className="mt-1 text-[13px] text-gray-500 md:text-[14px]">
-                Build reusable templates for your technician team to keep routine checks aligned.
+                Build reusable templates for your technician team to keep
+                routine checks aligned.
               </p>
             </div>
           </div>
-          
+
           <div className="mt-5 pl-16">
-            <NavElement to="/chef-technician/checklist/items" label="View all checklists item" end />
+            <NavElement
+              to="/chef-technician/checklist/items"
+              label="View all checklists item"
+              end
+            />
           </div>
         </div>
 
@@ -135,7 +141,7 @@ export function ChecklistTemplatesPage() {
               {paginate?.total ?? 0}
             </p>
           </div>
-          
+
           <div className="flex flex-1 flex-col items-center px-4 md:px-6 lg:flex-none">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
               Current Page
@@ -144,7 +150,7 @@ export function ChecklistTemplatesPage() {
               {currentPage}
             </p>
           </div>
-          
+
           <div className="flex flex-1 flex-col items-center px-4 md:px-6 lg:flex-none">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
               Search Matches
@@ -169,15 +175,17 @@ export function ChecklistTemplatesPage() {
           />
         </div>
 
-       <Button 
-          type="button" 
+        <Button
+          type="button"
           onClick={() => setIsAddModalOpen(true)}
           className="flex h-10 items-center justify-center gap-1.5 rounded-lg bg-[#388E8E] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#2c7a7a] md:text-[14px]"
         >
-          <span className="material-symbols-outlined relative top-1 text-[20px]">
-            add
-          </span>
-          <span>New Template</span>
+          <div className="flex gap-1.5 items-center">
+            <span className="material-symbols-outlined text-[20px]">
+              add
+            </span>
+            <span>New Template</span>
+          </div>
         </Button>
       </section>
 

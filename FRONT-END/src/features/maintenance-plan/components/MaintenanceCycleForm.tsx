@@ -164,7 +164,7 @@ export function MaintenanceCycleForm({
                 onChange={(event) => {
                   updateField("machine_id", Number(event.target.value));
                 }}
-                className="h-12 w-full appearance-none rounded-xl border border-[#d6e1e8] bg-[#f8fafb] px-12 text-sm font-semibold text-[#172033] outline-none transition focus:border-[#388E8E] focus:ring-4 focus:ring-[#388E8E]/10"
+                className="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-12 text-sm font-medium text-slate-900 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-4 focus:ring-[#43968C]/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value={0}>Choose machine...</option>
                 {machines.map((machine) => (
@@ -268,7 +268,7 @@ export function MaintenanceCycleForm({
                       event.target.value as MaintenanceCycleFormState["status"],
                     );
                   }}
-                  className="h-12 w-full appearance-none rounded-xl border border-[#d6e1e8] bg-[#f8fafb] px-12 text-sm font-semibold text-[#172033] outline-none transition focus:border-[#388E8E] focus:ring-4 focus:ring-[#388E8E]/10"
+                  className="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-12 text-sm font-medium text-slate-900 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-4 focus:ring-[#43968C]/10 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -297,7 +297,7 @@ export function MaintenanceCycleForm({
                 onChange={(event) => {
                   updateField("assigned_to", Number(event.target.value));
                 }}
-                className="h-12 w-full appearance-none rounded-xl border border-[#d6e1e8] bg-[#f8fafb] px-12 text-sm font-semibold text-[#172033] outline-none transition focus:border-[#388E8E] focus:ring-4 focus:ring-[#388E8E]/10"
+                className="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-12 text-sm font-medium text-slate-900 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-4 focus:ring-[#43968C]/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value={0}>Assign technician...</option>
                 {technicians.map((technician) => (

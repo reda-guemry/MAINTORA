@@ -41,25 +41,28 @@ export function ProfileForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
+      className="rounded-4xl border border-slate-200/60 bg-white p-8 shadow-sm"
     >
-      <div className="mb-6">
-        <h2 className="text-lg font-black text-gray-900">Profile Information</h2>
-        <p className="mt-1 text-sm text-gray-500">
-          Update your personal account details.
+      <div className="mb-8 border-b border-slate-100 pb-6">
+        <h2 className="text-xl font-black tracking-tight text-slate-900">
+          Profile Information
+        </h2>
+        <p className="mt-1.5 text-xs font-medium text-slate-500">
+          Update your personal account details and contact information.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <FormField label="First name" htmlFor="profile_first_name" required>
           <Input
             id="profile_first_name"
             {...register("first_name", {
               required: "First name is required",
             })}
+            className="rounded-xl border-slate-200 bg-slate-50 focus:border-[#43968C] focus:bg-white "
           />
           {errors.first_name && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wide text-red-500">
               {errors.first_name.message}
             </p>
           )}
@@ -71,40 +74,54 @@ export function ProfileForm({
             {...register("last_name", {
               required: "Last name is required",
             })}
+            className="rounded-xl border-slate-200 bg-slate-50 focus:border-[#43968C] focus:bg-white "
           />
           {errors.last_name && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wide text-red-500">
               {errors.last_name.message}
             </p>
           )}
         </FormField>
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-        <FormField label="Email" htmlFor="profile_email" required>
+      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <FormField label="Email Address" htmlFor="profile_email" required>
           <Input
             id="profile_email"
             type="email"
             {...register("email", {
               required: "Email is required",
             })}
+            className="rounded-xl border-slate-200 bg-slate-50 focus:border-[#43968C] focus:bg-white "
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+            <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wide text-red-500">
+              {errors.email.message}
+            </p>
           )}
         </FormField>
 
-        <FormField label="Phone" htmlFor="profile_phone">
-          <Input id="profile_phone" {...register("phone")} />
+        <FormField label="Phone Number" htmlFor="profile_phone">
+          <Input 
+            id="profile_phone" 
+            {...register("phone")} 
+            className="rounded-xl border-slate-200 bg-slate-50 focus:border-[#43968C] focus:bg-white "
+          />
           {errors.phone && (
-            <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
+            <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wide text-red-500">
+              {errors.phone.message}
+            </p>
           )}
         </FormField>
       </div>
 
-      <div className="mt-6 flex justify-end">
-        <Button type="submit" isLoading={isLoading}>
-          Save Profile
+      <div className="mt-8 flex justify-end border-t border-slate-50 pt-6">
+        <Button 
+          type="submit" 
+          isLoading={isLoading}
+          className="rounded-xl bg-[#43968C] px-8 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-teal-900/10 transition-all hover:bg-[#367a72] active:scale-95"
+        >
+          {isLoading ? "Saving..." : "Save Profile"}
         </Button>
       </div>
     </form>

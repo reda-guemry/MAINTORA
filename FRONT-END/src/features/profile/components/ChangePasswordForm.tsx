@@ -35,16 +35,18 @@ export function ChangePasswordForm({
   return (
     <form
       onSubmit={handleSubmit(submitHandler)}
-      className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
+      className="rounded-[32px] border border-slate-200/60 bg-white p-8 shadow-sm"
     >
-      <div className="mb-6">
-        <h2 className="text-lg font-black text-gray-900">Change Password</h2>
-        <p className="mt-1 text-sm text-gray-500">
-          Confirm your current password before setting a new one.
+      <div className="mb-8 border-b border-slate-100 pb-6">
+        <h2 className="text-xl font-black tracking-tight text-slate-900">
+          Change Password
+        </h2>
+        <p className="mt-1.5 text-xs font-medium text-slate-500">
+          Ensure your account stays secure by using a strong password.
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <FormField
           label="Current password"
           htmlFor="current_password"
@@ -56,9 +58,10 @@ export function ChangePasswordForm({
             {...register("current_password", {
               required: "Current password is required",
             })}
+            className="rounded-xl border-slate-200 bg-slate-50 focus:border-[#43968C] focus:bg-white focus:ring-[#43968C]/10"
           />
           {errors.current_password && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wide text-red-500">
               {errors.current_password.message}
             </p>
           )}
@@ -75,9 +78,10 @@ export function ChangePasswordForm({
                 message: "New password must be at least 8 characters",
               },
             })}
+            className="rounded-xl border-slate-200 bg-slate-50 focus:border-[#43968C] focus:bg-white focus:ring-[#43968C]/10"
           />
           {errors.new_password && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wide text-red-500">
               {errors.new_password.message}
             </p>
           )}
@@ -96,18 +100,23 @@ export function ChangePasswordForm({
               validate: (value, formValues) =>
                 value === formValues.new_password || "Passwords do not match",
             })}
+            className="rounded-xl border-slate-200 bg-slate-50 focus:border-[#43968C] focus:bg-white focus:ring-[#43968C]/10"
           />
           {errors.new_password_confirmation && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wide text-red-500">
               {errors.new_password_confirmation.message}
             </p>
           )}
         </FormField>
       </div>
 
-      <div className="mt-6 flex justify-end">
-        <Button type="submit" isLoading={isLoading}>
-          Update Password
+      <div className="mt-8 flex justify-end border-t border-slate-50 pt-6">
+        <Button 
+          type="submit" 
+          isLoading={isLoading}
+          className="rounded-xl bg-[#43968C] px-8 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-teal-900/10 transition-all hover:bg-[#367a72] active:scale-95"
+        >
+          {isLoading ? "Updating..." : "Update Password"}
         </Button>
       </div>
     </form>

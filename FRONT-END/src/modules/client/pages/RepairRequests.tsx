@@ -146,7 +146,7 @@ export default function RepairRequestsPage() {
             <select
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value)}
-              className="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 pl-12 pr-10 text-sm font-medium text-slate-700 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-2 focus:ring-[#43968C]/20"
+              className="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 pl-12 pr-10 text-sm font-medium text-slate-900 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-4 focus:ring-[#43968C]/10 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="">All Statuses</option>
               <option value="open">Open</option>

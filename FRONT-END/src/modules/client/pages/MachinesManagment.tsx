@@ -121,7 +121,7 @@ export default function MachinesManagement() {
                 onChange={(event) =>
                   setFilter("status", event.target.value)
                 }
-                className="h-11 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm outline-none transition-colors hover:bg-slate-50 focus:border-[#43968C] focus:ring-2 focus:ring-[#43968C]/20"
+                className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-900 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-4 focus:ring-[#43968C]/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="all">All Assets</option>
                 <option value="active">Active</option>
