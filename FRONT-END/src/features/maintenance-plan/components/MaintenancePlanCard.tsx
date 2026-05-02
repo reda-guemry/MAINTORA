@@ -14,7 +14,7 @@ export function MaintenancePlanCard({
 }: MaintenancePlanCardProps) {
   return (
     <div className="rounded-[22px] border border-[#e7ddd0] bg-white px-4 py-4 shadow-[0_10px_24px_rgba(62,52,39,0.05)]">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+      <div className="flex flex-col gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-sm font-bold text-[#2d241c]">
@@ -69,12 +69,22 @@ export function MaintenancePlanCard({
           </div>
         </div>
 
-        <div className="flex shrink-0 gap-2">
-          <Button variant="outline" size="sm" onClick={() => onEdit(maintenancePlan)}>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onEdit(maintenancePlan)}
+            className="min-w-24 flex-1 justify-center"
+          >
             <span className="material-symbols-outlined text-[16px]">edit</span>
             Edit
           </Button>
-          <Button variant="danger" size="sm" onClick={() => onDelete(maintenancePlan)}>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => onDelete(maintenancePlan)}
+            className="min-w-24 flex-1 justify-center"
+          >
             <span className="material-symbols-outlined text-[16px]">delete</span>
             Delete
           </Button>

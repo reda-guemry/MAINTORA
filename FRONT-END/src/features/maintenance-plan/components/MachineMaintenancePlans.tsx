@@ -3,6 +3,7 @@ import { MaintenancePlanCard } from "./MaintenancePlanCard";
 import type { MachineMaintenancePlansProps } from "../types/maintenancePlan";
 
 export function MachineMaintenancePlans({
+  hasActivePlan = false,
   machineName,
   maintenancePlans,
   onAdd,
@@ -19,7 +20,6 @@ export function MachineMaintenancePlans({
 
   return (<div className="rounded-[20px] border border-[#e6dbcd] bg-[#fcfaf7] p-4 shadow-sm">
       <div className="flex flex-col gap-3">
-        {/* Header: Title & Badge */}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-[#988a79]">
@@ -34,30 +34,36 @@ export function MachineMaintenancePlans({
           </span>
         </div>
 
-        {/* Description */}
         <p className="text-[11px] leading-5 text-[#6f6254]">
           Create, update, or remove preventive routines without leaving the
           round workspace.
         </p>
 
-        {/* Action Button - Rdito kayakhod l'3erd kaml bach yji zwin f l'espace sghir */}
         <div className="mt-1">
-          <Button 
-            type="button" 
-            size="sm" 
-            onClick={onAdd}
-            className="w-full flex items-center justify-center gap-1.5"
-          >
-            <span className="material-symbols-outlined text-[18px]">add</span>
-            New Plan
-          </Button>
+          {hasActivePlan ? (
+            <div className="flex items-start gap-2 rounded-[14px] border border-[#d5eee9] bg-[#edf8f7] px-3 py-3 text-[11px] font-semibold leading-5 text-[#3b7772]">
+              <span className="material-symbols-outlined mt-0.5 text-[18px] text-[#388E8E]">
+                verified
+              </span>
+              <span>This machine already has an active maintenance plan.</span>
+            </div>
+          ) : (
+            <Button
+              type="button"
+              size="sm"
+              onClick={onAdd}
+              className="flex w-full items-center justify-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-[18px]">add</span>
+              New Plan
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Plans List */}
       <div className="mt-4 space-y-2.5">
         {sortedPlans.length === 0 ? (
-          <div className="rounded-[16px] border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-center text-xs text-[#7f7468]">
+          <div className="rounded-2xl border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-center text-xs text-[#7f7468]">
             No maintenance plans are linked to this machine yet.
           </div>
         ) : (

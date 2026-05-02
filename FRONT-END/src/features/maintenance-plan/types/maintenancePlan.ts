@@ -56,58 +56,12 @@ export type MaintenancePlanCardProps = {
 };
 
 export type MachineMaintenancePlansProps = {
+  hasActivePlan?: boolean;
   machineName: string;
   maintenancePlans: MaintenancePlan[];
   onAdd: () => void;
   onEdit: (maintenancePlan: MaintenancePlan) => void;
   onDelete: (maintenancePlan: MaintenancePlan) => void;
-};
-
-type MaintenancePlanBaseFormProps = {
-  title: string;
-  description: string;
-  submitLabel: string;
-  defaultValues: MaintenancePlanFormValues;
-  technicians: Technician[];
-  templates: MaintenancePlanChecklistTemplate[];
-  onClose: () => void;
-  isLoading?: boolean;
-  error?: string | null;
-};
-
-type CreateMaintenancePlanFormProps = MaintenancePlanBaseFormProps & {
-  machineId: number;
-  includeStatus?: false;
-  onSubmit: (values: CreateMaintenancePlanPayload) => void;
-};
-
-type UpdateMaintenancePlanFormProps = MaintenancePlanBaseFormProps & {
-  machineId?: undefined;
-  includeStatus: true;
-  onSubmit: (values: UpdateMaintenancePlanPayload) => void;
-};
-
-export type MaintenancePlanFormProps =
-  | CreateMaintenancePlanFormProps
-  | UpdateMaintenancePlanFormProps;
-
-export type AddMaintenancePlanModalProps = {
-  isOpen: boolean;
-  machineId: number | null;
-  technicians: Technician[];
-  onClose: () => void;
-  onSubmit: (payload: CreateMaintenancePlanPayload) => void;
-  isLoading?: boolean;
-  error?: string | null;
-};
-
-export type EditMaintenancePlanModalProps = {
-  maintenancePlan: MaintenancePlan | null;
-  technicians: Technician[];
-  onClose: () => void;
-  onSubmit: (payload: UpdateMaintenancePlanPayload) => void;
-  isLoading?: boolean;
-  error?: string | null;
 };
 
 export type DeleteMaintenancePlanDialogProps = {
@@ -116,4 +70,18 @@ export type DeleteMaintenancePlanDialogProps = {
   onConfirm: () => void;
   isLoading?: boolean;
   error?: string | null;
+};
+
+
+export type MaintenanceCycleSidebarProps = {
+  stats: MaintenanceCycleStats;
+};
+
+
+export type MaintenanceCycleStats = {
+  activeCycles: number;
+  automatedAssets: number;
+  automatedAssetsPercent: number;
+  pendingAssets: number;
+  totalAssets: number;
 };
