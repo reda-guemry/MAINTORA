@@ -12,6 +12,7 @@ use App\Http\Controllers\CheckList\ChecklistItemsController;
 use App\Http\Controllers\CheckList\ChecklistTemplateController;
 use App\Http\Controllers\Client\ClientDashboardController;
 use App\Http\Controllers\Client\ClientRepairRequestController;
+use App\Http\Controllers\ChefTechnician\ChefTechnicianDashboardController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Machine\MachineHistoryController;
 use App\Http\Controllers\Rounde\MaintenancePlanController;
@@ -72,6 +73,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('chef-technician')->middleware(['chef-technician'])->group(function () {
 
 
+
+        Route::get('dashboard/statistics', [ChefTechnicianDashboardController::class, 'statistics'])->middleware('can:manage technicians');
 
 
         Route::get('checklist/items/search', [ChecklistItemsController::class, 'search'])->middleware('can:manage technicians');
