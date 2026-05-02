@@ -21,7 +21,7 @@ import { AppPagination } from "@/shared/components";
 import { cn } from "@/shared/utils";
 
 const roleFilterOptions: UserRoleFilterOption[] = [
-  { label: "All", value: "all" },
+  { label: "All Users", value: "all" },
   { label: "Admin", value: "admin", apiValue: "admin" },
   { label: "Chef Technician", value: "chef_technician", apiValue: "chef_technician" },
   { label: "Technician", value: "technician", apiValue: "technician" },
@@ -67,6 +67,7 @@ export default function UsersManagement() {
   }
 
   function handleOpenDelete(user: User) {
+    handleOpenDelete;
     setDeleteUser(user);
   }
 
@@ -93,7 +94,6 @@ export default function UsersManagement() {
       if (response) {
         await refreshUsers();
       }
-
       handleCloseAdd();
     } finally {
       setIsCreatingUser(false);
@@ -102,9 +102,7 @@ export default function UsersManagement() {
 
   async function handleEditSubmit(payload: EditUserPayload) {
     if (!editUser) return;
-
     const ok = await editUserCall(editUser.id, payload);
-
     if (ok) {
       await refreshUsers();
       handleCloseEdit();
@@ -113,9 +111,7 @@ export default function UsersManagement() {
 
   async function handleDeleteConfirm() {
     if (!deleteUser) return;
-
     const ok = await deleteUserCall(deleteUser.id);
-
     if (ok) {
       await refreshUsers();
       handleCloseDelete();
@@ -123,44 +119,41 @@ export default function UsersManagement() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="space-y-8 pb-10">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
+          <h1 className="text-3xl font-black tracking-tight text-slate-900">
             User Management
           </h1>
-          <p className="mt-1.5 text-sm text-gray-500">
-            Configure user access levels and system permissions.
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            Maintain system security and manage user credentials.
           </p>
         </div>
         <button
-          className="flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#2d7373]"
+          className="flex items-center justify-center gap-2 rounded-2xl bg-[#43968C] px-6 py-3.5 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-teal-900/10 transition-all hover:bg-[#367a72] active:scale-[0.98]"
           type="button"
           onClick={handleOpenAdd}
         >
-          <span className="material-symbols-outlined text-[18px]">
-            person_add
-          </span>
+          <span className="material-symbols-outlined text-[20px]">person_add</span>
           Add New User
         </button>
       </div>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <section className="rounded-[32px] border border-slate-200/60 bg-white p-8 shadow-sm">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-400">
-              Role Filter
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#43968C]">
+              Quick Filters
             </p>
-            <p className="mt-1 text-sm text-gray-500">
-              Showing {activeRoleOption.label.toLowerCase()} users.
+            <p className="mt-1 text-sm font-bold text-slate-900">
+              Access Levels: <span className="text-slate-400 font-medium">{activeRoleOption.label}</span>
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
             {roleFilterOptions.map((option) => {
               const isActive = option.value === selectedRole;
-              const count =
-                isActive && paginate ? paginate.total : undefined;
+              const count = isActive && paginate ? paginate.total : undefined;
 
               return (
                 <button
@@ -169,22 +162,18 @@ export default function UsersManagement() {
                   onClick={() => handleRoleChange(option.value)}
                   disabled={isLoading && isActive}
                   className={cn(
-                    "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-bold transition-colors",
+                    "inline-flex items-center gap-3 rounded-xl border px-5 py-2.5 text-[11px] font-black uppercase tracking-wider transition-all",
                     isActive
-                      ? "border-[#388E8E] bg-[#eef7f6] text-[#2c7a7a]"
-                      : "border-gray-200 bg-white text-gray-500 hover:border-[#388E8E]/30 hover:bg-gray-50 hover:text-gray-800",
+                      ? "border-[#43968C] bg-teal-50 text-[#43968C] shadow-sm"
+                      : "border-slate-100 bg-white text-slate-400 hover:border-slate-200 hover:bg-slate-50 hover:text-slate-600",
                   )}
                 >
                   {option.label}
                   {count !== undefined && (
-                    <span
-                      className={cn(
-                        "rounded-full px-2 py-0.5 text-[10px]",
-                        isActive
-                          ? "bg-white text-[#2c7a7a]"
-                          : "bg-gray-100 text-gray-500",
-                      )}
-                    >
+                    <span className={cn(
+                      "rounded-lg px-2 py-0.5 text-[10px] font-black",
+                      isActive ? "bg-[#43968C] text-white" : "bg-slate-100 text-slate-400"
+                    )}>
                       {count}
                     </span>
                   )}
@@ -195,36 +184,28 @@ export default function UsersManagement() {
         </div>
       </section>
 
-      <UsersTable
-        users={users}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage={
-          selectedRole === "all"
-            ? "No users found."
-            : `No users found for ${activeRoleOption.label}.`
-        }
-        onEdit={handleOpenEdit}
-        onDelete={handleOpenDelete}
-      >
-        <AppPagination
-          currentPage={currentPage}
-          lastPage={paginate?.last_page ?? 1}
-          from={paginate?.from ?? 0}
-          to={paginate?.to ?? 0}
-          total={paginate?.total ?? 0}
+      <div className="rounded-4xl border border-slate-200/60 bg-white p-2 shadow-sm overflow-hidden">
+        <UsersTable
+          users={users}
           isLoading={isLoading}
-          label="users"
-          onPageChange={handlePageChange}
-        />
-      </UsersTable>
-
-      <div className="flex justify-between items-center text-[10px] font-mono text-gray-400 tracking-widest uppercase mt-8 pb-4">
-        <div className="flex gap-8">
-          <span>SESSION: CMMS-ADMIN-PRV-93</span>
-          <span>SERVER: AWS-US-EAST-1</span>
-        </div>
-        <span>LAST SYSTEM SYNC: 2023-11-24 14:32:01 UTC</span>
+          error={error}
+          emptyMessage={`No accounts found for ${activeRoleOption.label}.`}
+          onEdit={handleOpenEdit}
+          onDelete={handleOpenDelete}
+        >
+          <div className="px-6 py-6 border-t border-slate-50">
+            <AppPagination
+              currentPage={currentPage}
+              lastPage={paginate?.last_page ?? 1}
+              from={paginate?.from ?? 0}
+              to={paginate?.to ?? 0}
+              total={paginate?.total ?? 0}
+              isLoading={isLoading}
+              label="registered users"
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </UsersTable>
       </div>
 
       <EditUserModal

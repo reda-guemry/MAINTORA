@@ -1,7 +1,6 @@
 import type { UsersTableProps } from "../types/usersComponents";
 import { UserTableRow } from "./UserTableRow";
-
-
+import { Spinner } from "@/shared/components/ui";
 
 export function UsersTable({
   users,
@@ -13,64 +12,72 @@ export function UsersTable({
   children,
 }: UsersTableProps ) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-      <table className="w-full border-collapse text-left">
-        <thead className="border-b border-gray-100 bg-gray-50">
-          <tr>
-            <th className="w-[14%] px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-400">User ID</th>
-            <th className="w-[36%] px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-400">Name</th>
-            <th className="w-[20%] px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-400">Role</th>
-            <th className="w-[15%] px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-400">Status</th>
-            <th className="w-[15%] px-6 py-4 text-right text-[11px] font-bold uppercase tracking-widest text-gray-400">Actions</th>
-          </tr>
-        </thead>
-
-        <tbody className="divide-y divide-gray-100">
-          {isLoading && (
-            <tr>
-              <td colSpan={5} className="py-8 text-center text-gray-500">
-                Loading users...
-              </td>
+    <div className="w-full bg-white">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse text-left">
+          <thead>
+            <tr className="border-b border-slate-100 bg-slate-50/50">
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Identity ID</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Full Name</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Access Role</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Account Status</th>
+              <th className="px-6 py-5 text-right text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Management</th>
             </tr>
-          )}
+          </thead>
 
-          {!isLoading && error && (
-            <tr>
-              <td colSpan={5} className="py-8 text-center text-red-500">
-                {error}
-              </td>
-            </tr>
-          )}
-
-          {!isLoading && !error && users.length === 0 && (
-            <tr>
-              <td colSpan={5} className="px-6 py-12 text-center">
-                <div className="mx-auto flex max-w-sm flex-col items-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-gray-400">
-                    <span className="material-symbols-outlined text-[24px]">group_off</span>
+          <tbody className="divide-y divide-slate-50">
+            {isLoading && (
+              <tr>
+                <td colSpan={5} className="py-24 text-center">
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <Spinner className="text-[#43968C]" size="md" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Synchronizing Registry...</span>
                   </div>
-                  <p className="mt-3 text-sm font-semibold text-gray-700">
-                    {emptyMessage}
-                  </p>
-                  <p className="mt-1 text-xs text-gray-400">
-                    Try another role filter or create a new user.
-                  </p>
-                </div>
-              </td>
-            </tr>
-          )}
+                </td>
+              </tr>
+            )}
 
-          {!isLoading && !error &&
-            users.map((user) => (
-              <UserTableRow
-                key={user.id}
-                user={user}
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
-            ))}
-        </tbody>
-      </table>
+            {!isLoading && error && (
+              <tr>
+                <td colSpan={5} className="py-20 text-center">
+                  <div className="inline-flex items-center gap-2 rounded-xl bg-red-50 px-4 py-2 text-sm font-bold text-red-600">
+                    <span className="material-symbols-outlined text-[18px]">error</span>
+                    {error}
+                  </div>
+                </td>
+              </tr>
+            )}
+
+            {!isLoading && !error && users.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-6 py-24 text-center">
+                  <div className="mx-auto flex max-w-xs flex-col items-center">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-[20px] bg-slate-50 text-[#43968C]">
+                      <span className="material-symbols-outlined text-[32px]">person_search</span>
+                    </div>
+                    <p className="mt-5 text-sm font-black text-slate-900">
+                      {emptyMessage}
+                    </p>
+                    <p className="mt-1 text-xs font-medium text-slate-400 leading-relaxed">
+                      We couldn't find any accounts matching your current filter criteria.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            )}
+
+            {!isLoading && !error &&
+              users.map((user) => (
+                <UserTableRow
+                  key={user.id}
+                  user={user}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                />
+              ))}
+          </tbody>
+        </table>
+      </div>
       {children}
     </div>
   );

@@ -10,12 +10,15 @@ class RoleController
 
     public function __construct(
 
-    ){}
+    ) {
+    }
 
 
     public function index()
     {
-        $roles = Role::all();
+        $roles = Role::where('name', '!=', 'admin')
+            ->orderBy('name')
+            ->get();
 
         return response()->json([
             'success' => true,
