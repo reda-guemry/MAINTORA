@@ -125,7 +125,7 @@ export default function RepairRequestsPage() {
       </section>
 
       {/* Filters Section */}
-      <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">
             <span className="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
@@ -169,14 +169,14 @@ export default function RepairRequestsPage() {
       )}
 
       {isLoading && repairRequests.length === 0 ? (
-        <div className="flex min-h-[300px] flex-col items-center justify-center rounded-[24px] border border-slate-200 bg-white shadow-sm">
+        <div className="flex min-h-75 flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white shadow-sm">
           <Spinner className="text-[#43968C]" size="lg" />
           <p className="mt-4 text-[11px] font-bold uppercase tracking-widest text-slate-400 animate-pulse">
             Loading repair requests...
           </p>
         </div>
       ) : filteredRepairRequests.length === 0 ? (
-        <div className="flex min-h-[300px] flex-col items-center justify-center rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-6 py-16 text-center shadow-sm">
+        <div className="flex min-h-75 flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-6 py-16 text-center shadow-sm">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm">
             <span className="material-symbols-outlined text-[32px] text-slate-400">
               search_off
@@ -194,7 +194,7 @@ export default function RepairRequestsPage() {
           {filteredRepairRequests.map((repairRequest) => (
             <article
               key={repairRequest.id}
-              className="group flex flex-col rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-slate-300 hover:shadow-md"
+              className="group flex flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-slate-300 hover:shadow-md"
             >
               {/* Card Header */}
               <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-5">

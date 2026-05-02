@@ -35,7 +35,7 @@ export function ChangePasswordForm({
   return (
     <form
       onSubmit={handleSubmit(submitHandler)}
-      className="rounded-[32px] border border-slate-200/60 bg-white p-8 shadow-sm"
+      className="rounded-4xl border border-slate-200/60 bg-white p-8 shadow-sm"
     >
       <div className="mb-8 border-b border-slate-100 pb-6">
         <h2 className="text-xl font-black tracking-tight text-slate-900">
