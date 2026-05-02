@@ -8,11 +8,11 @@ import {
   useDeleteUser,
   useEditUser,
   usePaginateUser,
-  UsersPagination,
   UsersTable,
 } from "@/features/user";
 
 import type { AddUserPayload, EditUserPayload } from "@/features/user";
+import { AppPagination } from "@/shared/components";
 
 export default function UsersManagement() {
   const {
@@ -156,13 +156,14 @@ export default function UsersManagement() {
         onEdit={handleOpenEdit}
         onDelete={handleOpenDelete}
       >
-        <UsersPagination
+        <AppPagination
           currentPage={currentPage}
           lastPage={paginate?.last_page ?? 1}
           from={paginate?.from ?? 0}
           to={paginate?.to ?? 0}
           total={paginate?.total ?? 0}
           isLoading={isLoading}
+          label="users"
           onPageChange={setPage}
         />
       </UsersTable>

@@ -71,13 +71,3 @@ export type DeleteChecklistTemplateDialogProps = {
   onClose: () => void;
   onConfirm: () => void;
 };
-
-export type ChecklistTemplatesPaginationProps = {
-  currentPage: number;
-  lastPage: number;
-  from: number | null;
-  to: number | null;
-  total: number;
-  isLoading: boolean;
-  onPageChange: (page: number) => void;
-};

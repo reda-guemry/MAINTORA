@@ -1,6 +1,6 @@
 import { useChefTechnicianDashboard } from "@/features/chef-dashboard";
 import { Alert } from "@/shared/components/feedback";
-import { Button, Spinner } from "@/shared/components/ui";
+import { Spinner } from "@/shared/components/ui";
 
 function formatDate(value: string | null | undefined) {
   if (!value) {
@@ -56,8 +56,7 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export function Dashboard() {
-  const { dashboard, error, fetchDashboard, isLoading } =
-    useChefTechnicianDashboard();
+  const { dashboard, error, isLoading } = useChefTechnicianDashboard();
 
   if (isLoading && !dashboard) {
     return (

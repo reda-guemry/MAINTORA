@@ -1,13 +1,13 @@
 import { useState } from "react";
 import {
   ChecklistItemsList,
-  ChecklistItemsPagination,
   useCreateChecklistItem,
   useDeleteChecklistItem,
   useEditChecklistItem,
   usePaginateChecklistItems,
   type ChecklistItem,
 } from "@/features/checklist-item";
+import { AppPagination } from "@/shared/components";
 import { Button, Input } from "@/shared/components/ui";
 
 export function ChecklistItemsPage() {
@@ -170,13 +170,14 @@ export function ChecklistItemsPage() {
         onEditSubmit={handleEditSubmit}
         onDelete={handleDelete}
       >
-        <ChecklistItemsPagination
+        <AppPagination
           currentPage={currentPage}
           lastPage={paginate?.last_page ?? 1}
           from={paginate?.from ?? 0}
           to={paginate?.to ?? 0}
           total={paginate?.total ?? 0}
           isLoading={isLoading}
+          label="checklist items"
           onPageChange={setPage}
         />
       </ChecklistItemsList>

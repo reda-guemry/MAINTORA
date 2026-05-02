@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   DeleteMachineDialog,
   EditMachineModal,
-  MachinesPagination,
   MachinesTable,
   useDeleteMachine,
   useEditMachine,
@@ -11,6 +10,7 @@ import {
   type Machine,
   type MachinePayload,
 } from "@/features/machines";
+import { AppPagination } from "@/shared/components";
 import { Button, Input } from "@/shared/components/ui";
 import { AddMachineFlow } from "../components/AddMachineFlow";
 import { useFiltering, useModalState } from "@/shared";
@@ -155,13 +155,15 @@ export default function MachinesManagement() {
           onDelete={deleteModal.open}
           onHistory={(machine) => navigate(`/client/machines/${machine.id}/history`)}
         >
-          <MachinesPagination
+          <AppPagination
+            currentPage={currentPage}
+            lastPage={paginate?.last_page ?? 1}
             from={paginate?.from ?? 0}
             to={paginate?.to ?? 0}
             total={paginate?.total ?? 0}
             isLoading={isLoading}
-            onPrevious={() => setPage(currentPage - 1)}
-            onNext={() => setPage(currentPage + 1)}
+            label="assets"
+            onPageChange={setPage}
           />
         </MachinesTable>
       </div>

@@ -58,15 +58,6 @@ export type DeleteMachineDialogProps = {
   onConfirm: () => void;
 };
 
-export type MachinesPaginationProps = {
-  from: number;
-  to: number;
-  total: number;
-  isLoading: boolean;
-  onPrevious: () => void;
-  onNext: () => void;
-};
-
 export type PaginateMachineResponse = ApiResponse<PaginatedResponse<Machine>>;
 
 export type PaginateMachineData = PaginateMachineResponse["data"];

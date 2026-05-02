@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { AppPagination } from "@/shared/components";
 import { Alert } from "@/shared/components/feedback";
 import { Button, Input, Spinner } from "@/shared/components/ui";
 import { formatDate } from "@/shared/utils/formatters";
@@ -291,30 +292,17 @@ export default function RepairRequestsPage() {
       )}
 
       {paginate && paginate.last_page > 1 && (
-        <section className="flex flex-col gap-3 rounded-3xl border border-[#ddd5c8] bg-white px-5 py-4 shadow-[0_16px_40px_rgba(62,52,39,0.07)] sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-[#6f6254]">
-            Showing {paginate.from ?? 0} to {paginate.to ?? 0} of {paginate.total} repair requests.
-          </p>
-
-          <div className="flex items-center gap-3">
-            <Button
-              variant="secondary"
-              onClick={() => setPage(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </Button>
-            <span className="text-sm font-bold text-[#2d241c]">
-              Page {currentPage} / {paginate.last_page}
-            </span>
-            <Button
-              variant="secondary"
-              onClick={() => setPage(currentPage + 1)}
-              disabled={currentPage === paginate.last_page}
-            >
-              Next
-            </Button>
-          </div>
+        <section className="overflow-hidden rounded-3xl border border-[#ddd5c8] shadow-[0_16px_40px_rgba(62,52,39,0.07)]">
+          <AppPagination
+            currentPage={currentPage}
+            lastPage={paginate.last_page}
+            from={paginate.from ?? 0}
+            to={paginate.to ?? 0}
+            total={paginate.total}
+            isLoading={isLoading}
+            label="repair requests"
+            onPageChange={setPage}
+          />
         </section>
       )}
 

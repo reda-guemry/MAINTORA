@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppPagination } from "@/shared/components";
 import { Alert } from "@/shared/components/feedback";
-import { Button, Spinner } from "@/shared/components/ui";
+import { Spinner } from "@/shared/components/ui";
 import { formatDate, formatDateTime } from "@/shared/utils/formatters";
 import { useMachineHistory } from "../hooks/useMachineHistory";
 import { useMachineHistoryTask } from "../hooks/useMachineHistoryTask";
@@ -171,30 +172,15 @@ export function MachineHistoryView({
           ))}
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-[#dce5e2] px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-            Showing {history.tasks.from ?? 0}-{history.tasks.to ?? 0} of{" "}
-            {history.tasks.total}
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage <= 1}
-              onClick={() => setPage(currentPage - 1)}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage >= history.tasks.last_page}
-              onClick={() => setPage(currentPage + 1)}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
+        <AppPagination
+          currentPage={currentPage}
+          lastPage={history.tasks.last_page}
+          from={history.tasks.from ?? 0}
+          to={history.tasks.to ?? 0}
+          total={history.tasks.total}
+          label="tasks"
+          onPageChange={setPage}
+        />
       </section>
 
       {selectedTaskId && (

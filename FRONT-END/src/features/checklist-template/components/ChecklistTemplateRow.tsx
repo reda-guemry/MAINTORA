@@ -13,40 +13,46 @@ export function ChecklistTemplateRow({
     .toUpperCase();
 
   return (
-    <tr className="group transition-colors hover:bg-[#fbf8f2]">
-      <td className="px-6 py-5">
+    <tr className="group transition-colors hover:bg-gray-50">
+      <td className="px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#efe7da] text-sm font-black text-[#816b55]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#eef7f6] text-[13px] font-bold text-[#388E8E]">
             {initials}
           </div>
           <div>
-            <p className="text-[14px] font-bold text-[#2d241c]">
+            <p className="text-[13px] font-bold text-[#1A1A1A] md:text-[14px]">
               {template.name}
             </p>
-            <p className="mt-1 text-[11px] uppercase tracking-[0.22em] text-[#9d9388]">
+            <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 md:text-[11px]">
               Template #{template.id}
             </p>
           </div>
         </div>
       </td>
-      <td className="px-6 py-5 text-sm leading-6 text-[#6f6254]">
-        {template.description || "No description provided."}
+      
+      <td className="px-6 py-4 text-[13px] leading-relaxed text-gray-500 w-1/2 max-w-xs md:max-w-md lg:max-w-lg">
+        <div className="line-clamp-2 wrap-break-word" title={template.description ?? undefined}>
+          {template.description || "No description provided."}
+        </div>
       </td>
-      <td className="px-6 py-5 text-right">
+      
+      <td className="px-6 py-4 text-right">
         <div className="flex justify-end gap-2">
           <button
             type="button"
             onClick={() => onEdit(template)}
-            className="rounded-full border border-[#e5ddd1] bg-[#f3eee7] p-2 text-[#6f6254] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#bfe3df] hover:bg-[#dff1ef] hover:text-[#4b9c99]"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-400 transition-colors hover:border-[#388E8E] hover:bg-[#eef7f6] hover:text-[#388E8E]"
+            title="Edit template"
           >
-            <span className="material-symbols-outlined text-[18px]">edit</span>
+            <span className="material-symbols-outlined text-[16px]">edit</span>
           </button>
           <button
             type="button"
             onClick={() => onDelete(template)}
-            className="rounded-full border border-[#e5ddd1] bg-[#f3eee7] p-2 text-[#6f6254] transition-all duration-200 hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-400 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+            title="Delete template"
           >
-            <span className="material-symbols-outlined text-[18px]">
+            <span className="material-symbols-outlined text-[16px]">
               delete
             </span>
           </button>

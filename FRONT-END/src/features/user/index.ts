@@ -11,7 +11,5 @@ export * from "./components/EditUserModal";
 export * from "./components/AddUserModal";
 export * from "./components/DeleteUserDialog";
 export * from "./components/UsersTable";
-export * from "./components/UsersPagination";
-
 
 

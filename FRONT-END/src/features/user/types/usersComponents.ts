@@ -63,13 +63,3 @@ export type RoleOption = {
   name: string;
 };
 
-
-export type UsersPaginationProps = {
-  currentPage: number;
-  lastPage: number;
-  from: number | null;
-  to: number | null;
-  total: number;
-  isLoading: boolean;
-  onPageChange: (page: number) => void;
-};

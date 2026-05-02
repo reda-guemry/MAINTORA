@@ -5,7 +5,6 @@ export * from "./hooks/useEditChecklistTemplate";
 export * from "./hooks/useDeleteChecklistTemplate";
 export * from "./components/ChecklistTemplatesTable";
 export * from "./components/ChecklistTemplateRow";
-export * from "./components/ChecklistTemplatesPagination";
 export * from "./components/AddChecklistTemplateModal";
 export * from "./components/EditChecklistTemplateModal";
 export * from "./components/DeleteChecklistTemplateDialog";

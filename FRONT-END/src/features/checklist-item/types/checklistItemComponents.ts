@@ -13,16 +13,6 @@ export type ChecklistItemPayload = {
 
 export type PaginateChecklistItemResponse = ApiResponse<PaginatedResponse<ChecklistItem>>;
 
-export type ChecklistItemsPaginationProps = {
-  currentPage: number;
-  lastPage: number;
-  from: number | null;
-  to: number | null;
-  total: number;
-  isLoading: boolean;
-  onPageChange: (page: number) => void;
-};
-
 export type ChecklistItemsListProps = {
   items: ChecklistItem[];
   isLoading: boolean;
