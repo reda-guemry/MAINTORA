@@ -42,7 +42,6 @@ export function ChefAppLayout() {
 
           <div className="flex items-center gap-3 md:gap-4">
 
-            <div className="mx-0.5 h-6 w-px bg-gray-200 md:mx-1 md:h-8" />
 
             <div className="flex items-center gap-2 md:gap-3">
               <NavLink

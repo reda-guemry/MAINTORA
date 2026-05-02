@@ -131,7 +131,7 @@ export function Rounde() {
   }
 
   return (
-    <div className="relative h-[calc(100vh-8rem)] w-full overflow-hidden rounded-[32px] bg-[#ebe4d8] shadow-[0_20px_60px_rgba(62,52,39,0.15)]">
+    <div className="relative h-[calc(100vh-8rem)] w-full overflow-hidden rounded-4xl bg-[#ebe4d8] shadow-[0_20px_60px_rgba(62,52,39,0.15)]">
       <div className="absolute inset-0 z-0">
         <MachinesAssetMap
           machines={machines}
@@ -145,7 +145,7 @@ export function Rounde() {
         <div className="pointer-events-auto flex items-start gap-3">
           <div
             className={cn(
-              "max-w-[340px] rounded-[24px] border border-white/60 bg-white/95 p-5 shadow-lg backdrop-blur-md transition-opacity duration-300",
+              "max-w-85 rounded-3xl border border-white/60 bg-white/95 p-5 shadow-lg backdrop-blur-md transition-opacity duration-300",
               isSidebarOpen ? "opacity-0 md:opacity-100" : "opacity-100",
             )}
           >
@@ -173,7 +173,7 @@ export function Rounde() {
 
         <div className="pointer-events-auto flex flex-wrap gap-3">
           <div className="flex flex-col items-center justify-center rounded-[20px] border border-white/60 bg-white/95 px-5 py-3 shadow-lg backdrop-blur-md">
-            <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-[#988a79]">
+            <p className="text-3xl font-bold uppercase tracking-[0.24em] text-[#988a79]">
               Machines
             </p>
             <p className="mt-1 text-xl font-black text-[#2d241c]">
@@ -266,7 +266,7 @@ export function Rounde() {
           )}
 
           {selectedMachine && (
-            <div className="mt-3 rounded-[16px] border border-[#e6dbcd] bg-[#fbfaf8] p-3 shadow-sm">
+            <div className="mt-3 rounded-2xl border border-[#e6dbcd] bg-[#fbfaf8] p-3 shadow-sm">
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[10px] font-bold uppercase tracking-[0.22em] text-[#988a79]">
@@ -326,22 +326,22 @@ export function Rounde() {
 
           <div className="space-y-2">
             {sidebarDataError ? (
-              <div className="rounded-[16px] border border-dashed border-[#ecd6d6] bg-white/50 px-3 py-4 text-xs text-[#8a4f4f]">
+              <div className="rounded-2xl border border-dashed border-[#ecd6d6] bg-white/50 px-3 py-4 text-xs text-[#8a4f4f]">
                 {sidebarDataError}
               </div>
             ) : isLoadingMachines || isLoadingTechnicians ? (
-              <div className="rounded-[16px] border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-xs text-[#7f7468]">
+              <div className="rounded-2xl border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-xs text-[#7f7468]">
                 Loading workspace data...
               </div>
             ) : sidebarTechnicians.length === 0 ? (
-              <div className="rounded-[16px] border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-xs text-[#7f7468]">
+              <div className="rounded-2xl border border-dashed border-[#ddd5c8] bg-white/50 px-3 py-4 text-xs text-[#7f7468]">
                 No technicians available right now.
               </div>
             ) : (
               sidebarTechnicians.map((technician, index) => (
                 <div
                   key={technician.id}
-                  className="rounded-[16px] border border-[#e7ddd0] bg-white p-3 shadow-[0_2px_8px_rgba(62,52,39,0.04)] transition-transform hover:-translate-y-0.5"
+                  className="rounded-2xl border border-[#e7ddd0] bg-white p-3 shadow-[0_2px_8px_rgba(62,52,39,0.04)] transition-transform hover:-translate-y-0.5"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#dff1ef] text-xs font-black text-[#3b8f88]">
