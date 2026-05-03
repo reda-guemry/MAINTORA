@@ -171,18 +171,8 @@ function ClientAppLayout() {
               </span>
             </div>
           </div>
-
-          <div className="flex items-center gap-4">
-            <button className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 shadow-sm transition-all hover:text-[#43968C] hover:border-[#43968C]/30 hover:bg-teal-50">
-              <span className="material-symbols-outlined text-[20px]">
-                notifications
-              </span>
-              <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border-2 border-white bg-red-500"></span>
-            </button>
-          </div>
         </header>
 
-        {/* Page Content */}
         <div className="flex-1 overflow-y-auto px-4 pb-8 sm:px-8">
           <div className="mx-auto w-full max-w-350">
             <Outlet />

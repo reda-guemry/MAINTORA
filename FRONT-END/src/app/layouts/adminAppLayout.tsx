@@ -130,26 +130,17 @@ function AdminAppLayout() {
                 shield_person
               </span>
               <span className="hidden sm:block">/</span>
-              <span className="text-[#43968C] truncate max-w-[150px] sm:max-w-none">
+              <span className="text-[#43968C] truncate max-w-37.5 sm:max-w-none">
                 {breadcrumbLabel}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="hidden h-8 w-[1px] bg-slate-200 sm:block" />
-            <button className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 shadow-sm transition-all hover:text-[#43968C] hover:border-[#43968C]/30">
-              <span className="material-symbols-outlined text-[20px]">
-                notifications
-              </span>
-              <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border-2 border-white bg-[#43968C]"></span>
-            </button>
-          </div>
         </header>
 
         {/* Content Body */}
         <div className="flex-1 overflow-y-auto px-4 pb-8 sm:px-8">
-          <div className="mx-auto w-full max-w-[1200px]">
+          <div className="mx-auto w-full max-w-300">
             <Outlet />
           </div>
         </div>
