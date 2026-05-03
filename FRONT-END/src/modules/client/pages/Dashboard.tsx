@@ -15,7 +15,7 @@ import {
 } from "@/shared/utils/statusHelpers";
 
 function DashboardPage() {
-  const { dashboard, isLoading, error, fetchDashboard } = useClientDashboard();
+  const { dashboard, isLoading, error } = useClientDashboard();
 
   const stats = dashboard?.stats ?? {
     total_machines: 0,
@@ -277,7 +277,7 @@ function DashboardPage() {
           </div>
 
           <div className="overflow-x-auto custom-scrollbar">
-            <table className="w-full min-w-[500px] text-left">
+            <table className="w-full min-w-125 text-left">
               <thead>
                 <tr className="border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   <th className="px-3 py-3">Request</th>

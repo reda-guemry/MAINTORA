@@ -5,18 +5,14 @@ namespace Database\Factories;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
+ * User factory for generating realistic test users.
+ *
  * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
-    protected static ?string $password;
-
     /**
      * Define the model's default state.
      *
@@ -29,20 +25,21 @@ class UserFactory extends Factory
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
-            'phone' => fake()->phoneNumber(),
-            'status' => fake()->randomElement(['active', 'suspended', 'inactive']),
+            'password' => Hash::make('password123'),
+            'phone' => $this->generatePhoneNumber(),
+            'status' => fake()->randomElement(['active', 'active', 'active', 'inactive']),
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Generate a realistic phone number.
      */
-    public function unverified(): static
+    private function generatePhoneNumber(): string
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        $areaCode = rand(201, 999);
+        $exchange = rand(200, 999);
+        $number = rand(1000, 9999);
+        return "+1-{$areaCode}-{$exchange}-{$number}";
     }
 }
+

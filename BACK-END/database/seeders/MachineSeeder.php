@@ -1,42 +1,53 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Seeders;
 
 use App\Models\Machine;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
-/**
- * Machine factory for generating realistic industrial assets.
- *
- * @extends Factory<Machine>
- */
-class MachineFactory extends Factory
+
+
+
+class MachineSeeder extends Seeder
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    public function run(): void
     {
-        return [
-            'code' => $this->generateMachineCode(),
-            'name' => $this->generateMachineName(),
-            'location' => $this->generateLocation(),
-            'latitude' => $this->generateLatitude(),
-            'longitude' => $this->generateLongitude(),
-            'status' => fake()->randomElement(['active', 'active', 'active', 'maintenance', 'anomalous']),
-        ];
+        $clients = User::role('client')->get();
+
+        if ($clients->isEmpty()) {
+            $this->command->warn('No client users found. Please run UserSeeder first.');
+            return;
+        }
+
+        $machineCount = 0;
+
+        foreach ($clients as $client) {
+            $machinesPerClient = rand(2, 4);
+
+            for ($i = 0; $i < $machinesPerClient; $i++) {
+                Machine::create([
+                    'code' => $this->generateMachineCode(),
+                    'name' => $this->generateMachineName(),
+                    'location' => $this->generateLocation(),
+                    'latitude' => $this->generateLatitude(),
+                    'longitude' => $this->generateLongitude(),
+                    'status' => $this->randomMachineStatus(),
+                    'created_by' => $client->id,
+                ]);
+                $machineCount++;
+            }
+        }
+
+        $this->command->info("Created {$machineCount} machines across {$clients->count()} clients");
     }
 
-    /**
-     * Generate a unique machine code.
-     */
     private function generateMachineCode(): string
     {
-        $prefix = ['MCH', 'AST', 'EQP', 'IND'];
+        $prefix = ['MCH', 'MCD', 'AST', 'EQP'];
         $randomPrefix = $prefix[array_rand($prefix)];
-        return $randomPrefix . '-' . date('Y') . '-' . strtoupper(substr(md5(uniqid()), 0, 4));
+        $code = $randomPrefix . '-' . date('Y') . '-' . strtoupper(substr(md5(uniqid()), 0, 4));
+        return $code;
     }
 
     /**
@@ -65,9 +76,6 @@ class MachineFactory extends Factory
         return $machines[array_rand($machines)] . ' #' . rand(1, 99);
     }
 
-    /**
-     * Generate a realistic location.
-     */
     private function generateLocation(): string
     {
         $locations = [
@@ -80,25 +88,26 @@ class MachineFactory extends Factory
             'Warehouse B - Section 2',
             'Service Center - Area 1',
             'Distribution Center',
-            'Outdoor Installation',
+            'Field Location',
         ];
 
         return $locations[array_rand($locations)];
     }
 
-    /**
-     * Generate a random latitude.
-     */
     private function generateLatitude(): float
     {
         return rand(40, 50) + (rand(0, 9999) / 10000);
     }
 
-    /**
-     * Generate a random longitude.
-     */
     private function generateLongitude(): float
     {
         return rand(0, 20) + (rand(0, 9999) / 10000);
+    }
+
+    
+    private function randomMachineStatus(): string
+    {
+        $statuses = ['active', 'active', 'active', 'maintenance', 'anomalous'];
+        return $statuses[array_rand($statuses)];
     }
 }

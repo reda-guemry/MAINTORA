@@ -2,132 +2,92 @@
 
 namespace Database\Seeders;
 
-use App\Models\Anomaly;
-use App\Models\ChecklistItem;
-use App\Models\ChecklistTemplate;
-use App\Models\ChecklistTemplateItem;
-use App\Models\Machine;
-use App\Models\MaintenancePlan;
-use App\Models\MaintenanceTask;
-use App\Models\MaintenanceTaskCheck;
-use App\Models\RepairPurchaseOrder;
-use App\Models\RepairRequest;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+/**
+ * Main database seeder orchestrator.
+ *
+ * Coordinates the execution of all seeders in the correct order.
+ * Respects foreign key relationships to ensure data integrity.
+ *
+ * Execution order:
+ * 1. RoleSeeder - Creates roles and permissions
+ * 2. UserSeeder - Creates users with role assignments
+ * 3. MachineSeeder - Creates machines for clients
+ * 4. ChecklistTemplateSeeder - Creates checklist templates
+ * 5. MaintenancePlanSeeder - Creates maintenance plans
+ * 6. MaintenanceTaskSeeder - Creates maintenance tasks
+ * 7. AnomalySeeder - Creates anomalies for machines
+ * 8. RepairRequestSeeder - Creates repair requests
+ * 9. RepairPurchaseOrderSeeder - Creates purchase orders
+ */
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
-        $this->call([
-            RolePermissionSeeder::class,
-        ]);
+        $this->command->info('Starting database seeding...');
 
-        Model::unguarded(function () {
-            $users = User::factory(12)->create();
-            $machines = Machine::factory(10)->make()->map(function ($machine) use ($users) {
-                $machine->created_by = $users->random()->id;
-                $machine->save();
+        // Step 1: Create roles and permissions
+        $this->call(RoleSeeder::class);
 
-                return $machine;
-            });
+        // Step 2: Create users with assigned roles
+        $this->call(UserSeeder::class);
 
-            $checklistItems = ChecklistItem::factory(18)->create();
-            $templates = ChecklistTemplate::factory(8)->make()->map(function ($template) use ($users) {
-                $template->created_by = $users->random()->id;
-                $template->save();
+        // Step 3: Create machines for clients
+        $this->call(MachineSeeder::class);
 
-                return $template;
-            });
+        // Step 4: Create checklist templates and items
+        $this->call(ChecklistTemplateSeeder::class);
 
-            $templates->each(function ($template) use ($checklistItems) {
-                $selectedItems = $checklistItems->random(rand(3, 6))->values();
+        // Step 5: Create maintenance plans
+        $this->call(MaintenancePlanSeeder::class);
 
-                $selectedItems->each(function ($item, $index) use ($template) {
-                    ChecklistTemplateItem::factory()->create([
-                        'checklist_template_id' => $template->id,
-                        'checklist_item_id' => $item->id,
-                        'order' => $index + 1,
-                    ]);
-                });
-            });
+        // Step 6: Create maintenance tasks
+        $this->call(MaintenanceTaskSeeder::class);
 
-            $plans = collect();
+        // Step 7: Create anomalies
+        $this->call(AnomalySeeder::class);
 
-            for ($i = 0; $i < 12; $i++) {
-                $plans->push(MaintenancePlan::factory()->create([
-                    'machine_id' => $machines->random()->id,
-                    'checklist_template_id' => $templates->random()->id,
-                    'assigned_to' => $users->random()->id,
-                    'created_by' => $users->random()->id,
-                ]));
-            }
+        // Step 8: Create repair requests
+        $this->call(RepairRequestSeeder::class);
 
-            $tasks = collect();
+        // Step 9: Create purchase orders
+        $this->call(RepairPurchaseOrderSeeder::class);
 
-            for ($i = 0; $i < 20; $i++) {
-                $plan = $plans->random();
+        $this->command->info('Database seeding completed successfully!');
+        $this->displaySeededData();
+    }
 
-                $tasks->push(MaintenanceTask::factory()->create([
-                    'machine_id' => $plan->machine_id,
-                    'maintenance_plan_id' => $plan->id,
-                ]));
-            }
+    /**
+     * Display summary of seeded data.
+     */
+    private function displaySeededData(): void
+    {
+        $this->command->newLine();
+        $this->command->info('Seeded Data Summary:');
+        $this->command->line('--------------------------------------------');
 
-            $tasks->each(function ($task) use ($templates) {
-                $template = $templates->firstWhere('id', $task->maintenancePlan->checklist_template_id);
+        // Display counts
+        $this->command->line('Users: ' . \App\Models\User::count());
+        $this->command->line('Machines: ' . \App\Models\Machine::count());
+        $this->command->line('Maintenance Plans: ' . \App\Models\MaintenancePlan::count());
+        $this->command->line('Maintenance Tasks: ' . \App\Models\MaintenanceTask::count());
+        $this->command->line('Anomalies: ' . \App\Models\Anomaly::count());
+        $this->command->line('Repair Requests: ' . \App\Models\RepairRequest::count());
+        $this->command->line('Purchase Orders: ' . \App\Models\RepairPurchaseOrder::count());
+        $this->command->line('Checklist Templates: ' . \App\Models\ChecklistTemplate::count());
 
-                if (!$template) {
-                    return;
-                }
-
-                $template->loadMissing('checklistItems');
-
-                foreach ($template->checklistItems as $templateItem) {
-                    MaintenanceTaskCheck::factory()->create([
-                        'maintenance_task_id' => $task->id,
-                        'checklist_item_id' => $templateItem->checklist_item_id,
-                    ]);
-                }
-            });
-
-            $anomalies = collect();
-
-            for ($i = 0; $i < 12; $i++) {
-                $task = $tasks->random();
-
-                $anomalies->push(Anomaly::factory()->create([
-                    'machine_id' => $task->machine_id,
-                    'maintenance_task_id' => $task->id,
-                    'reported_by' => $users->random()->id,
-                ]));
-            }
-
-            $repairRequests = collect();
-
-            foreach ($anomalies as $anomaly) {
-                $repairRequests->push(RepairRequest::factory()->create([
-                    'machine_id' => $anomaly->machine_id,
-                    'requested_by' => $users->random()->id,
-                    'anomaly_id' => $anomaly->id,
-                    'assigned_to' => rand(0, 1) ? $users->random()->id : null,
-                ]));
-            }
-
-            $repairRequests->each(function ($repairRequest) use ($users) {
-                RepairPurchaseOrder::factory(rand(0, 2))->create([
-                    'repair_request_id' => $repairRequest->id,
-                    'uploaded_by' => $users->random()->id,
-                ]);
-            });
-        });
-
+        $this->command->newLine();
+        $this->command->info('Test Credentials:');
+        $this->command->line('Email: admin@example.com');
+        $this->command->line('Password: 12345678');
+        $this->command->line('--------------------------------------------');
     }
 }
+
