@@ -5,13 +5,8 @@ namespace App\Http\Controllers\Anomaly;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\StoreAnomalyRequest;
-use App\Http\Requests\StoreRepairRequestRequest;
 use App\Http\Resources\AnomalyResource;
-use App\Http\Resources\RepairRequestResource;
 use App\Services\Anomaly\AnomalyService;
-use App\Services\ChefTechnician\ChefTechnicianAnomalyService;
-use App\Services\ChefTechnician\ChefTechnicianRepairRequestService;
-use App\Services\Technician\TechnicianAnomalyService;
 use App\Services\Email\EmailService;
 use App\Models\User;
 use Exception;
@@ -20,6 +15,7 @@ use Illuminate\Http\Request;
 
 class AnomalyController extends Controller
 {
+    
     public function __construct(
         private AnomalyService $anomalyService,
         private EmailService $emailService,

@@ -1,8 +1,25 @@
 
-import { ApiError, type ApiErrorResponse , type ApiRequestOptions } from '../types/api.types'
+import { ApiError, type ApiErrorResponse, type ApiRequestOptions } from '../types/api.types'
 
+function resolveApiBaseUrl(rawBaseUrl: string): string {
+    if (/^https?:\/\/backend:8000\/?$/i.test(rawBaseUrl)) {
+        return '/api'
+    }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+    return rawBaseUrl.replace(/\/$/, '')
+}
+
+function joinApiUrl(baseUrl: string, endpoint: string): string {
+    const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+
+    if (!baseUrl) {
+        return normalizedEndpoint
+    }
+
+    return `${baseUrl}${normalizedEndpoint}`
+}
+
+const API_BASE_URL = resolveApiBaseUrl(import.meta.env.VITE_API_URL || '')
 
 function isFormData(value: unknown): value is FormData {
     return typeof FormData !== "undefined" && value instanceof FormData;
@@ -44,13 +61,13 @@ export async function api<T>(
     } = options;
 
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        method , 
-        credentials : "include" , 
-        headers : buildHeaders(headers , body) ,
-        body : !body? undefined : isFormData(body) ? body : JSON.stringify(body) ,
-        signal , 
-    } )
+    const response = await fetch(joinApiUrl(API_BASE_URL, endpoint), {
+        method,
+        credentials: 'include',
+        headers: buildHeaders(headers, body),
+        body: !body ? undefined : isFormData(body) ? body : JSON.stringify(body),
+        signal,
+    })
 
     const responseData = await parseResponse(response);
 

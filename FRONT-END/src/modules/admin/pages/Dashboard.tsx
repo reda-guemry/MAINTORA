@@ -3,7 +3,6 @@ import { Spinner } from "@/shared/components/ui";
 import { useAdminDashboard } from "@/features/admin-dashboard";
 import { cn } from "@/shared/utils";
 import {
-  formatNumber,
   formatStatus,
   getSystemHealthScore,
   getUserStatusClasses,

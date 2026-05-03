@@ -9,7 +9,6 @@ export function AnomalyDetailsModal({
   isOpen,
   isLoading,
   error,
-  reviewError,
   isReviewingPurchaseOrder,
   onClose,
   onOpenRepairRequest,
