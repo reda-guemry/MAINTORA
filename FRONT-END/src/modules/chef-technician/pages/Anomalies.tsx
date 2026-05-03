@@ -203,7 +203,7 @@ export function AnomaliesPage() {
           <select
             value={statusFilter}
             onChange={(event) => setStatusFilter(event.target.value)}
-            className="grow md:grow-0 h-13 md:w-45 rounded-2xl border-none bg-slate-50 px-5 text-[14px] font-medium text-slate-900 outline-none transition-colors focus:bg-white focus:ring-2 focus:ring-gray-500"
+            className="grow md:grow-0 h-13 md:w-45 rounded-2xl border border-slate-200 bg-slate-50 px-5 text-[14px] font-medium text-slate-900 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-4 focus:ring-[#43968C]/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <option value="">All statuses</option>
             {["Open", "Pending", "In progress", "Resolved", "Rejected"].map(
@@ -218,7 +218,7 @@ export function AnomaliesPage() {
           <select
             value={severityFilter}
             onChange={(event) => setSeverityFilter(event.target.value)}
-            className="grow md:grow-0 h-13 md:w-45 rounded-2xl border-none bg-slate-50 px-5 text-[14px] font-medium text-slate-900 outline-none transition-colors focus:bg-white focus:ring-2 focus:ring-gray-500"
+            className="grow md:grow-0 h-13 md:w-45 rounded-2xl border border-slate-200 bg-slate-50 px-5 text-[14px] font-medium text-slate-900 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-4 focus:ring-[#43968C]/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <option value="">All severities</option>
             {["Low severity", "Medium severity", "High severity"].map((s) => (

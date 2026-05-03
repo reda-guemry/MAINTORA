@@ -190,7 +190,7 @@ function MaintenanceAnomalyForm({
                 <select
                   value={severity}
                   onChange={(event) => setSeverity(event.target.value as AnomalySeverity)}
-                  className="mt-2 h-12 w-full rounded-xl border border-[#cfdce5] bg-[#f9fbfc] px-4 text-sm text-[#172033] outline-none transition focus:border-[#3D8D8D]"
+                  className="mt-2 h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-900 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-4 focus:ring-[#43968C]/10 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="low">Low - Monitor</option>
                   <option value="medium">Medium - Needs attention</option>

@@ -317,7 +317,7 @@ export function EditChecklistTemplateModal({
                                 Number(event.target.value),
                               )
                             }
-                            className="rounded-md border border-gray-200 bg-white px-2 py-1 text-[13px] font-semibold text-[#1A1A1A] outline-none transition-all focus:border-[#388E8E] focus:ring-1 focus:ring-[#388E8E]"
+                            className="rounded-xl border border-slate-200 bg-slate-50 px-2 py-1 text-[13px] font-medium text-slate-900 outline-none transition-all focus:border-[#43968C] focus:bg-white focus:ring-4 focus:ring-[#43968C]/10 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             {templateItems.map((_, orderIndex) => (
                               <option
