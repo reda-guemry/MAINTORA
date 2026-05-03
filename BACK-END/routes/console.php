@@ -9,6 +9,7 @@ Artisan::command('inspire', function () {
 
 
 Schedule::command('app:generate-planning-rounds')->dailyAt('00:00') ;
+Schedule::command('app:start-scheduled-maintenance')->dailyAt('00:00') ;
 
 
 

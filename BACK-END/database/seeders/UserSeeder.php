@@ -10,18 +10,57 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    
+
     public function run(): void
     {
 
-    $admin = User::create([
-            'first_name' => 'System',
-            'last_name' => 'Administrator',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('12345678'),
-            'phone' => '+1-800-ADMIN',
-            'status' => 'active',
-        ]);
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'first_name' => 'System',
+                'last_name' => 'Administrator',
+                'password' => bcrypt('12345678'),
+                'phone' => '+1-800-ADMIN',
+                'status' => 'active',
+            ]
+        );
+
+        $client = User::updateOrCreate(
+            ['email' => 'client@example.com'],
+            [
+                'first_name' => 'System',
+                'last_name' => 'Client',
+                'password' => bcrypt('12345678'),
+                'phone' => '+1-800-CLIENT',
+                'status' => 'active',
+            ]
+        );
+
+        $technician = User::updateOrCreate(
+            ['email' => 'technician@example.com'],
+            [
+                'first_name' => 'System',
+                'last_name' => 'Technician',
+                'password' => bcrypt('12345678'),
+                'phone' => '+1-800-TECHNICIAN',
+                'status' => 'active',
+            ]
+        );
+
+        $cheftechnician = User::updateOrCreate(
+            ['email' => 'cheftechnician@example.com'],
+            [
+                'first_name' => 'System',
+                'last_name' => 'cheftechnician',
+                'password' => bcrypt('12345678'),
+                'phone' => '+1-800-cheftechnician',
+                'status' => 'active',
+            ]
+        );
+
+        $cheftechnician->assignRole('chef technician');
+        $technician->assignRole('technician');
+        $client->assignRole('client');
         $admin->assignRole('admin');
         $this->command->info('Created admin user: admin@example.com');
 
@@ -36,7 +75,7 @@ class UserSeeder extends Seeder
         $this->command->info('All users created successfully.');
     }
 
-    
+
     private function createUsersWithRole(string $role, int $count): void
     {
         $users = User::factory($count)->create();

@@ -23,6 +23,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+
         try {
             $response = $this->authService->login($request->validated());
 
@@ -45,7 +46,7 @@ class AuthController extends Controller
                 );
 
         } catch (Exception $e) {
-            return ApiResponse::error($e->getMessage() , 401);
+            return ApiResponse::error($e->getMessage() , $e->getCode() ?: 400);
         }
     }
 

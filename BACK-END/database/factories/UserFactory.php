@@ -25,7 +25,7 @@ class UserFactory extends Factory
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('12345678'),
             'phone' => $this->generatePhoneNumber(),
             'status' => fake()->randomElement(['active', 'active', 'active', 'inactive']),
         ];
