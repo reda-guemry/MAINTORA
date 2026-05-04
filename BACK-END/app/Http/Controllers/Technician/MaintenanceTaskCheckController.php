@@ -39,7 +39,7 @@ class MaintenanceTaskCheckController extends Controller
                 'success' => false,
                 'message' => 'Error occurred while submitting maintenance task.',
                 'error' => $e->getMessage(),
-            ], $e->getCode() ?: 500);
+            ],  500);
         }
     }
 

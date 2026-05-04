@@ -16,12 +16,12 @@ export const markerColors: Record<
     bg: "#eef7f6",
   },
   anomalous: {
-    accent: "#ea7b26",
+    accent: "#d9534f",
     glow: "rgba(234, 123, 38, 0.28)",
     bg: "#fff3ea",
   },
   maintenance: {
-    accent: "#3b8f88",
+    accent: "#d58a1d",
     glow: "rgba(59, 143, 136, 0.30)",
     bg: "#eef7f6",
   },

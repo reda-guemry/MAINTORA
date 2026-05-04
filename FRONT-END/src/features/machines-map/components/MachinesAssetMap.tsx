@@ -77,7 +77,7 @@ export function MachinesAssetMap<TMachine extends MachinesMapMachine>({
         <div class="relative flex flex-col items-center pb-1.5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
              style="transform-origin: bottom center; transform: ${isSelected ? "scale(1.25)" : "scale(1)"};">
 
-          <div class="absolute bottom-[100%] mb-2 whitespace-nowrap rounded-xl border border-white/80 bg-white/95 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_8px_16px_rgba(62,52,39,0.08)] backdrop-blur-md transition-all duration-300 ${
+          <div class="absolute bottom-full mb-2 whitespace-nowrap rounded-xl border border-white/80 bg-white/95 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_8px_16px_rgba(62,52,39,0.08)] backdrop-blur-md transition-all duration-300 ${
             isSelected
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0"
