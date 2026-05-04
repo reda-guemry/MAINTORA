@@ -66,5 +66,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(ChecklistTemplate::class, 'created_by');
     }
 
+    public function rpairRequests()
+    {
+        return $this->hasMany(RepairRequest::class, 'requested_by') ;
+    }
 
 }

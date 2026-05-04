@@ -28,5 +28,10 @@ class ChecklistItem extends Model
          ->withTimestamps() ;
     }
 
+    public function maintenanceTaskChecks()
+    {
+        return $this->hasMany(MaintenanceTaskCheck::class) ;
+    }
+
 
 }

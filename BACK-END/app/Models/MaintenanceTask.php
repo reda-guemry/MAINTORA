@@ -46,11 +46,6 @@ class MaintenanceTask extends Model
     {
         return $this->hasMany(MaintenanceTaskCheck::class) ;
     }
-
-    /* * Relationships
-     * Has
-     */
-
     public function anomalies()
     {
         return $this->hasMany(Anomaly::class) ;
