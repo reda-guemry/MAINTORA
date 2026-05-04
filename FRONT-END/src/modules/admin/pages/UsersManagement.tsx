@@ -139,7 +139,7 @@ export default function UsersManagement() {
         </button>
       </div>
 
-      <section className="rounded-[32px] border border-slate-200/60 bg-white p-8 shadow-sm">
+      <section className="rounded-4xl border border-slate-200/60 bg-white p-8 shadow-sm">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-[#43968C]">

@@ -51,7 +51,7 @@ export function EditUserModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-2xl rounded-[32px] bg-white shadow-2xl ring-1 ring-slate-100">
+      <div className="w-full max-w-2xl rounded-4xl bg-white shadow-2xl ring-1 ring-slate-100">
         <div className="border-b border-slate-100 px-8 py-6">
           <h3 className="text-xl font-black text-slate-900">Edit Account Details</h3>
           <p className="mt-1 text-xs font-medium text-slate-500">

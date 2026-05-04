@@ -131,7 +131,7 @@ export function ChecklistItemsPage() {
               value={draftLabel}
               onChange={(event) => setDraftLabel(event.target.value)}
               placeholder="E.g., Check hydraulic fluid level..."
-              className="w-full border-gray-200 bg-white text-[13px] text-[#111827] placeholder:text-gray-400 focus:border-[#388E8E] focus:ring-1 focus:ring-[#388E8E] sm:min-w-[300px]"
+              className="w-full border-gray-200 bg-white text-[13px] text-[#111827] placeholder:text-gray-400 focus:border-[#388E8E] focus:ring-1 focus:ring-[#388E8E] sm:min-w-75"
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleCreate();
               }}
