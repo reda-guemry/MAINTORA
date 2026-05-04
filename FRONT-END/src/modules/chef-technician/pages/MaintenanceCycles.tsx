@@ -226,8 +226,11 @@ export function MaintenanceCyclesPage() {
           onClick={() => navigate("/chef-technician/mape")}
           className="w-fit rounded-xl"
         >
+          <div className="flex gap-2 items-center">
+
           <span className="material-symbols-outlined text-[18px]">map</span>
-          Back to Map
+          <span>Back to Map</span>
+          </div>
         </Button>
       </header>
 

@@ -8,10 +8,15 @@ import type {
   MaintenancePlanChecklistTemplate,
   UpdateMaintenancePlanPayload,
 } from "../types/maintenancePlan";
-import type { MaintenanceCycleFormProps, MaintenanceCycleFormState } from "../types/MaintenanceCycle";
-import { formatRecurrenceDay, frequencyOptions, validateForm } from "../utils/MaintenanceCycle";
-
-
+import type {
+  MaintenanceCycleFormProps,
+  MaintenanceCycleFormState,
+} from "../types/MaintenanceCycle";
+import {
+  formatRecurrenceDay,
+  frequencyOptions,
+  validateForm,
+} from "../utils/MaintenanceCycle";
 
 const initialFormState: MaintenanceCycleFormState = {
   assigned_to: 0,
@@ -41,13 +46,16 @@ export function MaintenanceCycleForm({
     ...initialValues,
   });
   const [templateQuery, setTemplateQuery] = useState("");
-  const [templateResults, setTemplateResults] = useState<MaintenancePlanChecklistTemplate[]>([]);
+  const [templateResults, setTemplateResults] = useState<
+    MaintenancePlanChecklistTemplate[]
+  >([]);
   const [selectedTemplate, setSelectedTemplate] =
     useState<MaintenancePlanChecklistTemplate | null>(initialTemplate);
   const [isSearchingTemplates, setIsSearchingTemplates] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const { searchChecklistTemplatesCall, error: templateSearchError } =
     useSearchChecklistTemplates();
+  const [isTyping, setIsTyping] = useState(false);
 
   const recurrenceDay = () => {
     return formatRecurrenceDay(
@@ -55,7 +63,7 @@ export function MaintenanceCycleForm({
       values.repeat_every,
       values.repeat_unit,
     );
-  } ; 
+  };
 
   function updateField<Key extends keyof MaintenanceCycleFormState>(
     key: Key,
@@ -90,6 +98,7 @@ export function MaintenanceCycleForm({
     updateField("checklist_template_id", template.id);
     setTemplateQuery(template.name);
     setTemplateResults([]);
+    setIsTyping(false);
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -135,9 +144,7 @@ export function MaintenanceCycleForm({
           <span className="material-symbols-outlined text-[22px] text-[#388E8E]">
             settings_suggest
           </span>
-          <h2 className="text-xl font-black text-[#172033]">
-            {title}
-          </h2>
+          <h2 className="text-xl font-black text-[#172033]">{title}</h2>
         </div>
         <span className="w-fit rounded-full bg-[#e6f4f1] px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#388E8E]">
           Step 1: Define Parameters
@@ -194,6 +201,7 @@ export function MaintenanceCycleForm({
                 id="maintenance_cycle_template"
                 value={templateQuery}
                 onChange={(event) => {
+                  setIsTyping(true) ; 
                   void handleTemplateQueryChange(event.target.value);
                 }}
                 placeholder="Select standard protocol..."
@@ -203,41 +211,47 @@ export function MaintenanceCycleForm({
                 expand_more
               </span>
 
-              {(templateQuery.trim().length >= 2 || isSearchingTemplates) && (
-                <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-20 overflow-hidden rounded-xl border border-[#d6e1e8] bg-white shadow-[0_16px_32px_rgba(17,24,39,0.12)]">
-                  {isSearchingTemplates ? (
-                    <div className="px-4 py-4 text-sm text-[#64748b]">
-                      Searching protocols...
-                    </div>
-                  ) : templateResults.length === 0 ? (
-                    <div className="px-4 py-4 text-sm text-[#64748b]">
-                      No checklist templates found.
-                    </div>
-                  ) : (
-                    <div className="max-h-56 overflow-y-auto py-2">
-                      {templateResults.map((template) => (
-                        <button
-                          key={template.id}
-                          type="button"
-                          onClick={() => handleTemplateSelect(template)}
-                          className="flex w-full items-center justify-between px-4 py-3 text-left transition hover:bg-[#f2f7f7]"
-                        >
-                          <span>
-                            <span className="block text-sm font-black text-[#172033]">
-                              {template.name}
-                            </span>
-                            <span className="mt-1 block text-xs text-[#728293]">
-                              {template.description || `Protocol #${template.id}`}
-                            </span>
-                          </span>
-                          <span className="material-symbols-outlined text-[20px] text-[#388E8E]">
-                            add_circle
-                          </span>
-                        </button>
-                      ))}
+              {(!selectedTemplate || mode === "edit") && (
+                <>
+                  {isTyping && (templateQuery.trim().length >= 2 ||
+                    isSearchingTemplates) && (
+                    <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-20 overflow-hidden rounded-xl border border-[#d6e1e8] bg-white shadow-[0_16px_32px_rgba(17,24,39,0.12)]">
+                      {isSearchingTemplates ? (
+                        <div className="px-4 py-4 text-sm text-[#64748b]">
+                          Searching protocols...
+                        </div>
+                      ) : templateResults.length === 0 ? (
+                        <div className="px-4 py-4 text-sm text-[#64748b]">
+                          No checklist templates found.
+                        </div>
+                      ) : (
+                        <div className="max-h-56 overflow-y-auto py-2">
+                          {templateResults.map((template) => (
+                            <button
+                              key={template.id}
+                              type="button"
+                              onClick={() => handleTemplateSelect(template)}
+                              className="flex w-full items-center justify-between px-4 py-3 text-left transition hover:bg-[#f2f7f7]"
+                            >
+                              <span>
+                                <span className="block text-sm font-black text-[#172033]">
+                                  {template.name}
+                                </span>
+                                <span className="mt-1 block text-xs text-[#728293]">
+                                  {template.description ||
+                                    `Protocol #${template.id}`}
+                                </span>
+                              </span>
+                              <span className="material-symbols-outlined text-[20px] text-[#388E8E]">
+                                add_circle
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
-                </div>
+                </>
               )}
             </div>
             {selectedTemplate && (
@@ -378,7 +392,9 @@ export function MaintenanceCycleForm({
                   id="maintenance_cycle_start_date"
                   type="date"
                   value={values.start_date}
-                  onChange={(event) => updateField("start_date", event.target.value)}
+                  onChange={(event) =>
+                    updateField("start_date", event.target.value)
+                  }
                   className="h-12 rounded-xl border-[#d6e1e8] bg-[#f8fafb] pl-12 font-semibold"
                 />
               </div>
@@ -415,8 +431,12 @@ export function MaintenanceCycleForm({
             isLoading={isLoading}
             className="h-14 flex-1 rounded-xl bg-[#388E8E] text-white shadow-lg shadow-[#388E8E]/20 hover:bg-[#2f7b7b]"
           >
-            <span className="material-symbols-outlined text-[18px]">bolt</span>
-            {submitLabel}
+            <div className="flex gap-1.5 items-center">
+              <span className="material-symbols-outlined text-[18px]">
+                bolt
+              </span>
+              <span> {submitLabel}</span>
+            </div>
           </Button>
           <Button
             type="button"

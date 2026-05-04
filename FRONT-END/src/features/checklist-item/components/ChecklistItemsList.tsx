@@ -103,8 +103,10 @@ export function ChecklistItemsList({
                         onClick={() => onEditStart(item)}
                         className="flex h-8 items-center gap-1.5 px-3 text-[13px] text-gray-600 hover:text-[#388E8E]"
                       >
-                        <span className="material-symbols-outlined text-[16px]">edit</span>
-                        Edit
+                        <div className="flex gap-2 items-center">
+                          <span className="material-symbols-outlined text-[16px]">edit</span>
+                          <span>Edit</span>
+                        </div>
                       </Button>
                       <Button
                         variant="danger"
@@ -112,8 +114,11 @@ export function ChecklistItemsList({
                         onClick={() => onDelete(item)}
                         className="flex h-8 items-center gap-1.5 px-3 text-[13px]"
                       >
+                        <div className="flex gap-2 items-center">
+
                         <span className="material-symbols-outlined text-[16px]">delete</span>
-                        Delete
+                        <span>Delete</span>
+                        </div>
                       </Button>
                     </>
                   )}

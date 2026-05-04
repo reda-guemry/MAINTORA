@@ -61,12 +61,6 @@ export function MaintenanceCycleSidebar({ stats }: MaintenanceCycleSidebarProps)
             Automating cycles reduces manual overhead by keeping future rounds
             aligned with your preventive maintenance standards.
           </p>
-          <button
-            type="button"
-            className="mt-4 text-sm font-black text-[#5ec0be] transition-colors hover:text-white"
-          >
-            Read documentation →
-          </button>
         </div>
         <span className="material-symbols-outlined absolute -bottom-6 -right-4 text-[112px] text-white/10">
           key

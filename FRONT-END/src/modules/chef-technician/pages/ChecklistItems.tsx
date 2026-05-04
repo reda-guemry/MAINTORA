@@ -144,10 +144,10 @@ export function ChecklistItemsPage() {
               {isCreating ? (
                 <span>Creating...</span>
               ) : (
-                <>
+                <div className="flex gap-1.5 items-center">
                   <span className="material-symbols-outlined relative top-px text-[18px]">add</span>
                   <span>Add Item</span>
-                </>
+                </div>
               )}
             </Button>
           </div>

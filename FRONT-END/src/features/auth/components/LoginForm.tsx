@@ -32,7 +32,7 @@ export function LoginForm({ onSuccess }: onSuccess) {
       </div>
 
       <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-        <FormField label="Email or Username" htmlFor="email" required>
+        <FormField label="Email" htmlFor="email" required>
           <Input
             id="email"
             type="email"

@@ -392,8 +392,12 @@ function SubmitMaintenanceForm({
               onClick={() => navigate("/technician/map")}
               className="flex items-center justify-center gap-2 rounded-xl border border-[#dbe5e2] px-6 py-4 text-sm font-bold text-[#607776] transition-colors hover:bg-[#f2f7f7] hover:text-text-main"
             >
+
+              <div className="flex gap-2 items-center">
+
               <span className="material-symbols-outlined text-lg">map</span>
-              Back to Map
+              <span>Back to Map</span>
+              </div>
             </button>
           )}
         </div>
