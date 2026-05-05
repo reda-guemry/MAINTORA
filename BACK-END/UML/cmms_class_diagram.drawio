@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="cmms-simplified" name="CMMS-Simple">
-        <mxGraphModel dx="2458" dy="2594" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1600" math="0" shadow="0">
+        <mxGraphModel dx="3277" dy="2925" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1600" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -479,7 +479,7 @@
                 <mxCell id="554" value="0..*" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="-170" y="345" width="40" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="555" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="85" target="73">
+                <mxCell id="555" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;edgeStyle=orthogonalEdgeStyle;" parent="1" source="85" target="73" edge="1">
                     <mxGeometry width="160" relative="1" as="geometry">
                         <mxPoint x="820" y="868" as="sourcePoint"/>
                         <mxPoint x="992" y="790" as="targetPoint"/>
@@ -489,7 +489,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="556" value="" style="endArrow=none;endFill=0;endSize=24;html=1;entryX=0.677;entryY=0.953;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="103" target="459">
+                <mxCell id="556" value="" style="endArrow=none;endFill=0;endSize=24;html=1;entryX=0.677;entryY=0.953;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="103" target="459" edge="1">
                     <mxGeometry width="160" relative="1" as="geometry">
                         <mxPoint x="1070" y="1470" as="sourcePoint"/>
                         <mxPoint x="1242" y="1392" as="targetPoint"/>
@@ -499,7 +499,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="557" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="526">
+                <mxCell id="557" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="526" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="670" y="1100" as="sourcePoint"/>
                         <mxPoint x="1040" y="1290" as="targetPoint"/>
